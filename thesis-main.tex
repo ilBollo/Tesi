@@ -43,9 +43,10 @@ Questa tesi sperimenta l'integrazione di un \ac{RAG} con un \ac{LLM} per ottener
 \end{abstract}
 
 \begin{dedication} % this is optional
-A Giulia ed ai miei figli, non arrendetevi mai cercando di vivere il più possibile con entusiasmo, impegno e quando necessario sacrificio per realizzare i vostri sogni.
+A Giulia che ha cambiato in meglio la mia vita.
+\newline Ai miei figli, il dono più grande di questo mondo.
 \newline A tutta la mia famiglia che ha sempre rispettato la mia libertà ma sulla quale posso sempre contare.
-Grazie di tutto.
+\newline Grazie a tutti voi.
 \end{dedication}
 
 %----------------------------------------------------------------------------------------
@@ -91,33 +92,88 @@ Altro compito complesso per il programmatore è non farsi troppo ammaliare dalle
 Questo nuovo modo di lavorare per mette di conoscere nuove soluzioni ma comporta test e tempo non sempre disponibile.
 Il programmatore deve avere il controllo del progetto accettando generazione del codice automatica solo dove consapevole di quanto proposto e del suo impatto anche in casi di revisione e manutenzione futuri.
 L'ultimo miglio da percorrere è la personalizzazione delle risposte del LLM, per ottenere risposte coerenti con quanto già realizzato e conosciuto, per fare questo entra in gioco la RAG.
+\chapter{Addestre un LLM per la Generazione del Codice}
 
+L'addestramento di LLM per la generazione di codice di programmazione richiede una serie di passaggi metodici e risorse computazionali significative.
+Conoscere questo processo è utile per la successiva integrazione con la RAG.
 
-\chapter{Addestramento di un Large Language Model per la Generazione di Codice}
+\section{Raccolta e Preparazione dei Dati}
+La qualità e la quantità dei dati di addestramento è di primaria importanza, per la generazione di codice è essenziale offrire per l'addestramento del modello
+codice sorgente proveniente dai vari linguaggi di programmazione che si vogliono gestire. Fonti comuni includono repository open source, piattaforme di condivisione del codice e documentazione tecnica. I dati raccolti devono essere puliti e pre-processati per rimuovere errori, duplicati e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
 
-L'addestramento di un Large Language Model (LLM) per la generazione di codice di programmazione richiede una serie di passaggi metodici e risorse computazionali significative. Il processo può essere suddiviso in diverse fasi chiave:
-
-\subsection*{Raccolta e Preparazione dei Dati}
-La qualità e la quantità dei dati di addestramento sono fondamentali per il successo di un LLM. Per la generazione di codice, è essenziale raccogliere un ampio corpus di codice sorgente proveniente da vari linguaggi di programmazione e domini applicativi. Fonti comuni includono repository open source, piattaforme di condivisione del codice e documentazione tecnica. I dati raccolti devono essere puliti e pre-processati per rimuovere errori, duplicati e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
-
-\subsection*{Pre-Addestramento}
+\section{Pre-Addestramento}
 Il pre-addestramento è la fase in cui il modello apprende le strutture sintattiche e semantiche del linguaggio naturale e del codice. Durante questa fase, il modello viene esposto a grandi quantità di testo e codice, permettendogli di comprendere le regole grammaticali, i pattern comuni e le dipendenze contestuali. Questo processo utilizza tecniche di apprendimento non supervisionato, in cui il modello impara a prevedere la parola o il token successivo in una sequenza, sviluppando una comprensione approfondita delle strutture linguistiche.
 
-\subsection*{Fine-Tuning}
-Dopo il pre-addestramento, il modello viene sottoposto a una fase di fine-tuning utilizzando dataset specifici del dominio, in questo caso, codice di programmazione. Il fine-tuning consente al modello di specializzarsi in compiti particolari, migliorando la sua capacit\`a di generare codice coerente e funzionale. Questa fase può includere l'uso di tecniche di apprendimento supervisionato, dove il modello viene addestrato su coppie di input-output, come descrizioni di funzionalità e il relativo codice implementativo.
+\section{Fine-Tuning}
+Dopo il pre-addestramento, il modello viene sottoposto a una fase di fine-tuning utilizzando dataset specifici del dominio, in questo caso, codice di programmazione. Il fine-tuning consente al modello di specializzarsi in compiti particolari, migliorando la sua capacità di generare codice coerente e funzionale. Questa fase può includere l'uso di tecniche di apprendimento supervisionato, dove il modello viene addestrato su coppie di input-output, come descrizioni di funzionalità e il relativo codice implementativo.
 
-\subsection*{Architettura del Modello}
+\subsection{Dataset per il Fine-Tuning}
+\begin{itemize}
+    \item \textbf{Descrizioni di Funzionalità}: Testi descrittivi che spiegano cosa dovrebbe fare il codice.
+    \item \textbf{Codice Implementativo}: Esempi di codice che realizzano le funzionalità descritte.
+\end{itemize}
+
+\subsection{Tecniche di Fine-Tuning}
+\begin{itemize}
+    \item \textbf{Apprendimento Supervisionato}: Utilizzo di coppie input-output per addestrare il modello.
+    \item \textbf{Apprendimento per Rinforzo}: Utilizzo di feedback per migliorare le prestazioni del modello.
+\end{itemize}
+
+\section{Architettura del Modello}
 Gli LLM utilizzano tipicamente architetture basate su trasformatori, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice. I trasformatori utilizzano meccanismi di auto-attenzione per valutare l'importanza di diversi elementi in una sequenza, permettendo al modello di comprendere le relazioni a lungo raggio tra parole o token. Questa capacità è cruciale per la generazione di codice, dove le dipendenze tra variabili e funzioni possono estendersi su intere porzioni di codice.
 
-\subsection*{Valutazione e Ottimizzazione}
+\subsection{Componenti Principali dei Trasformatori}
+\begin{itemize}
+    \item \textbf{Encoder}: Codifica l'input in una rappresentazione interna.
+    \item \textbf{Decoder}: Genera l'output basandosi sulla rappresentazione interna.
+    \item \textbf{Meccanismo di Attenzione}: Valuta l'importanza di diversi elementi in una sequenza.
+\end{itemize}
+
+\subsection{Varianti di Trasformatori}
+\begin{itemize}
+    \item \textbf{Trasformatori Autoregressivi}: Utilizzati per la generazione di testo (es. GPT).
+    \item \textbf{Trasformatori Encoder-Decoder}: Utilizzati per compiti di traduzione e sintesi (es. BERT).
+\end{itemize}
+
+\section{Valutazione e Ottimizzazione}
 Una volta addestrato, il modello deve essere rigorosamente valutato utilizzando metriche specifiche per la generazione di codice, come la correttezza sintattica, la funzionalità e l'efficienza del codice prodotto. I risultati della valutazione guidano ulteriori ottimizzazioni, che possono includere aggiustamenti dei pesi del modello, modifiche all'architettura o l'inclusione di dati di addestramento aggiuntivi per affrontare eventuali carenze.
 
-\subsection*{Considerazioni Etiche e di Sicurezza}
-È fondamentale affrontare le implicazioni etiche e di sicurezza nell'addestramento di LLM per la generazione di codice. Ciò include la prevenzione della generazione di codice vulnerabile o malevolo, la protezione della proprietà intellettuale e la garanzia che il modello non perpetui bias presenti nei dati di addestramento. Implementare controlli e filtri adeguati è essenziale per mitigare questi rischi.
+\subsection{Metriche di Valutazione}
+\begin{itemize}
+    \item \textbf{Correttezza Sintattica}: Verifica che il codice generato sia sintatticamente corretto.
+    \item \textbf{Funzionalità}: Verifica che il codice generato realizzi la funzionalità desiderata.
+    \item \textbf{Efficienza}: Valuta le prestazioni del codice in termini di tempo di esecuzione e utilizzo delle risorse.
+\end{itemize}
 
+\subsection{Tecniche di Ottimizzazione}
+\begin{itemize}
+    \item \textbf{Aggiustamento dei Pesi}: Modifica dei pesi del modello per migliorare le prestazioni.
+    \item \textbf{Modifiche all'Architettura}: Introduzione di nuove componenti o modifiche a quelle esistenti.
+    \item \textbf{Integrazione di Dati Aggiuntivi}: Utilizzo di ulteriori dati di addestramento per migliorare le prestazioni.
+\end{itemize}
+
+\chapter{Addestramento di un LLM per la Generazione del Codice}
+
+L'addestramento di LLM per la generazione di codice di programmazione richiede una serie di passaggi metodici e risorse computazionali significative. Il processo può essere suddiviso in diverse fasi chiave:
+
+\section{Pre-Addestramento}
+Il pre-addestramento è la fase in cui il modello apprende le strutture sintattiche e semantiche del linguaggio naturale e del codice. Durante questa fase, il modello viene esposto a grandi quantità di testo e codice, permettendogli di comprendere le regole grammaticali, i pattern comuni e le dipendenze contestuali. Questo processo utilizza tecniche di apprendimento non supervisionato,
+in cui il modello impara a prevedere la parola o il token successivo in una sequenza.
+
+\section{Raccolta e Preparazione dei Dati}
+La qualità e la quantità dei dati di addestramento è di primaria importanza, per la generazione di codice è essenziale offrire per l'addestramento del modello
+codice sorgente proveniente dai vari linguaggi di programmazione che si vogliono gestire. Fonti comuni includono repository open source, piattaforme di condivisione del codice e documentazione tecnica. I dati raccolti devono essere puliti e pre-processati per rimuovere errori, duplicati e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
+
+\section{Fine-Tuning}
+Dopo il pre-addestramento, il modello viene sottoposto a una fase di fine-tuning utilizzando i dataset  prepareti specifici con il codice di programmazione.
+Il fine-tuning consente al modello di specializzarsi nella creazione del codice, migliorando la sua capacità di generare risposte coerenti e funzionali. Questa fase può includere l'uso di tecniche di apprendimento supervisionato, dove il modello viene addestrato su coppie di input-output, come descrizioni di funzionalità e il relativo codice implementativo.
+
+\section{Valutazione e Ottimizzazione}
+Una volta addestrato, il modello viene valutato utilizzando metriche specifiche per la generazione di codice, come la correttezza sintattica, la funzionalità e l'efficienza del codice prodotto. I risultati della valutazione possono portare ad ulteriori ottimizzazioni,
+eseguendo aggiustamenti dei pesi del modello, modifiche all'architettura o l'inclusione di dati di addestramento aggiuntivi per sopperire ad eventuali carenze.
 
 \chapter{Cos'è la RAG}
-La \textbf{Retrieval-Augmented Generation} (RAG) permette di integrare un modello di generazione del linguaggio con un modello di recupero, per ottenere risposte più coerenti e contestualizzate.
+La \textbf{Retrieval-Augmented Generation} (RAG) \cref{fig:jumpstart-fm-rag.jpg} permette di integrare un modello di generazione del linguaggio con un modello di recupero, per ottenere risposte più coerenti e contestualizzate.
 Allo scopo di:
 \begin{itemize}
     \item migliorare la generazione di codice specifico per il dominio;
@@ -126,17 +182,19 @@ Allo scopo di:
     \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori, per realizzare naturalmente senza forzature, codice più moderno utilizzando librerie e standard comuni.
 \end{itemize}
 
-I suggest referencing stuff as follows: \cref{fig:random-image} or \Cref{fig:random-image}
 
 \begin{figure}
     \centering
-    \includegraphics[width=.8\linewidth]{figures/random-image.pdf}
-    \caption{Some random image}
+    \includegraphics[width=.8\linewidth]{figures/jumpstart-fm-rag.jpg}
+    \caption{Flusso concettuale dell'utilizzo di RAG con LLM}
     \label{fig:random-image}
 \end{figure}
 
 
 \chapter{Addestrare un LLM su dati custom(RAG)}
+Per addestrare un LLM su dati custom per l'utilizzo con RAG, è necessario eseguire una serie di passaggi specifici per garantire la coerenza e la pertinenza delle risposte generate. Questi passaggi includono:
+
+
 nsloth permette di addestrare in maniera efficente il modello
 
 \begin{lstlisting}
