@@ -42,10 +42,10 @@ Questa tesi sperimenta l'integrazione di un \ac{RAG} con un \ac{LLM} per ottener
 
 \end{abstract}
 
-\begin{dedication} % this is optional
-A Giulia che ha cambiato in meglio la mia vita.
+\begin{dedication}
+A Giulia persona eccezionale che ha cambiato in meglio la mia vita.
 \newline Ai miei figli, il dono più grande di questo mondo.
-\newline A tutta la mia famiglia che ha sempre rispettato la mia libertà ma sulla quale posso sempre contare.
+\newline A tutta la mia famiglia sulla quale posso sempre contare.
 \newline Grazie a tutti voi.
 \end{dedication}
 
@@ -92,14 +92,18 @@ Altro compito complesso per il programmatore è non farsi troppo ammaliare dalle
 Questo nuovo modo di lavorare per mette di conoscere nuove soluzioni ma comporta test e tempo non sempre disponibile.
 Il programmatore deve avere il controllo del progetto accettando generazione del codice automatica solo dove consapevole di quanto proposto e del suo impatto anche in casi di revisione e manutenzione futuri.
 L'ultimo miglio da percorrere è la personalizzazione delle risposte del LLM, per ottenere risposte coerenti con quanto già realizzato e conosciuto, per fare questo entra in gioco la RAG.
-\chapter{Addestre un LLM per la Generazione del Codice}
+\chapter{Addestrare un LLM per la Generazione del Codice}
 
 L'addestramento di LLM per la generazione di codice di programmazione richiede una serie di passaggi metodici e risorse computazionali significative.
 Conoscere questo processo è utile per la successiva integrazione con la RAG.
+La procedura si divide nelle selle seguenti fasi:
 
 \section{Raccolta e Preparazione dei Dati}
-La qualità e la quantità dei dati di addestramento è di primaria importanza, per la generazione di codice è essenziale offrire per l'addestramento del modello
-codice sorgente proveniente dai vari linguaggi di programmazione che si vogliono gestire. Fonti comuni includono repository open source, piattaforme di condivisione del codice e documentazione tecnica. I dati raccolti devono essere puliti e pre-processati per rimuovere errori, duplicati e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
+
+La qualità e la quantità dei dati di addestramento è di primaria importanza per addestrare il modello in maniera efficacie.
+Per prepare un modello alla generazione di codice è essenziale utilizzare per il training codice sorgente proveniente da progetti reali, documentazione tecnica e esempi di codice ben strutturati.
+Fonti comuni includono repository open source, piattaforme di condivisione del codice e documentazione tecnica che al momento è possibile trovare in grandi quantità su internet.
+I dati raccolti devono essere puliti e pre-processati per rimuovere errori e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
 
 \section{Pre-Addestramento}
 Il pre-addestramento è la fase in cui il modello apprende le strutture sintattiche e semantiche del linguaggio naturale e del codice. Durante questa fase, il modello viene esposto a grandi quantità di testo e codice, permettendogli di comprendere le regole grammaticali, i pattern comuni e le dipendenze contestuali. Questo processo utilizza tecniche di apprendimento non supervisionato, in cui il modello impara a prevedere la parola o il token successivo in una sequenza, sviluppando una comprensione approfondita delle strutture linguistiche.
@@ -152,31 +156,12 @@ Una volta addestrato, il modello deve essere rigorosamente valutato utilizzando 
     \item \textbf{Integrazione di Dati Aggiuntivi}: Utilizzo di ulteriori dati di addestramento per migliorare le prestazioni.
 \end{itemize}
 
-\chapter{Addestramento di un LLM per la Generazione del Codice}
-
-L'addestramento di LLM per la generazione di codice di programmazione richiede una serie di passaggi metodici e risorse computazionali significative. Il processo può essere suddiviso in diverse fasi chiave:
-
-\section{Pre-Addestramento}
-Il pre-addestramento è la fase in cui il modello apprende le strutture sintattiche e semantiche del linguaggio naturale e del codice. Durante questa fase, il modello viene esposto a grandi quantità di testo e codice, permettendogli di comprendere le regole grammaticali, i pattern comuni e le dipendenze contestuali. Questo processo utilizza tecniche di apprendimento non supervisionato,
-in cui il modello impara a prevedere la parola o il token successivo in una sequenza.
-
-\section{Raccolta e Preparazione dei Dati}
-La qualità e la quantità dei dati di addestramento è di primaria importanza, per la generazione di codice è essenziale offrire per l'addestramento del modello
-codice sorgente proveniente dai vari linguaggi di programmazione che si vogliono gestire. Fonti comuni includono repository open source, piattaforme di condivisione del codice e documentazione tecnica. I dati raccolti devono essere puliti e pre-processati per rimuovere errori, duplicati e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
-
-\section{Fine-Tuning}
-Dopo il pre-addestramento, il modello viene sottoposto a una fase di fine-tuning utilizzando i dataset  prepareti specifici con il codice di programmazione.
-Il fine-tuning consente al modello di specializzarsi nella creazione del codice, migliorando la sua capacità di generare risposte coerenti e funzionali. Questa fase può includere l'uso di tecniche di apprendimento supervisionato, dove il modello viene addestrato su coppie di input-output, come descrizioni di funzionalità e il relativo codice implementativo.
-
-\section{Valutazione e Ottimizzazione}
-Una volta addestrato, il modello viene valutato utilizzando metriche specifiche per la generazione di codice, come la correttezza sintattica, la funzionalità e l'efficienza del codice prodotto. I risultati della valutazione possono portare ad ulteriori ottimizzazioni,
-eseguendo aggiustamenti dei pesi del modello, modifiche all'architettura o l'inclusione di dati di addestramento aggiuntivi per sopperire ad eventuali carenze.
-
-\chapter{Cos'è la RAG}
-La \textbf{Retrieval-Augmented Generation} (RAG) \cref{fig:jumpstart-fm-rag.jpg} permette di integrare un modello di generazione del linguaggio con un modello di recupero, per ottenere risposte più coerenti e contestualizzate.
+\chapter{RAG}
+Il termine RAG è l'abbrevazione del termine \textbf{Retrieval-Augmented Generation} \cref{fig:jumpstart-fm-rag.jpg} è un sistema che permette di estendere un modello di generazione del linguaggio con un modello di recupero, per ottenere risposte più coerenti e contestualizzate.
 Allo scopo di:
 \begin{itemize}
-    \item migliorare la generazione di codice specifico per il dominio;
+    \item migliorare la generazione di codice specifico per il proprio dominio e riducendo le allucinazioni;
+    \item aumenta il contesto della domanda fatta al LLM;
     \item facilitare il debugging di sistemi complessi;
     \item supportare la creazione di documentazione aggiornata;
     \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori, per realizzare naturalmente senza forzature, codice più moderno utilizzando librerie e standard comuni.
@@ -187,7 +172,7 @@ Allo scopo di:
     \centering
     \includegraphics[width=.8\linewidth]{figures/jumpstart-fm-rag.jpg}
     \caption{Flusso concettuale dell'utilizzo di RAG con LLM}
-    \label{fig:random-image}
+    \label{fig:jumpstart-fm-rag.jpg}
 \end{figure}
 
 
