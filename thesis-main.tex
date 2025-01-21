@@ -341,7 +341,7 @@ UML su lucidchart da completare
 
 \section{Software Utilizzati}
 \subsection{Ollama}
-Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale, facilitando la creazione, l'addestramento e l'integrazione di modelli di machine learning nelle applicazioni senza dover dipendere da servizi cloud esterni.
+Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM, facilitando la creazione, l'addestramento e l'integrazione di modelli di machine learning nelle applicazioni senza dover dipendere da servizi cloud esterni.
 \subsection{LLM}
 Per rendere più completa la ricerca sono stati utilizzati due modelli di linguaggio per il caso studio:
 \subsubsection{Llama 3.2}
@@ -354,14 +354,17 @@ qwen2.5-coder \cite{qwen-coder} è stato sviluppato da Qwen AI ed è anchesso op
 Con 3 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato. 
 La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità.
 
-\subsection{Google Colab}
-Utilizzate le schede video Tesla T4 di Google Colab per l'addestramento del modello.
+\subsection{BGE-M3}
+BGE-M3 \cite{bge-m3} è un database vettoriale open source per la gestione di dati strutturati e non strutturati, sviluppato da BigGraph Engine.
+%\subsection{Google Colab}
+%Utilizzate le schede video Tesla T4 di Google Colab per l'addestramento del modello.
 
 \section{Dataset}
 Il dataset utilizzato per il caso studio è stato creato a partire da documenti tecnici e codice sorgente di progetti interni all'azienda.
 
 \section{Implementazione}
-\subsection{A}
+\subsection{Modello embedding}
+Utilizzando BGE-M3 il contenuto del dataset viene suddivo in chunk e tramite il modello embeddig è convertito in rappresentazioni vettoriali numeriche.
 \begin{lstlisting}[language=Python]
 # Caricamento documenti dalla directory
 loader = DirectoryLoader('./docs', glob="**/*.txt")
