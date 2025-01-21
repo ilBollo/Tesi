@@ -318,118 +318,66 @@ Per mantenere l'efficacia del sistema nel tempo:
 
 Questo approccio permette di superare le limitazioni dei LLM tradizionali, fornendo risposte più accurate e contestualizzate grazie all'integrazione di conoscenze esterne aggiornate.
 
-\chapter{Implementazione di un Sistema RAG per lo Sviluppo del Software: Caso Studio}
+\chapter{Caso Studio: Implementazione di un Sistema RAG per lo Sviluppo del Software}
 
-\section{Panoramica del Progetto}
-In questo capitolo viene presentata un'implementazione pratica di un sistema RAG per sviluppare software all'interno dell'ecosistema specifico di una software-house.
-Il progetto dimostra come integrare un LLM con una base di conoscenza personalizzata per migliorare la generazione di codice.
-
-\section{Architettura del Sistema}
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=.8\linewidth]{figures/system-architecture.png}
-%     \caption{Architettura del sistema RAG implementato}
-%     \label{fig:system-architecture}
-% \end{figure}
-
-\section{Ambiente di Sviluppo}
-Il sistema è stato sviluppato utilizzando:
+\section{Obiettivi del Caso Studio}
+Questo caso studio si propone di:
 \begin{itemize}
-    \item Python 3.9+
-    \item LangChain per l'orchestrazione RAG
-    \item OpenAI API per il modello di linguaggio
+    \item Dimostrare l'applicazione pratica dei concetti teorici presentati nei capitoli precedenti
+    \item \textbf{Scenario}: Supporto allo sviluppo software in una software-house
+    \item \textbf{Problematica}: Necessità di generare codice coerente con gli standard e le pratiche aziendali
+    \item \textbf{Soluzione Proposta}: Sistema RAG integrato con LLM per la generazione di codice contestualizzato
 \end{itemize}
 
-\begin{lstlisting}[language=Python]
-# Requisiti del progetto
-requirements = {
-    "langchain": "0.0.300",
-    "openai": "1.3.0",
-    "python-dotenv": "1.0.0"
-}
-\end{lstlisting}
+
+\section{Architettura del Sistema}
+UML su lucidchart da completare
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=.8\linewidth]{figures/rag-architecture.png}
+%     \caption{Architettura del sistema RAG implementato}
+%     \label{fig:rag-architecture}
+% \end{figure}
+
+\section{Software Utilizzati}
+\subsection{Ollama}
+Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale, facilitando la creazione, l'addestramento e l'integrazione di modelli di machine learning nelle applicazioni senza dover dipendere da servizi cloud esterni.
+\subsection{LLM}
+Per rendere più completa la ricerca sono stati utilizzati due modelli di linguaggio per il caso studio:
+\subsubsection{Llama 3.2}
+Llama 3.2 3B \cite{llama3-2}, un modello di linguaggio open source sviluppato da Meta AI.
+Il modello, con 3 miliardi di parametri, è ottimizzato per compiti di dialogo multilingue e si distingue per le sue capacità di recupero e sintesi delle informazioni.
+La scelta è ricaduta su questa versione per il suo equilibrio tra prestazioni e requisiti computazionali che permottono il suo utilizzo senza hardware troppo potente.
+
+\subsubsection{qwen2.5-coder:3b}
+qwen2.5-coder \cite{qwen-coder} è stato sviluppato da Qwen AI ed è anchesso open source, specializzato nella generazione di codice e documentazione tecnica.
+Con 3 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato. 
+La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità.
+
+\subsection{Google Colab}
+Utilizzate le schede video Tesla T4 di Google Colab per l'addestramento del modello.
+
+\section{Dataset}
+Il dataset utilizzato per il caso studio è stato creato a partire da documenti tecnici e codice sorgente di progetti interni all'azienda.
 
 \section{Implementazione}
-\subsection{Preparazione dei Dati}
-nsloth permette di addestrare in maniera efficente il modello
-
-\begin{lstlisting}
-from unsloth import FastLanguageModel
-import torch
-max_seq_length = 2048 # Choose any! We auto support RoPE Scaling internally!
-dtype = None # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
-load_in_4bit = False # Impostare a True per ridurre i pesi a 4bit quantizzandoli per ridurre uso di memoria, visto che il modello e' piccolo lascio Float16. 
-
-model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name = "unsloth/Llama-3.2-3B-Instruct", # or choose "unsloth/Llama-3.2-1B-Instruct"
-    max_seq_length = max_seq_length,
-    dtype = dtype,
-    load_in_4bit = load_in_4bit,
-    # token = "hf_...", # use one if using gated models like meta-llama/Llama-2-7b-hf
-)
+\subsection{A}
+\begin{lstlisting}[language=Python]
+# Caricamento documenti dalla directory
+loader = DirectoryLoader('./docs', glob="**/*.txt")
+documents = loader.load()
 \end{lstlisting}
 
-\section{LORA}
-LoRA (Low-Rank Adaptation of Large Language Models)
-è una tecnica di allenamento popolare e leggera che riduce significativamente il numero di parametri allenabili. Funziona inserendo un numero inferiore di nuovi pesi nel modello e solo questi sono addestrati. Ciò rende l'allenamento con LoRA molto più veloce, efficiente in termini di memoria e produce pesi modello più piccoli (alcune centinaia di MB), che sono più facili da archiviare e condividere.
-
-\begin{lstlisting}
-    model = FastLanguageModel.get_peft_model(
-    model,
-    r = 16, # Choose any number > 0 ! Suggested 8, 16, 32, 64, 128
-    target_modules = ["q_proj", "k_proj", "v_proj", "o_proj",
-                      "gate_proj", "up_proj", "down_proj",],
-    lora_alpha = 16,
-    lora_dropout = 0, # Supports any, but = 0 is optimized
-    bias = "none",    # Supports any, but = "none" is optimized
-    # [NEW] "unsloth" uses 30% less VRAM, fits 2x larger batch sizes!
-    use_gradient_checkpointing = "unsloth", # True or "unsloth" for very long context
-    random_state = 3407,
-    use_rslora = False,  # We support rank stabilized LoRA
-    loftq_config = None, # And LoftQ
-)
-\end{lstlisting}
-
-Usando SFTTrainer
-\section{FOrmatazione con i TAG di lamas}
-\begin{lstlisting}
-from unsloth.chat_templates import train_on_responses_only
-trainer = train_on_responses_only(
-    trainer,
-    instruction_part = "<|start_header_id|>user<|end_header_id|>\n\n",
-    response_part = "<|start_header_id|>assistant<|end_header_id|>\n\n",
-)
-\end{lstlisting}
-
-
-\subsection{Creazione del Database Vettoriale}
-[Mostra il tuo codice per la creazione degli embedding]
-
-\subsection{Integrazione con il LLM}
-[Mostra il tuo codice per l'integrazione con il modello]
-
-\subsection{Pipeline RAG}
-[Mostra il tuo codice per il processo RAG completo]
-
-\section{Test e Valutazione}
-\subsection{Metodologia di Test}
-[Descrivi come hai testato il sistema]
-
-\subsection{Risultati}
-[Mostra i risultati ottenuti]
-
-\section{Conclusioni e Considerazioni}
-[Discuti i risultati e le possibili migliorie]
 
 \chapter{Conclusioni}
 
 \section{Risultati Ottenuti}
-In questa tesi abbiamo esplorato l'integrazione di RAG e LLM nello sviluppo del software, dimostrando come questi strumenti possano migliorare significativamente il processo di sviluppo. I risultati principali includono:
-\begin{itemize}
-    \item Implementazione di un sistema RAG per la generazione di codice contestualizzato
-    \item Analisi delle prestazioni e dell'efficacia del sistema
-    \item Identificazione di potenziali aree di miglioramento
-\end{itemize}
+%In questa tesi ho esplorato l'integrazione di RAG e LLM nello sviluppo del software, dimostrando come questi strumenti possano migliorare significativamente il processo di sviluppo. I risultati principali includono:
+%\begin{itemize}
+%    \item Implementazione di un sistema RAG per la generazione di codice contestualizzato
+ %   \item Analisi delle prestazioni e dell'efficacia del sistema
+ %   \item Identificazione di potenziali aree di miglioramento
+%\end{itemize}
 
 \section{Impatto sullo Sviluppo Software}
 L'integrazione di strumenti basati su AI nel processo di sviluppo software sta rivoluzionando il settore. Durante il periodo di sviluppo di questa tesi (Ottobre 2024 - Gennaio 2025), abbiamo osservato:
@@ -439,26 +387,16 @@ L'integrazione di strumenti basati su AI nel processo di sviluppo software sta r
     \item Miglioramento continuo nelle capacità di generazione e comprensione del codice
 \end{itemize}
 
-\section{Sfide e Considerazioni Future}
-Nonostante i progressi significativi, rimangono diverse sfide da affrontare:
-\begin{itemize}
-    \item Bilanciamento tra automazione e controllo umano
-    \item Gestione delle implicazioni etiche
-    \item Necessità di mantenere competenze tecniche fondamentali
-\end{itemize}
-
-\section{Prospettive Future}
-Le tecnologie RAG e LLM mostrano un potenziale significativo per:
-\begin{itemize}
-    \item Accelerare lo sviluppo software
-    \item Migliorare la qualità del codice
-    \item Facilitare la documentazione e la manutenzione
-\end{itemize}
-
-La rapida evoluzione di questi strumenti suggerisce che siamo solo all'inizio di una trasformazione significativa nel modo in cui il software viene sviluppato e mantenuto.
+\section{Sfide e Prospettive Future}
+%Nonostante i progressi significativi, rimangono diverse sfide da affrontare:
+%\begin{itemize}
+%    \item Bilanciamento tra automazione e controllo umano
+%    \item Gestione delle implicazioni etiche
+%    \item Necessità di mantenere competenze tecniche fondamentali
+%\end{itemize}
 
 
-\lstinputlisting[float,language=Java,label={lst:random-code}]{listings/HelloWorld.java}
+%\lstinputlisting[float,language=Java,label={lst:random-code}]{listings/HelloWorld.java}
 
 
 %----------------------------------------------------------------------------------------
