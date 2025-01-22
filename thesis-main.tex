@@ -355,7 +355,7 @@ Con 3 miliardi di parametri, il modello è stato addestrato su un ampio dataset 
 La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità.
 
 \subsection{BGE-M3}
-BGE-M3 \cite{bge-m3} è un database vettoriale open source per la gestione di dati strutturati e non strutturati, sviluppato da BigGraph Engine.
+BGE-M3 \cite{bge-m3} è un database vettoriale open source per la gestione di dati strutturati e non strutturati multilingue, sviluppato da BigGraph Engine.
 %\subsection{Google Colab}
 %Utilizzate le schede video Tesla T4 di Google Colab per l'addestramento del modello.
 
@@ -365,11 +365,17 @@ Il dataset utilizzato per il caso studio è stato creato a partire da documenti 
 \section{Implementazione}
 \subsection{Modello embedding}
 Utilizzando BGE-M3 il contenuto del dataset viene suddivo in chunk e tramite il modello embeddig è convertito in rappresentazioni vettoriali numeriche.
+esempio
 \begin{lstlisting}[language=Python]
-# Caricamento documenti dalla directory
-loader = DirectoryLoader('./docs', glob="**/*.txt")
-documents = loader.load()
+    model = BGEM3FlagModel('BAAI/bge-m3',  use_fp16=True)
+    frase = "<cis-ui:button skin='red' text='Bottone rosso'/>"
+    embeddings = model.encode(frase)['dense_vecs']
+    print (embeddings)
 \end{lstlisting}
+\begin{verbatim}
+    [-0.03712651  0.02731708 -0.03263818 ...  0.02965933 -0.01724784  0.00510089]
+\end{verbatim}
+l'output è un vettore numerico con 1024 elementi.
 
 
 \chapter{Conclusioni}
