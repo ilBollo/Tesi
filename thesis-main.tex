@@ -293,7 +293,7 @@ Allo scopo di:
 \end{figure}
 RAG è un sistema che integra il processo di generazione del linguaggio con un meccanismo di recupero delle informazioni. Il funzionamento si articola in diverse fasi, come illustrato in \cref{fig:jumpstart-fm-rag}.
 
-\subsection{Preambolo: Creazione degli Embedding}
+\subsection{Creazione degli Embedding}
 Il sistema RAG utilizza dati esterni al training set originale del LLM, provenienti da diverse fonti come:
 \begin{itemize}
     \item API e database interni
@@ -326,10 +326,9 @@ Il sistema RAG arricchisce il prompt dell'utente:
     \item Fornisce al modello un contesto arricchito per generare risposte più accurate
 \end{itemize}
 
-\section{Gestione dell'Aggiornamento dei Dati nel Tempo}
+\section{Gestione dell'Aggiornamento dei Dati}
 Per mantenere l'efficacia del sistema nel tempo:
 \begin{itemize}
-    \item Aggiornamento asincrono dei documenti
     \item Ricalcolo degli embedding per i nuovi dati
     \item Possibilità di aggiornamenti in tempo reale o batch
 \end{itemize}
@@ -342,14 +341,15 @@ Questo approccio permette di superare le limitazioni dei LLM, fornendo risposte 
 Questo caso studio si propone di:
 \begin{itemize}
     \item Dimostrare l'applicazione pratica dei concetti teorici presentati nei capitoli precedenti
-    \item \textbf{Scenario}: Supporto allo sviluppo software in una software-house
+    \item \textbf{Scenario}: Creare un RAG di supporto allo sviluppo software in una software-house
     \item \textbf{Problematica}: Necessità di generare codice coerente con gli standard e le pratiche aziendali
     \item \textbf{Soluzione Proposta}: Sistema RAG integrato con LLM per la generazione di codice contestualizzato
 \end{itemize}
 
 
 \section{Architettura del Sistema}
-UML su lucidchart da completare
+(da completare)
+[Dati Aziendali] → [Chunking] → [Embedding] → [Vector DB] → [Retrieval] → [LLM] → [Risposta contestuale]
 % \begin{figure}[h]
 %     \centering
 %     \includegraphics[width=.8\linewidth]{figures/rag-architecture.png}
