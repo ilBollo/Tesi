@@ -5,6 +5,8 @@
 \usepackage{notes}
 \usepackage{shortcuts}
 \usepackage{acronym}
+\usepackage{listings}
+\usepackage{xcolor}
 
 \school{\unibo}
 \programme{Corso di Laurea in Ingegneria e Scienze Informatiche}
@@ -349,7 +351,7 @@ Questo caso studio si propone di:
 
 \section{Architettura del Sistema}
 (da completare)
-[Dati Aziendali] → [Chunking] → [Embedding] → [Vector DB] → [Retrieval] → [LLM] → [Risposta contestuale]
+[Librerie Custom] → [Chunking] → [Embedding] → [Vector DB] → [Retrieval] → [LLM] → [Risposta contestuale]
 % \begin{figure}[h]
 %     \centering
 %     \includegraphics[width=.8\linewidth]{figures/rag-architecture.png}
@@ -372,35 +374,96 @@ qwen2.5-coder \cite{qwen-coder} è stato sviluppato da Qwen AI ed è anchesso op
 Con 3 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato. 
 La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità.
 
+\subsection{LangChain}
+LangChain \cite{langchain} è un framework open source progettato per la gestione di dati strutturati e non strutturati in contesti multilingue. Fornisce strumenti avanzati per la creazione e la gestione di database vettoriali, facilitando l'organizzazione e la ricerca di informazioni in modo efficiente. LangChain è stato scelto per la sua capacità di integrare modelli di linguaggio con fonti di dati esterne.
+
 \subsection{BGE-M3}
 BGE-M3 \cite{bge-m3} è un database vettoriale open source per la gestione di dati strutturati e non strutturati multilingue, sviluppato da BigGraph Engine.
-%\subsection{Google Colab}
-%Utilizzate le schede video Tesla T4 di Google Colab per l'addestramento del modello.
+
 
 \section{Dataset}
-Il dataset utilizzato per il caso studio è una classe di prova DateUtil.java da me creata che potrebbe essere simile ad una personalizzata utilizzata in qualsisi azienda.
+Il dataset utilizzato per il caso studio è una classe custom di prova DateUtil.java simile ad una personalizzata utilizzata in qualsisi azienda per gestire il formato delle date.
 
 \section{Implementazione}
-\subsection{Modello embedding}
-Utilizzando BGE-M3 il contenuto del dataset viene suddivo in chunk e tramite il modello embeddig è convertito in rappresentazioni vettoriali numeriche.
-esempio
-\begin{lstlisting}[language=Python]
-    model = BGEM3FlagModel('BAAI/bge-m3',  use_fp16=True)
-    frase = "<cis-ui:button skin='red' text='Bottone rosso'/>"
-    embeddings = model.encode(frase)['dense_vecs']
-    print (embeddings)
-\end{lstlisting}
-\begin{verbatim}
-    [-0.03712651  0.02731708 -0.03263818 ...  0.02965933 -0.01724784  0.00510089]
-\end{verbatim}
-l'output è un vettore numerico con 1024 elementi.
+\subsection{Creazione dei Chunk}
+Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
+Il seguente codice Python mostra come suddividere il file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
+\begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione del file Java in chunk}, label={lst:chunking}]
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    import json
+    
+    # Carica il file Java
+    with open("my_project/DateUtil.java", "r") as f:
+        java_code = f.read()
+    
+    # Suddividi il codice in chunk
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=512,  # Dimensione di ogni chunk
+        chunk_overlap=128,  # Overlap tra chunk
+        separators=["\n\n", "\n", " ", ""]  # Separatori per il codice
+    )
+    
+    chunks = splitter.split_text(java_code)
+    
+    # Salva i chunk in un file JSON
+    chunks_data = [
+        {
+            "id": i + 1,
+            "text": chunk,
+            "source": "DateUtil.java",  # Nome del file
+            "type": "code",             # Tipo di contenuto
+            "start_line": 0,            # Linea di inizio (da calcolare)
+            "end_line": 0               # Linea di fine (da calcolare)
+        }
+        for i, chunk in enumerate(chunks)
+    ]
+    with open("chunks.json", "w", encoding="utf-8") as f:
+        json.dump(chunks_data, f, indent=4, ensure_ascii=False)
+    \end{lstlisting}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{figures/vis_embeddings_TSE.png}
-    \caption{Visualizzazione degli embeddings con TSNE}
-    \label{fig:vis_embeddings_tsne}
-\end{figure}
+
+    \subsection{Generazione degli Embedding}
+    Il seguente codice Python mostra come generare gli embedding per i chunk e creare un database Chroma:
+    
+    \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database Chroma}, label={lst:embeddings}]
+    import json
+    from sentence_transformers import SentenceTransformer
+    from langchain_community.vectorstores import Chroma
+    
+    # 1. Carica i chunk dal file JSON
+    with open("chunks.json", "r", encoding="utf-8") as f:
+        chunks_data = json.load(f)
+    
+    # Estrai i testi dei chunk
+    chunks = [item["text"] for item in chunks_data]
+    
+    # 2. Carica il modello BGE-M3 e genera gli embedding
+    embedder = SentenceTransformer('BAAI/bge-m3')
+    embeddings = embedder.encode(chunks, show_progress_bar=True)
+    
+    # 3. Crea un database Chroma
+    vector_store = Chroma.from_texts(
+        texts=chunks,  # Testi dei chunk
+        embedding=embedder,  # Modello di embedding
+        persist_directory="./chroma_db"  # Cartella per salvare il database
+    )
+    
+    print("Database Chroma creato e salvato in ./chroma_db.")
+    \end{lstlisting}
+
+\subsection{Esecuzione di una Query sul Database Chroma}
+Una volta creato il database Chroma, è possibile eseguire ricerche semantiche sui chunk memorizzati:
+
+
+\begin{lstlisting}[language=Python, caption={Codice Python per l'esecuzione di una query sul database Chroma}, label={lst:query}]
+    # Query di esempio
+    query = "Come formattare una data in Java?"
+    docs = vector_store.similarity_search(query, k=3)  # k = numero di risultati
+    for i, doc in enumerate(docs):
+        print(f"Risultato {i+1}:")
+        print(doc.page_content)  # Contenuto del chunk
+        print("-" * 40)
+\end{lstlisting}
 
 \subsection{Creazione Rag}
 
