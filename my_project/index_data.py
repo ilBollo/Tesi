@@ -1,4 +1,4 @@
-from creazioneRag import *
+from my_project.creazioneRag import *
 #import os 
 #mport json
 
