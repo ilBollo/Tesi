@@ -423,49 +423,174 @@ Il seguente codice Python mostra come suddividere il file Java in chunk di dimen
 
 
     \subsection{Generazione degli Embedding}
-    Il seguente codice Python mostra come generare gli embedding per i chunk e creare un database Chroma:
+    Il seguente codice Python mostra come generare gli embedding per i chunk e creare un database FAISS:
     
-    \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database Chroma}, label={lst:embeddings}]
-    import json
-    from sentence_transformers import SentenceTransformer
-    from langchain_community.vectorstores import Chroma
-    
-    # 1. Carica i chunk dal file JSON
-    with open("chunks.json", "r", encoding="utf-8") as f:
-        chunks_data = json.load(f)
-    
-    # Estrai i testi dei chunk
-    chunks = [item["text"] for item in chunks_data]
-    
-    # 2. Carica il modello BGE-M3 e genera gli embedding
-    embedder = SentenceTransformer('BAAI/bge-m3')
-    embeddings = embedder.encode(chunks, show_progress_bar=True)
-    
-    # 3. Crea un database Chroma
-    vector_store = Chroma.from_texts(
-        texts=chunks,  # Testi dei chunk
-        embedding=embedder,  # Modello di embedding
-        persist_directory="./chroma_db"  # Cartella per salvare il database
-    )
-    
-    print("Database Chroma creato e salvato in ./chroma_db.")
+    \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database FAISS}, label={lst:embeddings}]
+        import json
+        from sentence_transformers import SentenceTransformer
+        from langchain_community.vectorstores import FAISS
+        
+        # 1. Carica i chunk dal file JSON
+        with open("chunks.json", "r", encoding="utf-8") as f:
+            chunks_data = json.load(f)
+        
+        chunks = [item["text"] for item in chunks_data]
+        
+        # 2. Carica il modello BGE-M3 e genera gli embedding
+        embedder = SentenceTransformer('BAAI/bge-m3')
+        embeddings = embedder.encode(chunks, show_progress_bar=True)
+        
+        # 3. Crea un database FAISS
+        vector_store = FAISS.from_embeddings(
+            text_embeddings=list(zip(chunks, embeddings)),  # Abbina testi e embedding
+            embedding=embedder,  # Modello per future operazioni
+        )
+        
+        # 4. Salva il database
+        vector_store.save_local("./faiss_db")
+        print("Database FAISS creato e salvato in ./faiss_db.")
     \end{lstlisting}
 
-\subsection{Esecuzione di una Query sul Database Chroma}
-Una volta creato il database Chroma, è possibile eseguire ricerche semantiche sui chunk memorizzati:
+\subsection{Esecuzione di una Query sul Database FAISS}
+Una volta creato il database FAISS, è possibile eseguire ricerche semantiche sui chunk memorizzati:
 
-
-\begin{lstlisting}[language=Python, caption={Codice Python per l'esecuzione di una query sul database Chroma}, label={lst:query}]
-    # Query di esempio
+\begin{lstlisting}[language=Python, caption={Codice Python per l'esecuzione di una query sul database FAISS}, label={lst:query}]
+    from langchain_community.vectorstores import FAISS
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+    
+    # 1. Carica il modello di embedding nel formato corretto
+    embedder = HuggingFaceEmbeddings(
+        model_name="BAAI/bge-m3",
+        model_kwargs={'device': 'cpu'},  # Usa 'cuda' per GPU
+        encode_kwargs={'normalize_embeddings': True}
+    )
+    
+    # 2. Carica il database FAISS esistente
+    vector_store = FAISS.load_local(
+        folder_path="./faiss_db",
+        embeddings=embedder,
+        allow_dangerous_deserialization=True
+    )
+    
+    # 3. Query di esempio
     query = "Come formattare una data in Java?"
-    docs = vector_store.similarity_search(query, k=3)  # k = numero di risultati
+    docs = vector_store.similarity_search(query, k=3)
+    
     for i, doc in enumerate(docs):
         print(f"Risultato {i+1}:")
-        print(doc.page_content)  # Contenuto del chunk
+        print(doc.page_content)
         print("-" * 40)
 \end{lstlisting}
 
-\subsection{Creazione Rag}
+
+\subsection{Creazione della Pipeline RAG}
+Il seguente codice Python mostra come configurare e utilizzare una pipeline RAG (Retrieval-Augmented Generation) utilizzando FAISS e Ollama:
+
+\begin{lstlisting}[language=Python, caption={Codice Python per la creazione della pipeline RAG}, label={lst:rag}]
+    from langchain_community.vectorstores import FAISS
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+    from langchain_community.llms import Ollama
+    from langchain.chains import RetrievalQA
+    from langchain.prompts import PromptTemplate
+    
+# 1. Configurazione embedding
+embedder = HuggingFaceEmbeddings(
+    model_name="BAAI/bge-m3",
+    model_kwargs={'device': 'cpu'},
+    encode_kwargs={'normalize_embeddings': True}
+)
+
+# 2. Carica il database FAISS
+vector_store = FAISS.load_local(
+    folder_path="./faiss_db",
+    embeddings=embedder,
+    allow_dangerous_deserialization=True
+)
+
+# 3. Configurazione modelli Ollama
+LLAMA_TEMPLATE = """<|begin_of_text|>
+<|start_header_id|>system<|end_header_id|>
+Sei un esperto di programmazione. Rispondi in italiano basandoti esclusivamente sul contesto fornito.
+Contesto: {context}<|eot_id|>
+<|start_header_id|>user<|end_header_id|>
+Domanda: {question}<|eot_id|>
+<|start_header_id|>assistant<|end_header_id|>"""
+
+CODEQWEN_TEMPLATE = """<|im_start|>system
+Sei uno sviluppatore esperto. Fornisci risposte concise con codice basato sul contesto.<|im_end|>
+<|im_start|>user
+Contesto: {context}
+Domanda: {question}<|im_end|>
+<|im_start|>assistant
+"""
+
+# 4. Funzione per selezionare il modello (corretta)
+def load_model(model_name):
+    models = {
+        "llama3": {
+            "template": LLAMA_TEMPLATE,
+            "params": {
+                "temperature": 0.7,
+                "system": "Rispondi in italiano come esperto di programmazione"
+            }
+        },
+        "codeqwen": {
+            "template": CODEQWEN_TEMPLATE,
+            "params": {
+                "temperature": 0.3,
+                "system": "Fornisci solo codice basato sul contesto"
+            }
+        }
+    }
+    
+    if model_name not in models:
+        raise ValueError(f"Modello non supportato: {model_name}")
+    
+    return Ollama(
+        model=model_name,
+        **models[model_name]["params"]
+    ), PromptTemplate(
+        template=models[model_name]["template"],
+        input_variables=["context", "question"]  # Inputs corretti
+    )
+
+# 5. Inizializza il modello
+llm, prompt = load_model("codeqwen")
+
+# 6. Catena RAG corretta
+rag_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    chain_type="stuff",
+    retriever=vector_store.as_retriever(
+        search_kwargs={"k": 3, "score_threshold": 0.4}
+    ),
+    chain_type_kwargs={"prompt": prompt},
+    return_source_documents=True,
+    verbose=False
+)
+
+# 7. Funzione query (invariata)
+def ask_ollama(question):
+    try:
+        result = rag_chain.invoke({"query": question})
+        
+        print("\n\033[1;34mDOMANDA:\033[0m", question)
+        print("\n\033[1;32mRISPOSTA:\033[0m")
+        print(result["result"])
+        
+        print("\n\033[1;33mFONTI:\033[0m")
+        for i, doc in enumerate(result["source_documents"], 1):
+            print(f"{i}. {doc.page_content[:150]}...")
+            if 'source' in doc.metadata:
+                print(f"   Fonte: {doc.metadata['source']}")
+            print("-" * 80)
+    except Exception as e:
+        print(f"\033[1;31mERRORE:\033[0m {str(e)}")
+
+# 8. Esempio d'uso
+if __name__ == "__main__":
+    ask_ollama("Mostrami un esempio di formattazione della data in Java usando SimpleDateFormat")
+\end{lstlisting}
 
 \subsection{AI Agent}
 E' un componente che può chiamare delle funzioni (function calling) nel mio caso search
