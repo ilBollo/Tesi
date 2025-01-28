@@ -35,7 +35,7 @@ Domanda: {question}<|im_end|>
 <|im_start|>assistant
 """
 
-# 4. Funzione per selezionare il modello (corretta)
+# 4. Funzione per selezionare il modello
 def load_model(model_name):
     models = {
         "llama3": {
@@ -62,7 +62,7 @@ def load_model(model_name):
         **models[model_name]["params"]
     ), PromptTemplate(
         template=models[model_name]["template"],
-        input_variables=["context", "question"]  # Inputs corretti
+        input_variables=["context", "question"] 
     )
 
 # 5. Inizializza il modello

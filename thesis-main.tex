@@ -34,11 +34,10 @@
 
 \begin{abstract}	
 I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni utili e funzionanti.
-L'addestramento fatto sui modelli è però su fonti e soluzioni generali, questo non da quindi la possibilità al modello di proppore soluzioni su misura per una specifica richiesta utilizzando casistiche già create dal programmatore o dalla propria azienda per casi simili. Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
-Il \ac{LLM} non conosce le librerie interne dell'azienda, i pattern di programmazione adottati e quindi le risposte ottenute sono troppo generiche.
-Per rispondere a questa esigenza entra in gioco la \ac{RAG} ovvero il processo di ottimizzazione dell'output di un \ac{LLM},
-per permettergli di fruire di un ulteriore base di conoscenza personalizza, unica e privata.
-L'outup di questa \textbf{matrice di conoscenza} si inserisce e completa la query inviata al LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
+L'addestramento fatto sui modelli è però su fonti e soluzioni generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta utilizzando casistiche già create dal programmatore o dalla propria azienda per casi simili. Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
+Il fine-tuning di un \ac{LLM} è un processo molto costoso e non scalabile per essere aggiornato frequentemente, inoltre non è possibile addestrare il modello su tutte le casistiche possibili.
+Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di recuperare informazioni da una base di conoscenza esterna al modello, come librerie specifiche di un azienda, arricchendo il contesto della query.
+L'output di questa \textbf{matrice di conoscenza} si inserisce e completa la query inviata al LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
 Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} con un \ac{LLM} con lo scopo di ottenere dal LLM risposte personalizzate
 che solo con la conoscenza del LLM anche se estremamente performante e preparato sarebbe stato impossibile ottenere.
 \end{abstract}
@@ -340,18 +339,18 @@ Questo approccio permette di superare le limitazioni dei LLM, fornendo risposte 
 \chapter{Caso Studio: Implementazione di un Sistema RAG per lo Sviluppo del Software}
 
 \section{Obiettivi del Caso Studio}
-Questo caso studio si propone di:
+
+Questo caso studio si propone di dimostrare l'applicazione pratica dei concetti teorici presentati nei capitoli precedenti attraverso la creazione di un sistema RAG di supporto allo sviluppo software in una software-house.
+Valutando l'efficacia della soluzione proposta.
 \begin{itemize}
-    \item Dimostrare l'applicazione pratica dei concetti teorici presentati nei capitoli precedenti
-    \item \textbf{Scenario}: Creare un RAG di supporto allo sviluppo software in una software-house
-    \item \textbf{Problematica}: Necessità di generare codice coerente con gli standard e le pratiche aziendali
-    \item \textbf{Soluzione Proposta}: Sistema RAG integrato con LLM per la generazione di codice contestualizzato
+    \item \textbf{Scenario}: Creare un sistema RAG che supporti lo sviluppo software in una software-house.
+    \item \textbf{Problematica}: Affrontare la necessità di generare codice coerente con gli standard e le pratiche aziendali.
+    \item \textbf{Soluzione Proposta}: Integrare un sistema RAG con modelli di linguaggio di grandi dimensioni (LLM) per la generazione di codice contestualizzato.
 \end{itemize}
 
 
 \section{Architettura del Sistema}
-(da completare)
-[Librerie Custom] → [Chunking] → [Embedding] → [Vector DB] → [Retrieval] → [LLM] → [Risposta contestuale]
+[Dataset] → [Chunking] → [Embedding] → [Vector DB] → [Retrieval] → [LLM] → [Risposta contestuale]
 % \begin{figure}[h]
 %     \centering
 %     \includegraphics[width=.8\linewidth]{figures/rag-architecture.png}
@@ -369,10 +368,14 @@ Llama 3.2 3B \cite{llama3-2}, un modello di linguaggio open source sviluppato da
 Il modello, con 3 miliardi di parametri, è ottimizzato per compiti di dialogo multilingue e si distingue per le sue capacità di recupero e sintesi delle informazioni.
 La scelta è ricaduta su questa versione per il suo equilibrio tra prestazioni e requisiti computazionali che permottono il suo utilizzo senza hardware troppo potente.
 
-\subsubsection{qwen2.5-coder:3b}
-qwen2.5-coder \cite{qwen-coder} è stato sviluppato da Qwen AI ed è anchesso open source, specializzato nella generazione di codice e documentazione tecnica.
-Con 3 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato. 
-La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità.
+\subsection{Codeqwen 1.5}
+Codeqwen \cite{codeqwen1.5} è un modello di linguaggio open source sviluppato da Qwen AI specializzato nella generazione di codice e documentazione tecnica.  
+Con 7 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato.
+La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità. 
+%\subsubsection{qwen2.5-coder:3b}
+%qwen2.5-coder \cite{qwen-coder} è stato sviluppato da Qwen AI ed è anchesso open source, specializzato nella generazione di codice e documentazione tecnica.
+%Con 3 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato. 
+%La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità.
 
 \subsection{LangChain}
 LangChain \cite{langchain} è un framework open source progettato per la gestione di dati strutturati e non strutturati in contesti multilingue. Fornisce strumenti avanzati per la creazione e la gestione di database vettoriali, facilitando l'organizzazione e la ricerca di informazioni in modo efficiente. LangChain è stato scelto per la sua capacità di integrare modelli di linguaggio con fonti di dati esterne.
@@ -386,6 +389,12 @@ Il dataset utilizzato per il caso studio è una classe custom di prova DateUtil.
 
 \section{Implementazione}
 \subsection{Creazione dei Chunk}
+I modelli di embedding hanno limiti massimi di input (512-4096 token)  per questo spezzare il codice in chunk di dimensioni adeguate è fondamentale.
+Inoltre occorre prestare attenzione alla dimensione dei chunk generati:
+\begin{itemize}
+    \item Troppo piccoli: Riducono il contesto disponibile per il modello
+    \item Troppo grandi: Chunk troppo grandi perdono focalizzazione semantica
+\end{itemize}
 Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
 Il seguente codice Python mostra come suddividere il file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
 \begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione del file Java in chunk}, label={lst:chunking}]
@@ -423,7 +432,9 @@ Il seguente codice Python mostra come suddividere il file Java in chunk di dimen
 
 
     \subsection{Generazione degli Embedding}
-    Il seguente codice Python mostra come generare gli embedding per i chunk e creare un database FAISS:
+    Gli embedding trasformano i chunk in rappresentazioni vettoriali (array numerici) che catturano il significato semantico.
+    Il seguente codice Python mostra come generare gli embedding e creare un database FAISS.
+    FAISS (Facebook AI Similarity Search) è una libreria ottimizzata per la ricerca di similarità in spazi ad alta dimensionalità.
     
     \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database FAISS}, label={lst:embeddings}]
         import json
@@ -443,7 +454,7 @@ Il seguente codice Python mostra come suddividere il file Java in chunk di dimen
         # 3. Crea un database FAISS
         vector_store = FAISS.from_embeddings(
             text_embeddings=list(zip(chunks, embeddings)),  # Abbina testi e embedding
-            embedding=embedder,  # Modello per future operazioni
+            embedding=embedder,
         )
         
         # 4. Salva il database
@@ -484,7 +495,7 @@ Una volta creato il database FAISS, è possibile eseguire ricerche semantiche su
 
 
 \subsection{Creazione della Pipeline RAG}
-Il seguente codice Python mostra come configurare e utilizzare una pipeline RAG (Retrieval-Augmented Generation) utilizzando FAISS e Ollama:
+Il seguente codice Python mostra come configurare e utilizzare una pipeline RAG utilizzando FAISS, Ollama e i due LLM(LLAMA e CODEQWEN) per rispondere a domande specifiche sul codice Java:
 
 \begin{lstlisting}[language=Python, caption={Codice Python per la creazione della pipeline RAG}, label={lst:rag}]
     from langchain_community.vectorstores import FAISS
@@ -524,7 +535,7 @@ Domanda: {question}<|im_end|>
 <|im_start|>assistant
 """
 
-# 4. Funzione per selezionare il modello (corretta)
+# 4. Funzione per selezionare il modello
 def load_model(model_name):
     models = {
         "llama3": {
@@ -551,7 +562,7 @@ def load_model(model_name):
         **models[model_name]["params"]
     ), PromptTemplate(
         template=models[model_name]["template"],
-        input_variables=["context", "question"]  # Inputs corretti
+        input_variables=["context", "question"]
     )
 
 # 5. Inizializza il modello
@@ -569,7 +580,7 @@ rag_chain = RetrievalQA.from_chain_type(
     verbose=False
 )
 
-# 7. Funzione query (invariata)
+# 7. Funzione query
 def ask_ollama(question):
     try:
         result = rag_chain.invoke({"query": question})
@@ -595,13 +606,14 @@ if __name__ == "__main__":
 \subsection{AI Agent}
 E' un componente che può chiamare delle funzioni (function calling) nel mio caso search
 il LLM capisce se deve chiamare o meno il RAG.
-\subsubsection{function calling}
-Il function calling è un meccanismo che permette di chiamare delle funzioni definite in un file esterno, in questo caso il RAG.
+\subsubsection{Function Calling}
+Il "function calling" è un meccanismo che permette a un modello di linguaggio di determinare quando è necessario chiamare una funzione esterna e con quali parametri, in questo caso il RAG.
 
 
 \chapter{Conclusioni}
 
 \section{Risultati Ottenuti}
+da scrivere
 %In questa tesi ho esplorato l'integrazione di RAG e LLM nello sviluppo del software, dimostrando come questi strumenti possano migliorare significativamente il processo di sviluppo. I risultati principali includono:
 %\begin{itemize}
 %    \item Implementazione di un sistema RAG per la generazione di codice contestualizzato
