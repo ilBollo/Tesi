@@ -65,7 +65,7 @@
     },
     {
         "id": 9,
-        "text": "/**\n     * Verifica se una data Ã¨ nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data Ã¨ nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }",
+        "text": "public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }",
         "source": "DateUtil.java",
         "type": "code",
         "start_line": 0,
@@ -73,7 +73,7 @@
     },
     {
         "id": 10,
-        "text": "// Esempio di utilizzo della libreria\n    public static void main(String[] args) {\n        try {\n            // Ottenere la data corrente\n            Date currentDate = DateUtil.getCurrentDate();\n            System.out.println(\"Data corrente: \" + DateUtil.formatDate(currentDate));\n\n            // Aggiungere 5 giorni alla data corrente\n            Date futureDate = DateUtil.addDays(currentDate, 5);\n            System.out.println(\"Data tra 5 giorni: \" + DateUtil.formatDate(futureDate));",
+        "text": "/**\n     * Verifica se una data Ã¨ nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data Ã¨ nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }",
         "source": "DateUtil.java",
         "type": "code",
         "start_line": 0,
@@ -81,7 +81,7 @@
     },
     {
         "id": 11,
-        "text": "// Verificare se la data Ã¨ nel futuro\n            if (DateUtil.isFutureDate(futureDate)) {\n                System.out.println(\"La data Ã¨ nel futuro!\");\n            }\n\n            // Calcolare la differenza in giorni tra due date\n            Date pastDate = DateUtil.parseDate(\"01/01/2023\", \"dd/MM/yyyy\");\n            long diffInDays = DateUtil.getDifferenceInDays(pastDate, currentDate);\n            System.out.println(\"Differenza in giorni: \" + diffInDays);",
+        "text": "// Esempio di utilizzo della libreria\n    public static void main(String[] args) {\n        try {\n            // Ottenere la data corrente\n            Date currentDate = DateUtil.getCurrentDate();\n            System.out.println(\"Data corrente: \" + DateUtil.formatDate(currentDate));\n\n            // Aggiungere 5 giorni alla data corrente\n            Date futureDate = DateUtil.addDays(currentDate, 5);\n            System.out.println(\"Data tra 5 giorni: \" + DateUtil.formatDate(futureDate));",
         "source": "DateUtil.java",
         "type": "code",
         "start_line": 0,
@@ -89,6 +89,14 @@
     },
     {
         "id": 12,
+        "text": "// Verificare se la data Ã¨ nel futuro\n            if (DateUtil.isFutureDate(futureDate)) {\n                System.out.println(\"La data Ã¨ nel futuro!\");\n            }\n\n            // Calcolare la differenza in giorni tra due date\n            Date pastDate = DateUtil.parseDate(\"01/01/2023\", \"dd/MM/yyyy\");\n            long diffInDays = DateUtil.getDifferenceInDays(pastDate, currentDate);\n            System.out.println(\"Differenza in giorni: \" + diffInDays);",
+        "source": "DateUtil.java",
+        "type": "code",
+        "start_line": 0,
+        "end_line": 0
+    },
+    {
+        "id": 13,
         "text": "} catch (ParseException e) {\n            System.out.println(\"Errore nel parsing della data: \" + e.getMessage());\n        }\n    }\n}",
         "source": "DateUtil.java",
         "type": "code",

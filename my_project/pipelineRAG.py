@@ -38,7 +38,7 @@ Domanda: {question}<|im_end|>
 # 4. Funzione per selezionare il modello
 def load_model(model_name):
     models = {
-        "llama3": {
+        "llama3.2": {
             "template": LLAMA_TEMPLATE,
             "params": {
                 "temperature": 0.7,
@@ -49,7 +49,7 @@ def load_model(model_name):
             "template": CODEQWEN_TEMPLATE,
             "params": {
                 "temperature": 0.3,
-                "system": "Fornisci solo codice basato sul contesto"
+                "system": "Fornisci codice basato sul contesto"
             }
         }
     }
@@ -73,16 +73,23 @@ rag_chain = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type="stuff",
     retriever=vector_store.as_retriever(
-        search_kwargs={"k": 3, "score_threshold": 0.4}
+        search_kwargs={"k": 1}#, "score_threshold": 0.1}
     ),
     chain_type_kwargs={"prompt": prompt},
     return_source_documents=True,
     verbose=False
 )
 
-# 7. Funzione query (invariata)
+# 7. Funzione query
 def ask_ollama(question):
     try:
+        retrieved_docs = vector_store.similarity_search(question, k=3)
+        if not retrieved_docs:
+            print("\033[1;31mNessun documento rilevante trovato!\033[0m")
+            return        
+        print("\n\033[1;36mDOCUMENTI RECUPERATI:\033[0m")
+        for doc in retrieved_docs:
+            print(f"- {doc.page_content[:200]}...\n")
         result = rag_chain.invoke({"query": question})
         
         print("\n\033[1;34mDOMANDA:\033[0m", question)
@@ -100,4 +107,4 @@ def ask_ollama(question):
 
 # 8. Esempio d'uso
 if __name__ == "__main__":
-    ask_ollama("Mostrami un esempio di formattazione della data in Java usando SimpleDateFormat")
+    ask_ollama("Spiegami come funziona giorniAlmiocompleannoSpecial(Date dataNascita, String nome) ")

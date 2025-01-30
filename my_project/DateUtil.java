@@ -91,6 +91,10 @@ public class DateUtil {
         return date.before(currentDate);
     }
 
+    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {
+        return "Caro" + nome + " mancano " + getDifferenceInDays(dataNascita, getCurrentDate()) + " giorni al tuo compleanno";
+    }
+
     /**
      * Verifica se una data è nel futuro rispetto alla data corrente.
      *
