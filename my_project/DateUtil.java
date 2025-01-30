@@ -91,6 +91,8 @@ public class DateUtil {
         return date.before(currentDate);
     }
 
+    
+
     public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {
         return "Caro" + nome + " mancano " + getDifferenceInDays(dataNascita, getCurrentDate()) + " giorni al tuo compleanno";
     }
@@ -115,6 +117,9 @@ public class DateUtil {
         return new Date();
     }
 
+    public static String sopresa (String pomodoro){
+        String uao = GiorniMagici.getMessaggioMagico(pomodoro) ;
+    }
     // Esempio di utilizzo della libreria
     public static void main(String[] args) {
         try {
