@@ -20,11 +20,11 @@ public class GiorniMagici {
      * @param giorno
      * @param mese
      * @param anno
-     * @return
+     * @return Il numero magico generato.
      */
     public static int generaNumeroMagico(int giorno, int mese, int anno) {
         int somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);
-        return somma * somma; // Quadrato della somma
+        return somma * somma;
     }
     
     

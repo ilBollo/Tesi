@@ -121,7 +121,7 @@ public class DateUtilCustom {
     /**
      * Restituisce una stringa magica con un messaggio specifico in base al giorno indicato....
      * @param date
-     * @return
+     * @return Il messaggio magico.
      */
     public static String sorpresa (LocalDate date){
         String uao = GiorniMagici.getMessaggioMagico(date) ;
@@ -130,6 +130,5 @@ public class DateUtilCustom {
     // Esempio di utilizzo della libreria
     public static void main(String[] args) {
 //            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));
-
     }
 }

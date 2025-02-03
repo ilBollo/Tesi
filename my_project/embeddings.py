@@ -36,7 +36,7 @@ chunks = [item["text"] for item in chunks_data]
 # 2. Carica il modello BGE-M3 e genera gli embedding
 embedder = SentenceTransformer('BAAI/bge-m3')
 embeddings = embedder.encode(
-    [f"CLASSE:{c['class']} METODO:{extract_method_name(c['text'])} CONTENUTO:{c['text']}" 
+    [f"METHOD:{extract_method_name(c['text'])} CLASS:{c['class']} LINES:{c['start_line']}-{c['end_line']} CONTENT:{c['text']}" 
      for c in chunks_data],
     show_progress_bar=True
 )

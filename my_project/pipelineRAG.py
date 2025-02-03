@@ -28,15 +28,19 @@ Domanda: {question}<|eot_id|>
 <|start_header_id|>assistant<|end_header_id|>"""
 
 CODEQWEN_TEMPLATE = """<|im_start|>system
-Analizza i seguenti frammenti di codice correlati:
+Analizza i frammenti di codice seguenti (possono essere incompleti):
 {context}
 
-Segui queste regole:
-1. Combina le implementazioni da classi diverse
-2. Considera sia le definizioni che le chiamate
-3. Mostra le relazioni tra i metodi<|im_end|>
+Istruzioni vincolanti:
+1. Rispondi SEMPRE in italiano anche con informazioni parziali
+2. Segnala PRECISAMENTE le parti mancanti dal contesto
+3. Formato richiesto:
+   ✔️ Blocco codice Java corretto
+   ✔️ Commenti esplicativi se necessario
+   ✔️ Riferimenti ai metodi collegati
+   ❌ Mai inventare sintassi o API<|im_end|>
 <|im_start|>user
-{question}<|im_end|>
+Domanda: {question}<|im_end|>
 <|im_start|>assistant
 """
 
@@ -59,10 +63,13 @@ def load_model(model_name):
                 # 0.1-0.4: conservativa, buona per codice
                 # 0.5-0.7: bilanciata
                 # 0.8-1.0: molto creativa
-                "temperature": 0.6,  # Valore intermedio
-                "top_p": 0.9,        # Aggiungere sampling nucleare
+                "temperature": 0.4,  # Valore intermedio
+    #            "top_p": 0.9,        # Aggiungere sampling nucleare
+#- 0.7-0.8: Stabilità delle keyword tecniche
+#- 0.9-0.95: Flessibilità nella composizione sintattica
                 #"system": "Fornisci codice basato sul contesto"
-                "system": "Fornisci la miglior risposta possibile basandoti sul contesto disponibile, anche se parziale"
+               # "system": "Fornisci la risposta basandoti sul contesto disponibile, anche se parziale dai una risposta"
+                "system": "Rispondi in italiano come esperto di programmazione"
             }
         }
     }
@@ -88,8 +95,10 @@ rag_chain = RetrievalQA.from_chain_type(
     retriever=vector_store.as_retriever(
         search_kwargs={
             "k": 8,                   # Più documenti per contesto
-            "score_threshold": 0.90,   # bassa similarità
+            "score_threshold": 0.15,   # bassa similarità
             "search_type": "similarity",  # Più efficace per il codice
+            #"search_type": "mmr",      # Usare MMR per diversità
+            "lambda_mult": 0.5,       # Bilancia diversità/rilevanza
         }
     ),
     chain_type_kwargs={"prompt": prompt},
@@ -125,4 +134,4 @@ def ask_ollama(question):
 # 8. Esempio d'uso
 if __name__ == "__main__":
    # ask_ollama("Cosa ritorna sorpresa (LocalDate.of(2025, 1, 10))")
-    ask_ollama("Cosa ritorna GiorniMagici.getMessaggioMagico(LocalDate.of(2025, 1, 10))?")
+    ask_ollama("Cosa ritorna il metodo GiorniMagici.getMessaggioMagico(LocalDate.of(2025, 1, 10))?")

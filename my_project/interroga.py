@@ -16,15 +16,17 @@ vector_store = FAISS.load_local(
 )
 
 # 3. Query di esempio
-query = "Cosa ritorna GiorniMagici.getMessaggioMagico(LocalDate.of(2025, 1, 10))?"
+query = "Cosa ritorna il metodo GiorniMagici.getMessaggioMagico(LocalDate.of(2025, 1, 10))?"
 #"Spiegami cosa fa la funzione String sopresa (LocalDate date)"
 
 # 4. Cerca i chunk più simili
 docs = vector_store.similarity_search_with_score(
     query,
     k=5,
-    score_threshold=0.93,  # bassa similarità
-    search_type="similarity",  # Più efficace per il codice
+    score_threshold=0.70,  # bassa similarità
+    #search_type="similarity",  # Più efficace per il codice
+    search_type= "mmr",      # Usare MMR per diversità
+
 )
 
 # 5. Stampa i risultati con relativo score

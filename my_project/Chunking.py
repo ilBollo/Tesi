@@ -11,19 +11,17 @@ def process_file(file_path):
     text = ''.join(lines)
 
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1024,  # Dimensione di ogni chunk
-        chunk_overlap=256,  # Overlap tra chunk
-        separators=[
-            "\n\n}\n",       # Separatore tra metodi/clausole
-            "\npublic ",     # Nuovi metodi pubblici
-            "\nprivate ",    # Metodi privati
-            "\nclass ",      # Definizioni di classe
-            "\n//",          # Commenti
-            "\n",            # Newline generico
-            " "              # Spazio
-        ],
-        keep_separator=True
-    )
+    chunk_size=512,
+    chunk_overlap=128,
+    separators=[
+        "\n}\n\npublic",  # Priorità ai metodi interi
+        "\n}\n\nprivate",
+        "\n}\n\nprotected",
+        "\nclass "
+    ],
+    keep_separator=True,
+    is_separator_regex=False
+)
 
     chunks = splitter.split_text(text)
     # Calcola le linee esatte per ogni chunk
