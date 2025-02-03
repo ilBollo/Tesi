@@ -18,10 +18,8 @@ public class GiorniMagici {
     }
     
     // Ottieni un messaggio magico in base al giorno della settimana
-    public static String getMessaggioMagico(String data) throws DateTimeParseException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate date = LocalDate.parse(data, formatter);
-        DayOfWeek giornoSettimana = date.getDayOfWeek();
+    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {
+        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();
         
         switch(giornoSettimana) {
             case MONDAY: return "La magia inizia nel silenzio...";

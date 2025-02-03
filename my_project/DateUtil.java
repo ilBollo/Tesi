@@ -1,5 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -117,32 +118,39 @@ public class DateUtil {
         return new Date();
     }
 
-    public static String sopresa (String pomodoro){
-        String uao = GiorniMagici.getMessaggioMagico(pomodoro) ;
+    /**
+     * Restituisce una stringa magica con un messaggio specifico in base al giorno indicato....
+     * @param date
+     * @return
+     */
+    public static String sorpresa (LocalDate date){
+        String uao = GiorniMagici.getMessaggioMagico(date) ;
+        return uao;
     }
     // Esempio di utilizzo della libreria
     public static void main(String[] args) {
-        try {
+  //      try {
+            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));
             // Ottenere la data corrente
-            Date currentDate = DateUtil.getCurrentDate();
-            System.out.println("Data corrente: " + DateUtil.formatDate(currentDate));
+  //          Date currentDate = DateUtil.getCurrentDate();
+   //         System.out.println("Data corrente: " + DateUtil.formatDate(currentDate));
 
             // Aggiungere 5 giorni alla data corrente
-            Date futureDate = DateUtil.addDays(currentDate, 5);
-            System.out.println("Data tra 5 giorni: " + DateUtil.formatDate(futureDate));
+  //          Date futureDate = DateUtil.addDays(currentDate, 5);
+   //         System.out.println("Data tra 5 giorni: " + DateUtil.formatDate(futureDate));
 
             // Verificare se la data è nel futuro
-            if (DateUtil.isFutureDate(futureDate)) {
-                System.out.println("La data è nel futuro!");
-            }
+    //        if (DateUtil.isFutureDate(futureDate)) {
+     //           System.out.println("La data è nel futuro!");
+       //     }
 
             // Calcolare la differenza in giorni tra due date
-            Date pastDate = DateUtil.parseDate("01/01/2023", "dd/MM/yyyy");
-            long diffInDays = DateUtil.getDifferenceInDays(pastDate, currentDate);
-            System.out.println("Differenza in giorni: " + diffInDays);
+    //        Date pastDate = DateUtil.parseDate("01/01/2023", "dd/MM/yyyy");
+     //       long diffInDays = DateUtil.getDifferenceInDays(pastDate, currentDate);
+      //      System.out.println("Differenza in giorni: " + diffInDays);
 
-        } catch (ParseException e) {
-            System.out.println("Errore nel parsing della data: " + e.getMessage());
-        }
+//        } catch (ParseException e) {
+ //           System.out.println("Errore nel parsing della data: " + e.getMessage());
+ //       }
     }
 }

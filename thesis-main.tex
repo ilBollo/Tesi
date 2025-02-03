@@ -7,6 +7,13 @@
 \usepackage{acronym}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{tikz}
+
+\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{fit}
+\tikzstyle{block} = [rectangle, draw, fill=white, 
+    text width=3cm, text centered, rounded corners, minimum height=2em]
+\tikzstyle{line} = [draw, -latex']
 
 \school{\unibo}
 \programme{Corso di Laurea in Ingegneria e Scienze Informatiche}
@@ -340,35 +347,99 @@ Questo approccio permette di superare le limitazioni dei LLM, fornendo risposte 
 
 \section{Obiettivi del Caso Studio}
 
-Questo caso studio si propone di dimostrare l'applicazione pratica dei concetti teorici presentati nei capitoli precedenti attraverso la creazione di un sistema RAG di supporto allo sviluppo software in una software-house.
-Valutando l'efficacia della soluzione proposta.
-\begin{itemize}
-    \item \textbf{Scenario}: Creare un sistema RAG che supporti lo sviluppo software in una software-house.
-    \item \textbf{Problematica}: Affrontare la necessità di generare codice coerente con gli standard e le pratiche aziendali.
-    \item \textbf{Soluzione Proposta}: Integrare un sistema RAG con modelli di linguaggio di grandi dimensioni (LLM) per la generazione di codice contestualizzato.
-\end{itemize}
-
+Questo caso studio si propone di verificare il livello di personalizzazione e qualità delle risposte di un LLM potenziando la query nel prompt di input 
+attraverso la creazione di un sistema RAG di supporto.
+Il sistema RAG è testato con della \textbf{classi JAVA uniche} create appositamente per il caso studio.
+\newline\textbf{Problematica da affrontare:} chiamate a più livelli di classi e metodi, dove il RAG potrebbe non essere in grado di estrapolare
+le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte coerenti con quanto richiesto.
 
 \section{Architettura del Sistema}
-[Dataset] → [Chunking] → [Embedding] → [Vector DB] → [Retrieval] → [LLM] → [Risposta contestuale]
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=.8\linewidth]{figures/rag-architecture.png}
-%     \caption{Architettura del sistema RAG implementato}
-%     \label{fig:rag-architecture}
-% \end{figure}
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[node distance=2cm]
+        % Components
+        \node [block] (chunk) {Text Processor\\(Chunking)};
+        \node [block, right=of chunk] (embed) {Embedder\\(BGE-M3)};
+        \node [block, right=of embed] (db) {Vector DB\\(FAISS)};
+        \node [block, below=of chunk] (retriever) {Retriever};
+        \node [block, right=of retriever] (llm) {LLM Interface\\(CodeQwen)};
+        
+        % Connections
+        \path [line] (chunk) -- (embed);
+        \path [line] (embed) -- (db);
+        \path [line] (db) -- (retriever);
+        \path [line] (retriever) -- (llm);
+        
+        % Box around everything
+        \node [draw, dashed, fit=(chunk) (embed) (db) (retriever) (llm),
+            inner sep=1cm, label=above:RAG System] {};
+    \end{tikzpicture}
+    \caption{Architettura del sistema RAG}
+    \label{fig:rag-architecture}
+\end{figure}
+Il sistema RAG implementa un'architettura modulare composta da cinque componenti principali:
+
+\begin{enumerate}
+    \item \textbf{Text Processor (Chunking)}:
+    \begin{itemize}
+        \item Suddivide i file Java in chunk di un numero definito appositamente di token
+        \item Gestisce sovrapposizione di token tra chunk
+        \item Preserva il contesto del codice
+    \end{itemize}
+
+    \item \textbf{Embedder (BGE-M3)}:
+    \begin{itemize}
+        \item Converte i chunk in vettori numerici
+        \item Utilizza il modello BGE-M3 per la generazione degli embedding
+        \item Normalizza i vettori per ottimizzare la ricerca
+    \end{itemize}
+
+    \item \textbf{Vector DB (FAISS)}:
+    \begin{itemize}
+        \item Memorizza gli embedding in un database vettoriale
+        \item Ottimizza la ricerca per similarità
+        \item Garantisce recupero efficiente dei chunk rilevanti
+    \end{itemize}
+
+    \item \textbf{Retriever}:
+    \begin{itemize}
+        \item Esegue query semantiche sul database
+        \item Recupera i k chunk più rilevanti
+        \item Prepara il contesto per il LLM
+    \end{itemize}
+
+    \item \textbf{LLM Interface (CodeQwen e Llama 3.2)}:
+    \begin{itemize}
+        \item Interfaccia con i modelli CodeQwen e Llama 3.2
+        \item Genera risposte basate sul contesto recuperato
+        \item Ottimizza il prompt per la generazione di codice
+    \end{itemize}
+\end{enumerate}
+
 
 \section{Software Utilizzati}
 \subsection{Ollama}
-Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM, facilitando la creazione, l'addestramento e l'integrazione di modelli di machine learning nelle applicazioni senza dover dipendere da servizi cloud esterni.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.1\linewidth]{figures/ollama.png}
+    \caption{Logo di Ollama}
+    \label{fig:ollama-logo}
+\end{figure}
+Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM
+senza dover dipendere da servizi cloud esterni.
+Il software è stato scelto per la sua flessibilità, permettendo di integrare facilmente i modelli LLM nel sistema RAG.
+
 \subsection{LLM}
-Per rendere più completa la ricerca sono stati utilizzati due modelli di linguaggio per il caso studio:
+Ogni LLM è specializzato per determinati scopi,
+per questo motivo per rendere più completa la ricerca sono stati utilizzati due modelli.
+Nella scelta dei modelli è stato obbligatorio eseguire un pre filtraggio considerando solo modelli che permettessero di eseguire function calling.
+
 \subsubsection{Llama 3.2}
-Llama 3.2 3B \cite{llama3-2}, un modello di linguaggio open source sviluppato da Meta AI.
+Llama 3.2 3B \cite{llama3-2}, un modello di linguaggio open source.
 Il modello, con 3 miliardi di parametri, è ottimizzato per compiti di dialogo multilingue e si distingue per le sue capacità di recupero e sintesi delle informazioni.
 La scelta è ricaduta su questa versione per il suo equilibrio tra prestazioni e requisiti computazionali che permottono il suo utilizzo senza hardware troppo potente.
 
-\subsection{Codeqwen 1.5}
+\subsubsection{Codeqwen 1.5}
 Codeqwen \cite{codeqwen1.5} è un modello di linguaggio open source sviluppato da Qwen AI specializzato nella generazione di codice e documentazione tecnica.  
 Con 7 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato.
 La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità. 

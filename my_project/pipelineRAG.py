@@ -48,8 +48,10 @@ def load_model(model_name):
         "codeqwen": {
             "template": CODEQWEN_TEMPLATE,
             "params": {
-                "temperature": 0.3,
-                "system": "Fornisci codice basato sul contesto"
+                "temperature": 0.4,  # Valore intermedio
+                "top_p": 0.9,        # Aggiungere sampling nucleare
+                #"system": "Fornisci codice basato sul contesto"
+                "system": "Fornisci la miglior risposta possibile basandoti sul contesto disponibile, anche se parziale"
             }
         }
     }
@@ -73,7 +75,11 @@ rag_chain = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type="stuff",
     retriever=vector_store.as_retriever(
-        search_kwargs={"k": 1}#, "score_threshold": 0.1}
+        search_kwargs={
+            "k": 5,                   # Più documenti per contesto
+            "score_threshold": 0.05,  # Filtro qualità minimo
+            "search_type": "mmr"      # Massimal Marginal Relevance
+        }
     ),
     chain_type_kwargs={"prompt": prompt},
     return_source_documents=True,
@@ -107,4 +113,4 @@ def ask_ollama(question):
 
 # 8. Esempio d'uso
 if __name__ == "__main__":
-    ask_ollama("Spiegami come funziona giorniAlmiocompleannoSpecial(Date dataNascita, String nome) ")
+    ask_ollama("Spiegami cosa fa la funzione String sorpresa (LocalDate date)")

@@ -16,7 +16,7 @@ vector_store = FAISS.load_local(
 )
 
 # 3. Query di esempio
-query = "Spiegami come funziona giorniAlmiocompleannoSpecial(Date dataNascita, String nome)"
+query = "Spiegami cosa fa la funzione String sopresa (LocalDate date)"
 
 # 4. Cerca i chunk più simili
 docs = vector_store.similarity_search(query, k=3)
