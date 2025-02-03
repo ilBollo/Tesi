@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class DateUtil {
+public class DateUtilCustom {
 
     /**
      * Formatta una data nel formato "dd/MM/yyyy".
@@ -129,28 +129,7 @@ public class DateUtil {
     }
     // Esempio di utilizzo della libreria
     public static void main(String[] args) {
-  //      try {
-            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));
-            // Ottenere la data corrente
-  //          Date currentDate = DateUtil.getCurrentDate();
-   //         System.out.println("Data corrente: " + DateUtil.formatDate(currentDate));
+//            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));
 
-            // Aggiungere 5 giorni alla data corrente
-  //          Date futureDate = DateUtil.addDays(currentDate, 5);
-   //         System.out.println("Data tra 5 giorni: " + DateUtil.formatDate(futureDate));
-
-            // Verificare se la data è nel futuro
-    //        if (DateUtil.isFutureDate(futureDate)) {
-     //           System.out.println("La data è nel futuro!");
-       //     }
-
-            // Calcolare la differenza in giorni tra due date
-    //        Date pastDate = DateUtil.parseDate("01/01/2023", "dd/MM/yyyy");
-     //       long diffInDays = DateUtil.getDifferenceInDays(pastDate, currentDate);
-      //      System.out.println("Differenza in giorni: " + diffInDays);
-
-//        } catch (ParseException e) {
- //           System.out.println("Errore nel parsing della data: " + e.getMessage());
- //       }
     }
 }

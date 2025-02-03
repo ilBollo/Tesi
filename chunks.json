@@ -1,90 +1,119 @@
 [
     {
         "id": 1,
-        "text": "import java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.LocalDate;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;\n\npublic class DateUtil {\n\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {\n        SimpleDateFormat sdf = new SimpleDateFormat(\"dd/MM/yyyy\");\n        return sdf.format(date);\n    }\n\n    /**\n     * Formatta una data nel formato specificato.\n     *\n     * @param date   La data da formattare.\n     * @param format Il formato desiderato (es. \"yyyy-MM-dd\").\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.format(date);\n    }",
-        "source": "my_project/DateUtil.java",
+        "text": "// File: my_project/DateUtilCustom.java\nimport java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.LocalDate;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 1,
+        "end_line": 6,
+        "class": ""
     },
     {
         "id": 2,
-        "text": "/**\n     * Converte una stringa in un oggetto Date.\n     *\n     * @param dateString La stringa da convertire (es. \"31/12/2023\").\n     * @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.\n     * @throws ParseException Se la stringa non è nel formato corretto.\n     */\n    public static Date parseDate(String dateString, String format) throws ParseException {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.parse(dateString);\n    }\n\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */\n    public static long getDifferenceInDays(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }",
-        "source": "my_project/DateUtil.java",
+        "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\npublic class DateUtilCustom {\n\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {\n        SimpleDateFormat sdf = new SimpleDateFormat(\"dd/MM/yyyy\");\n        return sdf.format(date);\n    }\n\n    /**\n     * Formatta una data nel formato specificato.\n     *\n     * @param date   La data da formattare.\n     * @param format Il formato desiderato (es. \"yyyy-MM-dd\").\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.format(date);\n    }\n\n    /**\n     * Converte una stringa in un oggetto Date.\n     *\n     * @param dateString La stringa da convertire (es. \"31/12/2023\").\n     * @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 6,
+        "end_line": 38,
+        "class": "DateUtilCustom\n"
     },
     {
         "id": 3,
-        "text": "/**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in ore.\n     */\n    public static long getDifferenceInHours(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }",
-        "source": "my_project/DateUtil.java",
+        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Converte una stringa in un oggetto Date.\n     *\n     * @param dateString La stringa da convertire (es. \"31/12/2023\").\n     * @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.\n     * @throws ParseException Se la stringa non è nel formato corretto.\n     */\n    public static Date parseDate(String dateString, String format) throws ParseException {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.parse(dateString);\n    }\n\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */\n    public static long getDifferenceInDays(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 38,
+        "end_line": 65,
+        "class": ""
     },
     {
         "id": 4,
-        "text": "/**\n     * Verifica se una data è nel passato rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel passato, altrimenti False.\n     */\n    public static boolean isPastDate(Date date) {\n        Date currentDate = new Date();\n        return date.before(currentDate);\n    }\n\n    \n\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }",
-        "source": "my_project/DateUtil.java",
+        "text": "// File: my_project/DateUtilCustom.java\n*/\n    public static long getDifferenceInDays(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in ore.\n     */\n    public static long getDifferenceInHours(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 65,
+        "end_line": 97,
+        "class": ""
     },
     {
         "id": 5,
-        "text": "/**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n\n    /**\n     * Restituisce una stringa magica con un messaggio specifico in base al giorno indicato....\n     * @param date\n     * @return\n     */\n    public static String sorpresa (LocalDate date){\n        String uao = GiorniMagici.getMessaggioMagico(date) ;\n        return uao;\n    }\n    // Esempio di utilizzo della libreria\n    public static void main(String[] args) {\n  //      try {\n            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));\n            // Ottenere la data corrente\n  //          Date currentDate = DateUtil.getCurrentDate();\n   //         System.out.println(\"Data corrente: \" + DateUtil.formatDate(currentDate));",
-        "source": "my_project/DateUtil.java",
+        "text": "// File: my_project/DateUtilCustom.java\n*\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n\n    /**\n     * Verifica se una data è nel passato rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel passato, altrimenti False.\n     */\n    public static boolean isPastDate(Date date) {\n        Date currentDate = new Date();\n        return date.before(currentDate);\n    }\n\n    \n\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 97,
+        "end_line": 130,
+        "class": ""
     },
     {
         "id": 6,
-        "text": "// Aggiungere 5 giorni alla data corrente\n  //          Date futureDate = DateUtil.addDays(currentDate, 5);\n   //         System.out.println(\"Data tra 5 giorni: \" + DateUtil.formatDate(futureDate));\n\n            // Verificare se la data è nel futuro\n    //        if (DateUtil.isFutureDate(futureDate)) {\n     //           System.out.println(\"La data è nel futuro!\");\n       //     }\n\n            // Calcolare la differenza in giorni tra due date\n    //        Date pastDate = DateUtil.parseDate(\"01/01/2023\", \"dd/MM/yyyy\");\n     //       long diffInDays = DateUtil.getDifferenceInDays(pastDate, currentDate);\n      //      System.out.println(\"Differenza in giorni: \" + diffInDays);\n\n//        } catch (ParseException e) {\n //           System.out.println(\"Errore nel parsing della data: \" + e.getMessage());\n //       }\n    }\n}",
-        "source": "my_project/DateUtil.java",
+        "text": "// File: my_project/DateUtilCustom.java\nreturn \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n\n    /**\n     * Restituisce una stringa magica con un messaggio specifico in base al giorno indicato....\n     * @param date\n     * @return\n     */\n    public static String sorpresa (LocalDate date){\n        String uao = GiorniMagici.getMessaggioMagico(date) ;\n        return uao;\n    }\n    // Esempio di utilizzo della libreria\n    public static void main(String[] args) {",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 130,
+        "end_line": 135,
+        "class": ""
     },
     {
         "id": 7,
-        "text": "import java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeFormatter;\nimport java.time.format.DateTimeParseException;",
-        "source": "my_project/GiorniMagici.java",
+        "text": "// File: my_project/DateUtilCustom.java\n//            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));\n\n    }\n}",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 135,
+        "end_line": 135,
+        "class": ""
     },
     {
         "id": 8,
-        "text": "public class GiorniMagici {\n    \n    // Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)\n    public static boolean isDataMagica(int giorno, int mese, int anno) {\n        int ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    // Genera un numero magico dalla somma delle cifre della data\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {\n        int somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);\n        return somma * somma; // Quadrato della somma\n    }\n    \n    // Ottieni un messaggio magico in base al giorno della settimana\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        \n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";",
+        "text": "// File: my_project/GiorniMagici.java\nimport java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeParseException;",
         "source": "my_project/GiorniMagici.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 1,
+        "end_line": 3,
+        "class": ""
     },
     {
         "id": 9,
-        "text": "DayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        \n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n            case WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno è avvolto nel mistero...\";\n        }\n    }\n    \n    // Verifica se un numero è magico (primo e nella sequenza di Fibonacci)\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n    // Metodi privati di supporto\n    private static int sommaCifre(int numero) {",
+        "text": "// File: my_project/GiorniMagici.java\nClasse: GiorniMagici\npublic class GiorniMagici {\n    /**\n    // Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)\n    // @param giorno Il giorno della data.\n    // @param mese Il mese della data.\n    // @param anno L'anno della data.\n    // @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {\n        int ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno\n     * @return\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {\n        int somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);\n        return somma * somma; // Quadrato della somma\n    }\n    \n    \n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica\n     * @return Il messaggio magico.",
         "source": "my_project/GiorniMagici.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 3,
+        "end_line": 34,
+        "class": "GiorniMagici\n"
     },
     {
         "id": 10,
-        "text": "public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n    // Metodi privati di supporto\n    private static int sommaCifre(int numero) {\n        int somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;\n            numero /= 10;\n        }\n        return somma;\n    }\n    \n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        \n        for (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }",
+        "text": "// File: my_project/GiorniMagici.java\nreturn somma * somma; // Quadrato della somma\n    }\n    \n    \n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        \n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n            case WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";",
         "source": "my_project/GiorniMagici.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 34,
+        "end_line": 54,
+        "class": ""
     },
     {
         "id": 11,
-        "text": "return true;\n    }\n    \n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }\n    \n    private static boolean isPerfectSquare(int n) {\n        int sqrt = (int) Math.sqrt(n);\n        return sqrt * sqrt == n;\n    }\n}",
+        "text": "// File: my_project/GiorniMagici.java\ncase THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno è avvolto nel mistero...\";\n        }\n    }\n    \n    /**\n     * Verifica se un numero è magico.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n\n    /**\n     * Somma le cifre di un numero.\n     * @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */\n    private static int sommaCifre(int numero) {\n        int somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;",
         "source": "my_project/GiorniMagici.java",
         "type": "code",
-        "start_line": 0,
-        "end_line": 0
+        "start_line": 54,
+        "end_line": 86,
+        "class": ""
+    },
+    {
+        "id": 12,
+        "text": "// File: my_project/GiorniMagici.java\n* @return La somma delle cifre.\n     */\n    private static int sommaCifre(int numero) {\n        int somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;\n            numero /= 10;\n        }\n        return somma;\n    }\n    \n    /**\n     * Verifica se un numero è primo.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è di Fibonacci, false altrimenti.\n     */\n    private static boolean isFibonacci(int numero) {",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 86,
+        "end_line": 112,
+        "class": ""
+    },
+    {
+        "id": 13,
+        "text": "// File: my_project/GiorniMagici.java\n}\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è di Fibonacci, false altrimenti.\n     */\n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }\n    \n    /**\n     * Verifica se è un quadrato perfetto.\n     * @param n Il numero da verificare.\n     * @return true se il numero è un quadrato perfetto, false altrimenti.\n     */\n    private static boolean isPerfectSquare(int n) {\n        int sqrt = (int) Math.sqrt(n);\n        return sqrt * sqrt == n;\n    }\n}",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 112,
+        "end_line": 112,
+        "class": ""
     }
 ]
