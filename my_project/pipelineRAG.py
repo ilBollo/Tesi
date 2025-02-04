@@ -42,16 +42,17 @@ def load_model(model_name):
         "llama3.2": {
             "template": LLAMA_TEMPLATE,
             "params": {
-                "temperature": 0.6,
-                "system": "Rispondi in italiano come esperto di programmazione"
+                "temperature": 0.3,
+                "top_p": 0.85, #Bilancia creatività/controllo nei token generati
+                "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
             }
         },
         "codeqwen": {
             "template": CODEQWEN_TEMPLATE,
             "params": {
                 "temperature": 0.3,
-                "top_p": 0.85,
-                "system": "Sei un assistente esperto di programmazione."
+                "top_p": 0.85, #Bilancia creatività/controllo nei token generati
+                "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
             }
         }
     }
@@ -76,11 +77,10 @@ rag_chain = RetrievalQA.from_chain_type(
     chain_type="stuff",
     retriever=vector_store.as_retriever(
         search_kwargs={
-            "k": 3,                   # Più documenti per contesto
-            "score_threshold": 0.85,   # bassa similarità
-            "search_type": "similarity",  # Più efficace per il codice
-            #"search_type": "mmr",      # Usare MMR per diversità
-            "lambda_mult": 0.5,       # Bilancia diversità/rilevanza
+            "k": 5,                   # Più documenti per contesto
+            "score_threshold": 0.80, # medio-bassa similarità inizialmente era 0.90
+            "search_type" :"similarity",  # Più efficace per il codice usare mmr per diversità
+            "lambda_mult":0.5       # Bilancia diversità/rilevanza
         }
     ),
     chain_type_kwargs={"prompt": prompt},
@@ -115,5 +115,5 @@ def ask_ollama(question):
 
 # 8. Esempio d'uso
 if __name__ == "__main__":
-   # ask_ollama("Cosa ritorna sorpresa (LocalDate.of(2025, 1, 10))")
-    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza il metodo DateUtilCustom.getMessaggioMagico(date)?")
+    #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
+    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")

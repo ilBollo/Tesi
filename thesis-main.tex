@@ -695,7 +695,9 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
     \subsection{Generazione degli Embedding}
     Gli embedding trasformano i chunk in rappresentazioni vettoriali che catturano il significato semantico.
     Il seguente codice Python mostra come generare gli embedding e creare un database Faiss.
-    FAISS \cite{faiss} (Facebook AI Similarity Search) è una libreria ottimizzata per la ricerca di similarità in spazi ad alta dimensionalità.
+    Il modello di embedding utilizzato è BGE-M3, un modello pre-addestrato per la generazione di embedding con dimesioni 1024(denso) + 250K (sparso).
+    Il modello usa due rappresentazioni per complementarietà, la rappresentazione denza cattura relazioni semantiche mentre quella sparsa cattura relazioni sintattiche.
+    Mentre FAISS \cite{faiss} (Facebook AI Similarity Search) è una libreria ottimizzata per la ricerca di similarità in spazi ad alta dimensionalità.
     Utilizza la ricerca di somiglianza utilizzando la distanza euclidea tra i vettori.
     
     \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database FAISS}, label={lst:embeddings}]
@@ -733,33 +735,69 @@ Una volta creato il database FAISS, è possibile eseguire ricerche semantiche su
 
 \begin{lstlisting}[language=Python, caption={Codice Python per l'esecuzione di una query sul database FAISS}, label={lst:query}]
     from langchain_community.vectorstores import FAISS
-    from langchain_community.embeddings import HuggingFaceEmbeddings
-    
-    # 1. Carica il modello di embedding nel formato corretto
-    embedder = HuggingFaceEmbeddings(
-        model_name="BAAI/bge-m3",
-        model_kwargs={'device': 'cpu'},  # Usa 'cuda' per GPU
-        encode_kwargs={'normalize_embeddings': True}
-    )
-    
-    # 2. Carica il database FAISS esistente
-    vector_store = FAISS.load_local(
-        folder_path="./faiss_db",
-        embeddings=embedder,
-        allow_dangerous_deserialization=True
-    )
-    
-    # 3. Query di esempio
-    query = "Come formattare una data in Java?"
-    docs = vector_store.similarity_search(query, k=3)
-    
-    for i, doc in enumerate(docs):
-        print(f"Risultato {i+1}:")
-        print(doc.page_content)
-        print("-" * 40)
+from langchain_huggingface import HuggingFaceEmbeddings
+
+# 1. Carica il modello di embedding nel formato corretto
+embedder = HuggingFaceEmbeddings(
+    model_name="BAAI/bge-m3",
+    model_kwargs={'device': 'cpu'},  # Usa 'cuda' per GPU
+    encode_kwargs={'normalize_embeddings': True}
+)
+
+# 2. Carica il database FAISS esistente
+vector_store = FAISS.load_local(
+    folder_path="./faiss_db",
+    embeddings=embedder,
+    allow_dangerous_deserialization=True
+)
+
+# 3. Query di esempio
+query = "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?"
+
+# 4. Cerca i chunk piu' simili
+docs = vector_store.similarity_search_with_score(
+    query,
+    k=5,
+    score_threshold=0.90,  # bassa similarita'
+    search_type="similarity",  # Piu' efficace per il codice usare mmr per diversita'
+    lambda_mult=0.5       # Bilancia diversita'/rilevanza
+)
+
+# 5. Stampa i risultati con relativo score
+for i, (doc, score) in enumerate(docs):
+    print(f"Risultato {i+1} (Score: {score:.4f}):")
+    print(doc.page_content)
+    print("-" * 40)
 \end{lstlisting}
 
+\subsubsection{Query Base}
+Con la query: 
+\begin{quote}
+    \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
+\end{quote}
+viene restituito il chunk corretto con uno score di similarità di 0.6547. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
 
+\paragraph{Nota}
+È importante riscontrare che viene restituito un solo chunk nonostante \texttt{k=5}. Questo accade perché nessun altro chunk supera la soglia di similarità impostata. Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow} richiama un metodo presente nella libreria \texttt{DateUtilCustom}.
+
+\subsubsection{Query Migliorata}
+Per risolvere questo problema, la query è stata riformulata:
+\begin{quote}
+    \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
+\end{quote}
+
+\paragraph{Risultati Ottenuti}
+L'output fornisce 5 risultati:
+\begin{itemize}
+    \item Primo chunk (score: 0.5276): contiene la funzione \texttt{segnaleWow}
+    \item Secondo, terzo e quarto chunk (scores: 0.7188, 0.7258, 0.7605): contengono la funzione \texttt{getMessaggioMagico}
+    \item Quinto chunk (score: 0.8958): funzione non rilevante relativa alle date
+\end{itemize}
+
+\paragraph{Conclusione}
+Questa analisi ha portato alla decisione di abbassare lo \texttt{score\_threshold} da 0.90 a 0.80,
+è preferibile non ottenere risultati piuttosto che costruire risposte non coerenti.
+ 
 \subsection{Creazione della Pipeline RAG}
 Il seguente codice Python mostra come configurare e utilizzare una pipeline RAG utilizzando FAISS, Ollama e i due LLM(LLAMA e CODEQWEN) per rispondere a domande specifiche sul codice Java:
 
