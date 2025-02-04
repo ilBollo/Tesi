@@ -1,20 +1,308 @@
 [
     {
         "id": 1,
-        "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\nimport java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.LocalDate;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;\n\npublic class DateUtilCustom {\n\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {\n        SimpleDateFormat sdf = new SimpleDateFormat(\"dd/MM/yyyy\");\n        return sdf.format(date);\n    }\n\n    /**\n     * Formatta una data nel formato specificato.\n     *\n     * @param date   La data da formattare.\n     * @param format Il formato desiderato (es. \"yyyy-MM-dd\").\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.format(date);\n    }\n\n    /**\n     * Converte una stringa in un oggetto Date.\n     *\n     * @param dateString La stringa da convertire (es. \"31/12/2023\").\n     * @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.\n     * @throws ParseException Se la stringa non è nel formato corretto.\n     */\n    public static Date parseDate(String dateString, String format) throws ParseException {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.parse(dateString);\n    }\n\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */\n    public static long getDifferenceInDays(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in ore.\n     */\n    public static long getDifferenceInHours(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n\n    /**\n     * Verifica se una data è nel passato rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel passato, altrimenti False.\n     */\n    public static boolean isPastDate(Date date) {\n        Date currentDate = new Date();\n        return date.before(currentDate);\n    }\n\n    \n\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n\n    /**\n     * Restituisce una stringa magica con un messaggio specifico in base al giorno indicato....\n     * @param date\n     * @return Il messaggio magico.\n     */\n    public static String sorpresa (LocalDate date){\n        String uao = GiorniMagici.getMessaggioMagico(date) ;\n        return uao;\n    }\n    // Esempio di utilizzo della libreria\n    public static void main(String[] args) {\n//            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));\n    }\n}",
+        "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\nimport java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeParseException;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;\n\npublic class DateUtilCustom {\n\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
         "start_line": 1,
-        "end_line": 134,
+        "end_line": 18,
         "class": "DateUtilCustom\n"
     },
     {
         "id": 2,
-        "text": "// File: my_project/GiorniMagici.java\nClasse: GiorniMagici\nimport java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeParseException;\n\npublic class GiorniMagici {\n    /**\n    // Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)\n    // @param giorno Il giorno della data.\n    // @param mese Il mese della data.\n    // @param anno L'anno della data.\n    // @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {\n        int ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno\n     * @return Il numero magico generato.\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {\n        int somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);\n        return somma * somma;\n    }\n    \n    \n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        \n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n            case WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno è avvolto nel mistero...\";\n        }\n    }\n    \n    /**\n     * Verifica se un numero è magico.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n\n    /**\n     * Somma le cifre di un numero.\n     * @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */\n    private static int sommaCifre(int numero) {\n        int somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;\n            numero /= 10;\n        }\n        return somma;\n    }\n    \n    /**\n     * Verifica se un numero è primo.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è di Fibonacci, false altrimenti.\n     */\n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }\n    \n    /**\n     * Verifica se è un quadrato perfetto.\n     * @param n Il numero da verificare.\n     * @return true se il numero è un quadrato perfetto, false altrimenti.\n     */\n    private static boolean isPerfectSquare(int n) {\n        int sqrt = (int) Math.sqrt(n);\n        return sqrt * sqrt == n;\n    }\n}",
+        "text": "// File: my_project/DateUtilCustom.java\n* @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {\n        SimpleDateFormat sdf = new SimpleDateFormat(\"dd/MM/yyyy\");\n        return sdf.format(date);\n    }\n\n    /**\n     * Formatta una data nel formato specificato.\n     *\n     * @param date   La data da formattare.\n     * @param format Il formato desiderato (es. \"yyyy-MM-dd\").\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 18,
+        "end_line": 33,
+        "class": ""
+    },
+    {
+        "id": 3,
+        "text": "// File: my_project/DateUtilCustom.java\n* @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.format(date);\n    }\n\n    /**\n     * Converte una stringa in un oggetto Date.\n     *\n     * @param dateString La stringa da convertire (es. \"31/12/2023\").\n     * @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 33,
+        "end_line": 44,
+        "class": ""
+    },
+    {
+        "id": 4,
+        "text": "// File: my_project/DateUtilCustom.java\n* @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.\n     * @throws ParseException Se la stringa non è nel formato corretto.\n     */\n    public static Date parseDate(String dateString, String format) throws ParseException {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.parse(dateString);\n    }\n\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 44,
+        "end_line": 58,
+        "class": ""
+    },
+    {
+        "id": 5,
+        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */\n    public static long getDifferenceInDays(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Calcola la differenza in ore tra due date.\n     *",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 58,
+        "end_line": 73,
+        "class": ""
+    },
+    {
+        "id": 6,
+        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in ore.\n     */\n    public static long getDifferenceInHours(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 73,
+        "end_line": 90,
+        "class": ""
+    },
+    {
+        "id": 7,
+        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n\n    /**",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 90,
+        "end_line": 104,
+        "class": ""
+    },
+    {
+        "id": 8,
+        "text": "// File: my_project/DateUtilCustom.java\ncalendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n\n    /**\n     * Verifica se una data è nel passato rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel passato, altrimenti False.\n     */\n    public static boolean isPastDate(Date date) {\n        Date currentDate = new Date();\n        return date.before(currentDate);\n    }\n\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 104,
+        "end_line": 116,
+        "class": ""
+    },
+    {
+        "id": 9,
+        "text": "// File: my_project/DateUtilCustom.java\nreturn date.before(currentDate);\n    }\n\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.\n     * @param dataNascita\n     * @param nome\n     * @return messaggio giorni che mancano al tuo compleanno\n     */\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n\n    /**",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 116,
+        "end_line": 134,
+        "class": ""
+    },
+    {
+        "id": 10,
+        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 134,
+        "end_line": 142,
+        "class": ""
+    },
+    {
+        "id": 11,
+        "text": "// File: my_project/DateUtilCustom.java\n*\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n\n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 142,
+        "end_line": 147,
+        "class": ""
+    },
+    {
+        "id": 12,
+        "text": "// File: my_project/DateUtilCustom.java\nDayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n            case WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 147,
+        "end_line": 147,
+        "class": ""
+    },
+    {
+        "id": 13,
+        "text": "// File: my_project/DateUtilCustom.java\ncase FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno è avvolto nel mistero...\";\n        }\n    }\n}",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 147,
+        "end_line": 147,
+        "class": ""
+    },
+    {
+        "id": 14,
+        "text": "// File: my_project/GiorniMagici.java\nClasse: GiorniMagici\nimport java.time.LocalDate;\n\npublic class GiorniMagici {\n    /**\n     * Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)\n     * @param giorno Il giorno della data.\n     * @param mese Il mese della data.\n     * @param anno L'anno della data.\n     * @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {\n        int ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }",
         "source": "my_project/GiorniMagici.java",
         "type": "code",
         "start_line": 1,
-        "end_line": 112,
+        "end_line": 14,
         "class": "GiorniMagici\n"
+    },
+    {
+        "id": 15,
+        "text": "// File: my_project/GiorniMagici.java\nint ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno\n     * @return Il numero magico generato.\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {\n        int somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);\n        return somma * somma;\n    }\n    \n    \n\n    \n    /**",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 14,
+        "end_line": 34,
+        "class": ""
+    },
+    {
+        "id": 16,
+        "text": "// File: my_project/GiorniMagici.java\nreturn somma * somma;\n    }\n    \n    \n\n    \n    /**\n     * Verifica se un numero è magico.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n\n    /**\n     * Somma le cifre di un numero.\n     * @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 34,
+        "end_line": 50,
+        "class": ""
+    },
+    {
+        "id": 17,
+        "text": "// File: my_project/GiorniMagici.java\n* @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */\n    private static int sommaCifre(int numero) {\n        int somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;\n            numero /= 10;\n        }\n        return somma;\n    }\n    \n    /**\n     * Verifica se un numero è primo.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 50,
+        "end_line": 66,
+        "class": ""
+    },
+    {
+        "id": 18,
+        "text": "// File: my_project/GiorniMagici.java\n* @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 66,
+        "end_line": 79,
+        "class": ""
+    },
+    {
+        "id": 19,
+        "text": "// File: my_project/GiorniMagici.java\nif (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è di Fibonacci, false altrimenti.\n     */\n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 79,
+        "end_line": 97,
+        "class": ""
+    },
+    {
+        "id": 20,
+        "text": "// File: my_project/GiorniMagici.java\nint test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }\n    \n    /**\n     * Verifica se è un quadrato perfetto.\n     * @param n Il numero da verificare.\n     * @return true se il numero è un quadrato perfetto, false altrimenti.\n     */\n    private static boolean isPerfectSquare(int n) {\n        int sqrt = (int) Math.sqrt(n);\n        return sqrt * sqrt == n;\n    }\n\n        /**\n     * Restituisce un segnale Wow specifico in base al giorno indicato",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 97,
+        "end_line": 101,
+        "class": ""
+    },
+    {
+        "id": 21,
+        "text": "// File: my_project/GiorniMagici.java\nreturn sqrt * sqrt == n;\n    }\n\n        /**\n     * Restituisce un segnale Wow specifico in base al giorno indicato\n     * @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 101,
+        "end_line": 101,
+        "class": ""
+    },
+    {
+        "id": 22,
+        "text": "// File: my_project/BasketballStats.java\nClasse: BasketballStats\nimport java.util.Arrays;\nimport java.time.LocalDate;\n\npublic class BasketballStats {\n    \n    /**\n     * Calcola l'efficienza di un giocatore usando la formula PER (Player Efficiency Rating).\n     * Formula semplificata: (punti + rimbalzi + assist) - (palle perse + tiri sbagliati)\n     * \n     * @param punti Punti segnati\n     * @param rimbalzi Rimbalzi presi\n     * @param assist Assist effettuati\n     * @param pallePerse Palle perse\n     * @param tiriSbagliati Tiri sbagliati",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 1,
+        "end_line": 14,
+        "class": "BasketballStats\n"
+    },
+    {
+        "id": 23,
+        "text": "// File: my_project/BasketballStats.java\n* @param assist Assist effettuati\n     * @param pallePerse Palle perse\n     * @param tiriSbagliati Tiri sbagliati\n     * @return Il rating di efficienza del giocatore\n     */\n    public static double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist, \n                                                   int pallePerse, int tiriSbagliati) {\n        return (punti + rimbalzi + assist) - (pallePerse + tiriSbagliati);\n    }\n\n    /**",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 14,
+        "end_line": 25,
+        "class": ""
+    },
+    {
+        "id": 24,
+        "text": "// File: my_project/BasketballStats.java\nreturn (punti + rimbalzi + assist) - (pallePerse + tiriSbagliati);\n    }\n\n    /**\n     * Determina la valutazione di un tiro in base alla distanza e alla pressione difensiva.\n     * \n     * @param distanzaCanestro Distanza dal canestro in metri\n     * @param pressioneDifensiva Valore da 1 a 10 che indica la pressione difensiva\n     * @return Un messaggio che valuta la qualità del tiro\n     */\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 25,
+        "end_line": 33,
+        "class": ""
+    },
+    {
+        "id": 25,
+        "text": "// File: my_project/BasketballStats.java\n*/\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5) {\n            return \"Tiro facile sotto canestro\";\n        } else if (distanzaCanestro < 6.75 && pressioneDifensiva < 7) {\n            return \"Buon tiro da due punti\";\n        } else if (distanzaCanestro >= 6.75 && pressioneDifensiva > 8) {\n            return \"Tiro da tre difficile sotto pressione\";\n        } else {\n            return \"Tiro da tre con buon margine\";\n        }",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 33,
+        "end_line": 47,
+        "class": ""
+    },
+    {
+        "id": 26,
+        "text": "// File: my_project/BasketballStats.java\n} else {\n            return \"Tiro da tre con buon margine\";\n        }\n    }\n\n    /**\n     * Analizza le statistiche di una squadra in una partita.\n     * \n     * @param puntiSegnati Punti segnati dalla squadra\n     * @param tiriTentati Tiri tentati totali\n     * @param rimbalziOffensivi Rimbalzi offensivi presi\n     * @param rimbalziDifensivi Rimbalzi difensivi presi\n     * @return Un report dettagliato delle prestazioni\n     */",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 47,
+        "end_line": 54,
+        "class": ""
+    },
+    {
+        "id": 27,
+        "text": "// File: my_project/BasketballStats.java\n* @param rimbalziDifensivi Rimbalzi difensivi presi\n     * @return Un report dettagliato delle prestazioni\n     */\n    public static String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, \n                                                  int rimbalziOffensivi, int rimbalziDifensivi) {\n        double percentualeRealizzazione = (double) puntiSegnati / (tiriTentati * 2) * 100;\n        int rimbalziTotali = rimbalziOffensivi + rimbalziDifensivi;",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 54,
+        "end_line": 60,
+        "class": ""
+    },
+    {
+        "id": 28,
+        "text": "// File: my_project/BasketballStats.java\nint rimbalziTotali = rimbalziOffensivi + rimbalziDifensivi;\n        \n        StringBuilder report = new StringBuilder();\n        report.append(\"Report Statistiche Squadra:\\n\");\n        report.append(\"- Punti Segnati: \").append(puntiSegnati).append(\"\\n\");\n        report.append(\"- Percentuale Realizzazione: \").append(String.format(\"%.1f%%\", percentualeRealizzazione)).append(\"\\n\");\n        report.append(\"- Rimbalzi Totali: \").append(rimbalziTotali).append(\"\\n\");",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 60,
+        "end_line": 72,
+        "class": ""
+    },
+    {
+        "id": 29,
+        "text": "// File: my_project/BasketballStats.java\nreport.append(\"- Rimbalzi Totali: \").append(rimbalziTotali).append(\"\\n\");\n        report.append(\"- Ratio Rimbalzi Off/Dif: \").append(String.format(\"%.2f\", (double)rimbalziOffensivi/rimbalziDifensivi));\n        \n        return report.toString();\n    }\n\n    /**\n     * Prevede il vincitore di una partita basandosi sulle statistiche precedenti.\n     * \n     * @param squadraCasa Array con [puntiMedi, rimbalziMedi, assistMedi]\n     * @param squadraOspite Array con [puntiMedi, rimbalziMedi, assistMedi]",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 72,
+        "end_line": 80,
+        "class": ""
+    },
+    {
+        "id": 30,
+        "text": "// File: my_project/BasketballStats.java\n* @param squadraOspite Array con [puntiMedi, rimbalziMedi, assistMedi]\n     * @param dataPartita Data della partita\n     * @return Previsione del vincitore con margine\n     */\n    public static String previsioneVincitore(double[] squadraCasa, double[] squadraOspite, LocalDate dataPartita) {\n        double valutazioneCasa = squadraCasa[0] * 0.4 + squadraCasa[1] * 0.3 + squadraCasa[2] * 0.3;\n        double valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 80,
+        "end_line": 92,
+        "class": ""
+    },
+    {
+        "id": 31,
+        "text": "// File: my_project/BasketballStats.java\ndouble valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;\n        \n        double margine = Math.abs(valutazioneCasa - valutazioneOspite);\n        \n        if (valutazioneCasa > valutazioneOspite) {\n            return String.format(\"Vittoria casa prevista con margine di %.1f punti\", margine);\n        } else if (valutazioneOspite > valutazioneCasa) {\n            return String.format(\"Vittoria ospite prevista con margine di %.1f punti\", margine);",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 92,
+        "end_line": 101,
+        "class": ""
+    },
+    {
+        "id": 32,
+        "text": "// File: my_project/BasketballStats.java\nreturn String.format(\"Vittoria ospite prevista con margine di %.1f punti\", margine);\n        } else {\n            return \"Partita equilibrata, impossibile fare previsioni\";\n        }\n    }\n\n    /**\n     * Calcola il \"momentum\" della partita basato sugli ultimi eventi.\n     * \n     * @param ultimiPuntiCasa Ultimi punti segnati dalla squadra di casa\n     * @param ultimiPuntiOspite Ultimi punti segnati dalla squadra ospite\n     * @return Descrizione del momentum della partita\n     */",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 101,
+        "end_line": 110,
+        "class": ""
+    },
+    {
+        "id": 33,
+        "text": "// File: my_project/BasketballStats.java\n* @return Descrizione del momentum della partita\n     */\n    public static String calcolaMomentum(int[] ultimiPuntiCasa, int[] ultimiPuntiOspite) {\n        int sommaCasa = Arrays.stream(ultimiPuntiCasa).sum();\n        int sommaOspite = Arrays.stream(ultimiPuntiOspite).sum();\n        \n        if (sommaCasa > sommaOspite + 10) {\n            return \"Momentum fortemente a favore della squadra di casa!\";\n        } else if (sommaOspite > sommaCasa + 10) {",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 110,
+        "end_line": 110,
+        "class": ""
+    },
+    {
+        "id": 34,
+        "text": "// File: my_project/BasketballStats.java\nreturn \"Momentum fortemente a favore della squadra di casa!\";\n        } else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";\n        } else {\n            return \"Leggero momentum a favore della squadra \" + \n                   (sommaCasa > sommaOspite ? \"di casa\" : \"ospite\");\n        }\n    }\n}",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 110,
+        "end_line": 110,
+        "class": ""
     }
 ]

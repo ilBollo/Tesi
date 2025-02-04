@@ -9,6 +9,39 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{gray!10},
+    showstringspaces=false,
+    string=[db]{"},
+    stringstyle=\color{green!50!black},
+    morestring=[s][\color{black}]{\ \ "}{":},
+    keywordstyle=\color{blue},
+    keywords={true,false,null},
+    literate=
+     *{0}{{{\color{red}0}}}{1}
+      {1}{{{\color{red}1}}}{1}
+      {2}{{{\color{red}2}}}{1}
+      {3}{{{\color{red}3}}}{1}
+      {4}{{{\color{red}4}}}{1}
+      {5}{{{\color{red}5}}}{1}
+      {6}{{{\color{red}6}}}{1}
+      {7}{{{\color{red}7}}}{1}
+      {8}{{{\color{red}8}}}{1}
+      {9}{{{\color{red}9}}}{1}
+      {.}{{{\color{red}.}}}{1}
+      {:}{{{\color{gray}{:}}}}{1}
+      {,}{{{\color{gray}{,}}}}{1}
+      {\{}{{{\color{gray}{\{}}}}{1}
+      {\}}{{{\color{gray}{\}}}}}{1}
+      {[}{{{\color{gray}{[}}}}{1}
+      {]}{{{\color{gray}{]}}}}{1},
+}
+
 \usetikzlibrary{shapes,arrows,positioning}
 \usetikzlibrary{fit}
 \tikzstyle{block} = [rectangle, draw, fill=white, 
@@ -508,40 +541,125 @@ Inoltre occorre prestare attenzione alla dimensione dei chunk generati:
     \item Troppo grandi: Chunk troppo grandi perdono focalizzazione semantica
 \end{itemize}
 Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
-Il seguente codice Python mostra come suddividere il file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
-\begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione del file Java in chunk}, label={lst:chunking}]
+Il seguente codice Python mostra come suddividere i file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
+\begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione dei file Java in chunk}, label={lst:chunking}]
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     import json
     
-    # Carica il file Java
-    with open("my_project/DateUtil.java", "r") as f:
-        java_code = f.read()
+    # Funzione per caricare e suddividere un file Java
+    def process_file(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+         lines = f.readlines()
     
-    # Suddividi il codice in chunk
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=512,  # Dimensione di ogni chunk
-        chunk_overlap=128,  # Overlap tra chunk
-        separators=["\n\n", "\n", " ", ""]  # Separatori per il codice
+        # Ricostruisce il testo mantenendo le informazioni sulle linee
+        text = ''.join(lines)
+    
+        splitter = RecursiveCharacterTextSplitter(
+        chunk_size=512,
+        chunk_overlap=128,
+        separators=[
+            "\n}\n\npublic",  # I seguenti separatori sono stati usati per provare a mantenere i metodi uniti
+            "\n}\n\nprivate",
+            "\n}\n\nprotected",
+            "\n}\n\n//",       # Nuovo separatore per commenti
+            "\nclass ",
+            "\n@Override",     # Cattura le implementazioni di interfacce
+            "\n@Test",         # Per eventuali test case
+            "\n/**",           # Separatore per Javadoc
+            "\n * ",
+            "\n"
+        ],
+        keep_separator=True,
+        is_separator_regex=False
     )
     
-    chunks = splitter.split_text(java_code)
+        chunks = splitter.split_text(text)
+        # Calcola le linee esatte per ogni chunk
+        chunk_metadata = []
+        cursor = 0
+        for chunk in chunks:
+            start_line = text.count('\n', 0, cursor) + 1
+            chunk_length = len(chunk)
+            end_line = text.count('\n', 0, cursor + chunk_length) + 1
+            chunk_metadata.append({
+                "start_line": start_line,
+                "end_line": end_line,
+                "text": chunk
+            })
+            cursor += chunk_length
+        
+        return chunk_metadata
+    
+    # Carica e suddividi i file Java
+    files = ["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java"]
+    all_chunks = []
+    
+    for file_path in files:
+        chunks_info = process_file(file_path)
+        for chunk_info in chunks_info:
+            chunk_text = chunk_info["text"]
+            
+            # Aggiungi contesto strutturale
+            class_context = ""
+            if "class " in chunk_text:
+                class_name = chunk_text.split("class ")[1].split("{")[0].strip()
+                class_context = f"Classe: {class_name}\n"
+            
+            all_chunks.append({
+                "id": len(all_chunks) + 1,
+                "text": f"// File: {file_path}\n{class_context}{chunk_text}",
+                "source": file_path,
+                "type": "code",
+                "start_line": chunk_info["start_line"],
+                "end_line": chunk_info["end_line"],
+                "class": class_context.replace("Classe: ", "") if class_context else ""
+            })
     
     # Salva i chunk in un file JSON
-    chunks_data = [
-        {
-            "id": i + 1,
-            "text": chunk,
-            "source": "DateUtil.java",  # Nome del file
-            "type": "code",             # Tipo di contenuto
-            "start_line": 0,            # Linea di inizio (da calcolare)
-            "end_line": 0               # Linea di fine (da calcolare)
-        }
-        for i, chunk in enumerate(chunks)
-    ]
     with open("chunks.json", "w", encoding="utf-8") as f:
-        json.dump(chunks_data, f, indent=4, ensure_ascii=False)
+        json.dump(all_chunks, f, indent=4, ensure_ascii=False)
     \end{lstlisting}
 
+
+    Il chunking è costruito in maniera specifica per codice java.
+    I separatori sono stati scelti per tentare di segmentare il codice secondo la struttura tipica dei metodi e delle classi, garantendo che il chunk contenga blocchi di codice "interi".
+    L'opzione \texttt{keep\_separator=True} fa sì che il separatore venga mantenuto nel chunk risultante.
+    Per ciascun chunk, se nel testo è presente la stringa \texttt{class}, il codice estrae il nome della classe 
+    (prendendo il testo che segue \texttt{class} fino al primo \texttt{\{}) e lo utilizza per creare un contesto 
+    strutturale (es \texttt{Classe: NomeClasse}).
+    Questo contesto viene preappeso al testo del chunk e salvato anche come valore nel campo "class".
+
+    Il risultato nel file chunks.json è il seguente:
+    \begin{lstlisting}[language=json,firstnumber=1, caption={Esempio di chunks generati}, label={lst:chunks-example}]
+        [
+            {
+                "id": 1,
+                "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\npublic class DateUtilCustom {\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n            case WEDNESDAY: return \"Il velo tra i mondi e' sottile oggi.\";\n            case THURSDAY: return \"L'energia magica e' potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno e' avvolto nel mistero...\";\n        }\n    }\n}",
+                "source": "my_project/DateUtilCustom.java",
+                "type": "code",
+                "start_line": 1,
+                "end_line": 29,
+                "class": "DateUtilCustom"
+            },
+            {
+                "id": 2,
+                "text": "// File: my_project/GiorniMagici.java\nClasse: GiorniMagici\npublic class GiorniMagici {\n    public static String segnaleWow(LocalDate data) {\n        String wow = \"il tuo segnale Wow e': \" + DateUtilCustom.getMessaggioMagico(date);\n        return wow;\n    }\n}",
+                "source": "my_project/GiorniMagici.java",
+                "type": "code",
+                "start_line": 1,
+                "end_line": 8,
+                "class": "GiorniMagici"
+            }
+        ]
+        \end{lstlisting}
+        
+        Ogni chunk mantiene:
+        \begin{itemize}
+            \item Il riferimento al file sorgente
+            \item Il nome della classe
+            \item Le righe di inizio e fine nel file originale
+            \item Il contenuto del codice con la sua struttura
+        \end{itemize}
 
     \subsection{Generazione degli Embedding}
     Gli embedding trasformano i chunk in rappresentazioni vettoriali (array numerici) che catturano il significato semantico.

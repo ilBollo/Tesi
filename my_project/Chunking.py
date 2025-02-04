@@ -4,7 +4,6 @@ import json
 # Funzione per caricare e suddividere un file Java
 def process_file(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
-     #   java_code = f.read()
      lines = f.readlines()
 
     # Ricostruisce il testo mantenendo le informazioni sulle linee
@@ -14,10 +13,16 @@ def process_file(file_path):
     chunk_size=512,
     chunk_overlap=128,
     separators=[
-        "\n}\n\npublic",  # Priorità ai metodi interi
+        "\n}\n\npublic",  # I seguenti separatori sono stati usati per provare a mantenere i metodi uniti
         "\n}\n\nprivate",
         "\n}\n\nprotected",
-        "\nclass "
+        "\n}\n\n//",       # Nuovo separatore per commenti
+        "\nclass ",
+        "\n@Override",     # Cattura le implementazioni di interfacce
+        "\n@Test",         # Per eventuali test case
+        "\n/**",           # Separatore per Javadoc
+        "\n * ",
+        "\n"
     ],
     keep_separator=True,
     is_separator_regex=False
@@ -41,7 +46,7 @@ def process_file(file_path):
     return chunk_metadata
 
 # Carica e suddividi i file Java
-files = ["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java"]
+files = ["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java"]
 all_chunks = []
 
 for file_path in files:
