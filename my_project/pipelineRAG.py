@@ -36,24 +36,22 @@ CODEQWEN_TEMPLATE = """<|im_start|>system
 <|im_start|>assistant
 """
 
+COMMON_PARAMS = {
+    "temperature": 0.3,
+    "top_p": 0.85,  # Bilancia creatività/controllo nei token generati
+    "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
+}
+
 # 4. Funzione per selezionare il modello
 def load_model(model_name):
     models = {
         "llama3.2": {
             "template": LLAMA_TEMPLATE,
-            "params": {
-                "temperature": 0.3,
-                "top_p": 0.85, #Bilancia creatività/controllo nei token generati
-                "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
-            }
+            "params": COMMON_PARAMS
         },
         "codeqwen": {
             "template": CODEQWEN_TEMPLATE,
-            "params": {
-                "temperature": 0.3,
-                "top_p": 0.85, #Bilancia creatività/controllo nei token generati
-                "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
-            }
+            "params": COMMON_PARAMS
         }
     }
     
