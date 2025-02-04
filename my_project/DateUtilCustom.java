@@ -1,6 +1,8 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -93,7 +95,12 @@ public class DateUtilCustom {
     }
 
     
-
+    /**
+     * Calcola i giorni che mancano al compleanno di una persona.
+     * @param dataNascita
+     * @param nome
+     * @return messaggio giorni che mancano al tuo compleanno
+     */
     public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {
         return "Caro" + nome + " mancano " + getDifferenceInDays(dataNascita, getCurrentDate()) + " giorni al tuo compleanno";
     }
@@ -119,16 +126,22 @@ public class DateUtilCustom {
     }
 
     /**
-     * Restituisce una stringa magica con un messaggio specifico in base al giorno indicato....
-     * @param date
+     * Ottieni un messaggio magico in base al giorno della settimana di una data.
+     * @param datamagica
      * @return Il messaggio magico.
+     * @throws DateTimeParseException Se la data non è valida.
      */
-    public static String sorpresa (LocalDate date){
-        String uao = GiorniMagici.getMessaggioMagico(date) ;
-        return uao;
-    }
-    // Esempio di utilizzo della libreria
-    public static void main(String[] args) {
-//            System.out.println(sorpresa(LocalDate.of(2025, 1, 28)));
+    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {
+        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();
+        switch(giornoSettimana) {
+            case MONDAY: return "La magia inizia nel silenzio...";
+            case TUESDAY: return "I sussurri degli antichi si fanno sentire.";
+            case WEDNESDAY: return "Il velo tra i mondi è sottile oggi.";
+            case THURSDAY: return "L'energia magica è potente e chiara.";
+            case FRIDAY: return "Attenzione agli incantesimi del crepuscolo.";
+            case SATURDAY: return "Il giorno perfetto per scoprire segreti nascosti.";
+            case SUNDAY: return "Riposa e rigenera il tuo potere magico.";
+            default: return "Il giorno è avvolto nel mistero...";
+        }
     }
 }

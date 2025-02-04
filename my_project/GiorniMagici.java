@@ -1,14 +1,12 @@
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 public class GiorniMagici {
     /**
-    // Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)
-    // @param giorno Il giorno della data.
-    // @param mese Il mese della data.
-    // @param anno L'anno della data.
-    // @return true se la data è magica, false altrimenti.
+     * Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)
+     * @param giorno Il giorno della data.
+     * @param mese Il mese della data.
+     * @param anno L'anno della data.
+     * @return true se la data è magica, false altrimenti.
      */
     public static boolean isDataMagica(int giorno, int mese, int anno) {
         int ultimeDueCifreAnno = anno % 100;
@@ -28,26 +26,7 @@ public class GiorniMagici {
     }
     
     
-    /**
-     * Ottieni un messaggio magico in base al giorno della settimana di una data.
-     * @param datamagica
-     * @return Il messaggio magico.
-     * @throws DateTimeParseException Se la data non è valida.
-     */
-    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {
-        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();
-        
-        switch(giornoSettimana) {
-            case MONDAY: return "La magia inizia nel silenzio...";
-            case TUESDAY: return "I sussurri degli antichi si fanno sentire.";
-            case WEDNESDAY: return "Il velo tra i mondi è sottile oggi.";
-            case THURSDAY: return "L'energia magica è potente e chiara.";
-            case FRIDAY: return "Attenzione agli incantesimi del crepuscolo.";
-            case SATURDAY: return "Il giorno perfetto per scoprire segreti nascosti.";
-            case SUNDAY: return "Riposa e rigenera il tuo potere magico.";
-            default: return "Il giorno è avvolto nel mistero...";
-        }
-    }
+
     
     /**
      * Verifica se un numero è magico.
@@ -108,5 +87,15 @@ public class GiorniMagici {
     private static boolean isPerfectSquare(int n) {
         int sqrt = (int) Math.sqrt(n);
         return sqrt * sqrt == n;
+    }
+
+        /**
+     * Restituisce un segnale Wow specifico in base al giorno indicato
+     * @param date
+     * @return Il segnale Wow.
+     */
+    public static String segnaleWow (LocalDate date){
+        String wow = "il tuo segnale Wow è :" + DateUtilCustom.getMessaggioMagico(date) ;
+        return wow;
     }
 }

@@ -21,7 +21,7 @@ vector_store = FAISS.load_local(
 # 3. Configurazione Template del prompt
 LLAMA_TEMPLATE = """<|begin_of_text|>
 <|start_header_id|>system<|end_header_id|>
-Sei un esperto di programmazione. Rispondi in italiano basandoti esclusivamente sul contesto fornito.
+Sei un esperto di programmazione. Rispondi in italiano.
 Contesto: {context}<|eot_id|>
 <|start_header_id|>user<|end_header_id|>
 Domanda: {question}<|eot_id|>
@@ -63,7 +63,7 @@ def load_model(model_name):
                 # 0.1-0.4: conservativa, buona per codice
                 # 0.5-0.7: bilanciata
                 # 0.8-1.0: molto creativa
-                "temperature": 0.4,  # Valore intermedio
+                "temperature": 0.6,  # Valore intermedio
     #            "top_p": 0.9,        # Aggiungere sampling nucleare
 #- 0.7-0.8: Stabilità delle keyword tecniche
 #- 0.9-0.95: Flessibilità nella composizione sintattica
@@ -94,8 +94,8 @@ rag_chain = RetrievalQA.from_chain_type(
     chain_type="stuff",
     retriever=vector_store.as_retriever(
         search_kwargs={
-            "k": 8,                   # Più documenti per contesto
-            "score_threshold": 0.15,   # bassa similarità
+            "k": 3,                   # Più documenti per contesto
+            "score_threshold": 0.85,   # bassa similarità
             "search_type": "similarity",  # Più efficace per il codice
             #"search_type": "mmr",      # Usare MMR per diversità
             "lambda_mult": 0.5,       # Bilancia diversità/rilevanza
@@ -134,4 +134,4 @@ def ask_ollama(question):
 # 8. Esempio d'uso
 if __name__ == "__main__":
    # ask_ollama("Cosa ritorna sorpresa (LocalDate.of(2025, 1, 10))")
-    ask_ollama("Cosa ritorna il metodo GiorniMagici.getMessaggioMagico(LocalDate.of(2025, 1, 10))?")
+    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")

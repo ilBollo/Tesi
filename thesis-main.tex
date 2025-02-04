@@ -418,17 +418,10 @@ Il sistema RAG implementa un'architettura modulare composta da cinque componenti
 
 
 \section{Software Utilizzati}
-\subsection{Ollama}
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.1\linewidth]{figures/ollama.png}
-    \caption{Logo di Ollama}
-    \label{fig:ollama-logo}
-\end{figure}
+\subsection{Ollama\hspace{0.3cm}\protect\includegraphics[width=0.03\linewidth]{figures/ollama.png}}
 Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM
 senza dover dipendere da servizi cloud esterni.
 Il software è stato scelto per la sua flessibilità, permettendo di integrare facilmente i modelli LLM nel sistema RAG.
-
 \subsection{LLM}
 Ogni LLM è specializzato per determinati scopi,
 per questo motivo per rendere più completa la ricerca sono stati utilizzati due modelli.
@@ -440,7 +433,7 @@ Il modello, con 3 miliardi di parametri, è ottimizzato per compiti di dialogo m
 La scelta è ricaduta su questa versione per il suo equilibrio tra prestazioni e requisiti computazionali che permottono il suo utilizzo senza hardware troppo potente.
 
 \subsubsection{Codeqwen 1.5}
-Codeqwen \cite{codeqwen1.5} è un modello di linguaggio open source sviluppato da Qwen AI specializzato nella generazione di codice e documentazione tecnica.  
+Codeqwen \cite{codeqwen1.5} è un modello di linguaggio open source specializzato nella generazione di codice e documentazione tecnica.  
 Con 7 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato.
 La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità. 
 %\subsubsection{qwen2.5-coder:3b}
@@ -449,14 +442,62 @@ La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla su
 %La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità.
 
 \subsection{LangChain}
-LangChain \cite{langchain} è un framework open source progettato per la gestione di dati strutturati e non strutturati in contesti multilingue. Fornisce strumenti avanzati per la creazione e la gestione di database vettoriali, facilitando l'organizzazione e la ricerca di informazioni in modo efficiente. LangChain è stato scelto per la sua capacità di integrare modelli di linguaggio con fonti di dati esterne.
+LangChain \cite{langchain} è un framework open source progettato per costruire applicazioni basate su LLM.
+Fornisce strumenti avanzati per integrare modelli con dati esterni ed API, creare pipeline con chain
+e gestire database vettoriali, supportando l'implementazione di sistemi RAG.
 
 \subsection{BGE-M3}
 BGE-M3 \cite{bge-m3} è un database vettoriale open source per la gestione di dati strutturati e non strutturati multilingue, sviluppato da BigGraph Engine.
 
-
 \section{Dataset}
-Il dataset utilizzato per il caso studio è una classe custom di prova DateUtil.java simile ad una personalizzata utilizzata in qualsisi azienda per gestire il formato delle date.
+Il dataset creato appositamente è composto da tre classi Java:
+
+\begin{description}
+    \item[DateUtilCustom.java] Classe personalizzata per gestire le date
+    \item[GiorniMagici.java] Classe per calcolare in maniera particolare dei giorni
+    \item[BasketballStats.java] Classe per calcolare statistiche relative al mondo del basket
+\end{description}
+
+La classe BasketballStats non ha nessuna relazione diretta con le altre due classi, mentre DateUtilCustom.java e GiorniMagici.java sono strettamente correlate.
+Andremo a testare il sistema RAG con il seguente scenario:
+
+\begin{itemize}
+    \item \textbf{Query:} Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 1, 10))}?
+\end{itemize}
+
+\subsubsection{Codice di riferimento}
+In GiorniMagici.java è presente la seguente funzione:
+
+\begin{lstlisting}[language=Java, caption={Metodo segnaleWow in GiorniMagici.java}, label={lst:segnaleWow}]
+public static String segnaleWow(LocalDate data) {
+    String wow = "il tuo segnale Wow e': " + DateUtilCustom.getMessaggioMagico(date);
+    return wow;
+}
+\end{lstlisting}
+
+Questa funzione richiama il metodo \texttt{getMessaggioMagico} presente in DateUtilCustom.java:
+
+\begin{lstlisting}[language=Java, caption={Metodo getMessaggioMagico in DateUtilCustom.java}, label={lst:getMessaggioMagico}]
+public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {
+    DayOfWeek giornoSettimana = datamagica.getDayOfWeek();
+    switch(giornoSettimana) {
+        case MONDAY: return "La magia inizia nel silenzio...";
+        case TUESDAY: return "I sussurri degli antichi si fanno sentire.";
+        case WEDNESDAY: return "Il velo tra i mondi e' sottile oggi.";
+        case THURSDAY: return "L'energia magica e' potente e chiara.";
+        case FRIDAY: return "Attenzione agli incantesimi del crepuscolo.";
+        case SATURDAY: return "Il giorno perfetto per scoprire segreti nascosti.";
+        case SUNDAY: return "Riposa e rigenera il tuo potere magico.";
+        default: return "Il giorno e' avvolto nel mistero...";
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Risultato Atteso}
+Essendo il 10 gennaio 2025 un venerdì, ci aspettiamo come risposta:
+\begin{quote}
+    \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}
+\end{quote}
 
 \section{Implementazione}
 \subsection{Creazione dei Chunk}
