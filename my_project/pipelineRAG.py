@@ -1,6 +1,6 @@
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
@@ -28,19 +28,11 @@ Domanda: {question}<|eot_id|>
 <|start_header_id|>assistant<|end_header_id|>"""
 
 CODEQWEN_TEMPLATE = """<|im_start|>system
-Analizza i frammenti di codice seguenti (possono essere incompleti):
-{context}
-
-Istruzioni vincolanti:
-1. Rispondi SEMPRE in italiano anche con informazioni parziali
-2. Segnala PRECISAMENTE le parti mancanti dal contesto
-3. Formato richiesto:
-   ✔️ Blocco codice Java corretto
-   ✔️ Commenti esplicativi se necessario
-   ✔️ Riferimenti ai metodi collegati
-   ❌ Mai inventare sintassi o API<|im_end|>
+{{ .System }}<|im_end|>
+{{ if .Functions }}<|im_start|>functions
+{{ .Functions }}<|im_end|>{{ end }}
 <|im_start|>user
-Domanda: {question}<|im_end|>
+{{ .Question }}<|im_end|>
 <|im_start|>assistant
 """
 
@@ -50,26 +42,16 @@ def load_model(model_name):
         "llama3.2": {
             "template": LLAMA_TEMPLATE,
             "params": {
-                "temperature": 0.7,
+                "temperature": 0.6,
                 "system": "Rispondi in italiano come esperto di programmazione"
             }
         },
         "codeqwen": {
             "template": CODEQWEN_TEMPLATE,
             "params": {
-                                # Temperature 0.4: più deterministica, risposte più conservative
-                # Range temperature:
-                # 0.0: completamente deterministica
-                # 0.1-0.4: conservativa, buona per codice
-                # 0.5-0.7: bilanciata
-                # 0.8-1.0: molto creativa
-                "temperature": 0.6,  # Valore intermedio
-    #            "top_p": 0.9,        # Aggiungere sampling nucleare
-#- 0.7-0.8: Stabilità delle keyword tecniche
-#- 0.9-0.95: Flessibilità nella composizione sintattica
-                #"system": "Fornisci codice basato sul contesto"
-               # "system": "Fornisci la risposta basandoti sul contesto disponibile, anche se parziale dai una risposta"
-                "system": "Rispondi in italiano come esperto di programmazione"
+                "temperature": 0.3,
+                "top_p": 0.85,
+                "system": "Sei un assistente esperto di programmazione."
             }
         }
     }
@@ -77,7 +59,7 @@ def load_model(model_name):
     if model_name not in models:
         raise ValueError(f"Modello non supportato: {model_name}")
     
-    return Ollama(
+    return OllamaLLM(
         model=model_name,
         **models[model_name]["params"]
     ), PromptTemplate(
@@ -86,7 +68,7 @@ def load_model(model_name):
     )
 
 # 5. Inizializza il modello
-llm, prompt = load_model("codeqwen")
+llm, prompt = load_model("llama3.2")
 
 # 6. Catena RAG corretta
 rag_chain = RetrievalQA.from_chain_type(
@@ -111,27 +93,27 @@ def ask_ollama(question):
     try:
         retrieved_docs = vector_store.similarity_search(question, k=3)
         if not retrieved_docs:
-            print("\033[1;31mNessun documento rilevante trovato!\033[0m")
+            print("Nessun documento rilevante trovato!")
             return        
-        print("\n\033[1;36mDOCUMENTI RECUPERATI:\033[0m")
+        print("DOCUMENTI RECUPERATI:")
         for doc in retrieved_docs:
             print(f"- {doc.page_content[:200]}...\n")
         result = rag_chain.invoke({"query": question})
         
-        print("\n\033[1;34mDOMANDA:\033[0m", question)
-        print("\n\033[1;32mRISPOSTA:\033[0m")
+        print("DOMANDA:", question)
+        print("RISPOSTA:")
         print(result["result"])
         
-        print("\n\033[1;33mFONTI:\033[0m")
+        print("FONTI:")
         for i, doc in enumerate(result["source_documents"], 1):
             print(f"{i}. {doc.page_content[:150]}...")
             if 'source' in doc.metadata:
-                print(f"   Fonte: {doc.metadata['source']}")
+                print(f" Fonte: {doc.metadata['source']}")
             print("-" * 80)
     except Exception as e:
-        print(f"\033[1;31mERRORE:\033[0m {str(e)}")
+        print(f"ERRORE: {str(e)}")
 
 # 8. Esempio d'uso
 if __name__ == "__main__":
    # ask_ollama("Cosa ritorna sorpresa (LocalDate.of(2025, 1, 10))")
-    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")
+    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza il metodo DateUtilCustom.getMessaggioMagico(date)?")
