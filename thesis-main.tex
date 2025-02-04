@@ -376,9 +376,9 @@ Per mantenere l'efficacia del sistema nel tempo:
 
 Questo approccio permette di superare le limitazioni dei LLM, fornendo risposte più accurate e contestualizzate grazie all'integrazione di conoscenze esterne aggiornate.
 
-\chapter{Caso Studio: Implementazione di un Sistema RAG per lo Sviluppo del Software}
+\chapter{Implementazione di un Sistema RAG per lo Sviluppo del Software}
 
-\section{Obiettivi del Caso Studio}
+\section{Obiettivi}
 
 Questo caso studio si propone di verificare il livello di personalizzazione e qualità delle risposte di un LLM potenziando la query nel prompt di input 
 attraverso la creazione di un sistema RAG di supporto.
@@ -535,11 +535,7 @@ Essendo il 10 gennaio 2025 un venerdì, ci aspettiamo come risposta:
 \section{Implementazione}
 \subsection{Creazione dei Chunk}
 I modelli di embedding hanno limiti massimi di input (512-4096 token)  per questo spezzare il codice in chunk di dimensioni adeguate è fondamentale.
-Inoltre occorre prestare attenzione alla dimensione dei chunk generati:
-\begin{itemize}
-    \item Troppo piccoli: Riducono il contesto disponibile per il modello
-    \item Troppo grandi: Chunk troppo grandi perdono focalizzazione semantica
-\end{itemize}
+Inoltre occorre prestare attenzione alla dimensione dei chunk generati, se troppo piccoli riducono il contesto disponibile per il modello mentre se troppo grandi perdono focalizzazione semantica.
 Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
 Il seguente codice Python mostra come suddividere i file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
 \begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione dei file Java in chunk}, label={lst:chunking}]
@@ -661,10 +657,46 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
             \item Il contenuto del codice con la sua struttura
         \end{itemize}
 
+        \subsection{Arricchire i chunk con metadati relativi al codice}
+        Oltre al testo del codice, è importante mantenere informazioni aggiuntive per facilitare la ricerca e l'interpretazione dei chunk.
+        La seguente funzione \texttt{extract\_method\_name} aggiunge una stringa contestuale per ogni chunk che include:
+        \begin{itemize}
+            \item Il nome del metodo o della classe
+            \item La classe di appartenenza
+            \item Le righe di inizio e fine del codice
+        \end{itemize}
+        
+        \begin{lstlisting}[language=Python, caption={Funzione extract\_method\_name}]
+        import re
+        
+        def extract_method_name(text):
+            # Cerca firme di metodi Java standard
+            method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
+            
+            # Cerca costruttori
+            constructor_pattern = r'(?:public|private|protected)\s+(\w+)\s*\([^)]*\)'
+            
+            matches = re.findall(method_pattern, text)
+            if matches:
+                return matches[0]  # Restituisce il primo metodo trovato
+            
+            constr_matches = re.findall(constructor_pattern, text)
+            if constr_matches:
+                return constr_matches[0] + " (costruttore)"
+            
+            # Cerca chiamate a metodi nel chunk
+            method_calls = re.findall(r'\.(\w+)\s*\(', text)
+            if method_calls:
+                return f"Chiamata a: {method_calls[-1]}"
+            
+            return "unknown_method"  # Default se non trova nulla
+    \end{lstlisting}
+        
     \subsection{Generazione degli Embedding}
-    Gli embedding trasformano i chunk in rappresentazioni vettoriali (array numerici) che catturano il significato semantico.
-    Il seguente codice Python mostra come generare gli embedding e creare un database FAISS.
-    FAISS (Facebook AI Similarity Search) è una libreria ottimizzata per la ricerca di similarità in spazi ad alta dimensionalità.
+    Gli embedding trasformano i chunk in rappresentazioni vettoriali che catturano il significato semantico.
+    Il seguente codice Python mostra come generare gli embedding e creare un database Faiss.
+    FAISS \cite{faiss} (Facebook AI Similarity Search) è una libreria ottimizzata per la ricerca di similarità in spazi ad alta dimensionalità.
+    Utilizza la ricerca di somiglianza utilizzando la distanza euclidea tra i vettori.
     
     \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database FAISS}, label={lst:embeddings}]
         import json
@@ -679,12 +711,16 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
         
         # 2. Carica il modello BGE-M3 e genera gli embedding
         embedder = SentenceTransformer('BAAI/bge-m3')
-        embeddings = embedder.encode(chunks, show_progress_bar=True)
+        embeddings = embedder.encode(
+            [f"METHOD:{extract_method_name(c['text'])} CLASS:{c['class']} LINES:{c['start_line']}-{c['end_line']} CONTENT:{c['text']}" 
+             for c in chunks_data],
+            show_progress_bar=True
+        )
         
         # 3. Crea un database FAISS
         vector_store = FAISS.from_embeddings(
             text_embeddings=list(zip(chunks, embeddings)),  # Abbina testi e embedding
-            embedding=embedder,
+            embedding=embedder,  # Modello per future operazioni
         )
         
         # 4. Salva il database

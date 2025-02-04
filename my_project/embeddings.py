@@ -5,7 +5,6 @@ from langchain_community.vectorstores import FAISS
 import re
 
 def extract_method_name(text):
-    # Cerca firme di metodi Java standard
     method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
     
     # Cerca costruttori
