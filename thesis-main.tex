@@ -538,17 +538,16 @@ Il dataset creato appositamente è composto da tre classi Java:
 \begin{description}
     \item[DateUtilCustom.java] Classe personalizzata per gestire le date
     \item[GiorniMagici.java] Classe per calcolare in maniera particolare dei giorni
-    \item[BasketballStats.java] Classe per calcolare statistiche relative al mondo del basket
+    \item[BasketballStats.java] Classe per calcolare statistiche relative al mondo del basket,
+     questa classe non ha nessuna relazione diretta con le altre due classi, mentre DateUtilCustom.java e GiorniMagici.java sono strettamente correlate.
+     Andremo a testare il sistema RAG con il seguente scenario: 
 \end{description}
-
-La classe BasketballStats non ha nessuna relazione diretta con le altre due classi, mentre DateUtilCustom.java e GiorniMagici.java sono strettamente correlate.
-Andremo a testare il sistema RAG con il seguente scenario:
 
 \begin{itemize}
     \item \textbf{Query:} Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 1, 10))}?
 \end{itemize}
 
-\subsubsection{Codice di riferimento}
+\subsubsection{Codice di riferimento per rispondere alla query}
 In GiorniMagici.java è presente la seguente funzione:
 
 \begin{lstlisting}[language=Java, caption={Metodo segnaleWow in GiorniMagici.java}, label={lst:segnaleWow}]
@@ -1060,11 +1059,15 @@ Questo è poiché, inizialmente, viene recuperata la data di 10 gennaio 2025 uti
 passando questa data come parametro.
 
 Il metodo `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di tale data. In questo caso, la data 10 gennaio 2025 cade mercoledì, quindi viene restituito il messaggio "Il giorno perfetto per scoprire segreti nascosti."
+
+\subsection{Valutazione del RAG}
+Sfruttando l'approccio "llm as a judge" per valutare automaticamente quanto prodotto dal sistema RAG
+operiamo una valutazione automatica delle risposte prodotte.
+..........
+
 \chapter{Conclusioni}
 
-\section{Valutazione del RAG}
-Sfruttando gli approcci recenti di "llm as a judge" per valutare automaticamente quanto prodotto dal sistema.
-
+da completare
 %In questa tesi ho esplorato l'integrazione di RAG e LLM nello sviluppo del software, dimostrando come questi strumenti possano migliorare significativamente il processo di sviluppo. I risultati principali includono:
 %\begin{itemize}
 %    \item Implementazione di un sistema RAG per la generazione di codice contestualizzato
