@@ -10,9 +10,9 @@
 \usepackage{tikz}
 
 \lstdefinelanguage{json}{
-    basicstyle=\normalfont\ttfamily,
+    basicstyle=\footnotesize\ttfamily,
     numbers=left,
-    numberstyle=\scriptsize,
+    numberstyle=\tiny,
     breaklines=true,
     frame=lines,
     backgroundcolor=\color{gray!10},
@@ -44,6 +44,7 @@
 
 \usetikzlibrary{shapes,arrows,positioning}
 \usetikzlibrary{fit}
+\usetikzlibrary{calc}
 \tikzstyle{block} = [rectangle, draw, fill=white, 
     text width=3cm, text centered, rounded corners, minimum height=2em]
 \tikzstyle{line} = [draw, -latex']
@@ -326,13 +327,65 @@ Allo scopo di:
 
 \section{Funzionamento}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=.8\linewidth]{figures/jumpstart-fm-rag.jpg}
-    \caption{Flusso di una request ad un LLM integrato con un RAG}
-    \label{fig:jumpstart-fm-rag}
-\end{figure}
-RAG è un sistema che integra il processo di generazione del linguaggio con un meccanismo di recupero delle informazioni. Il funzionamento si articola in diverse fasi, come illustrato in \cref{fig:jumpstart-fm-rag}.
+\begin{tikzpicture}[node distance=2.5cm]
+    % Style definitions
+    \tikzstyle{block} = [rectangle, draw, fill=white, 
+        text width=3cm, text centered, rounded corners, minimum height=3em]
+    \tikzstyle{line} = [draw, -latex', thick]
+    \tikzstyle{data} = [text width=2.5cm, text centered]
+    
+    % Input nodes
+    \node [block] (input) {Input\\(Query utente)};
+    \node [block, right=of input] (docs) {Documenti\\(Es:File java)};
+    
+    % Processing nodes
+  %  \node [block, below=of input] (query) {Query\\Processor};
+    \node [block, below=of docs] (chunking) {Text\\Chunking};
+    
+    % Embedding layer
+    \node [block, below=of input] (qembed) {Embedding};
+    \node [block, below=of chunking] (dembed) {Document\\Embedding};
+    
+    % Storage and retrieval
+    \node [block, below=2.5cm of qembed] (vector) {Vector Store\\(Es: FAISS)};
+    
+    % LLM components
+    \node [block, below=of vector] (context) {Context\\Builder};
+    \node [block, right=of context] (llm) {LLM\\(Es:CodeQwen)};
+    \node [block, below=of context] (output) {Response\\Generator};
+    
+    % Connections
+    \path [line] (input) -- (qembed);
+    \path [line] (docs) -- (chunking);
+   % \path [line] (query) -- (qembed);
+    \path [line] (chunking) -- (dembed);
+    \path [line] (qembed) -- (vector);
+    \path [line] (dembed) -- (vector);
+    \path [line] (vector) -- (context);
+    \path [line] (context) -- (llm);
+    \path [line] (llm) -- (output);
+    
+    % Box around everything
+    \node [draw, dashed, fit=(input) (docs) (chunking) (qembed) 
+        (dembed) (vector) (context) (llm) (output),
+        inner sep=1cm, label=above:Sistema RAG] {};
+        
+    % Add data flow labels
+    \node [data] at ($(input)!0.5!(qembed)$) {Vettorizzazione};
+    \node [data] at ($(chunking)!0.5!(dembed)$) {Vettorizzazione};
+    \node [data] at ($(vector)!0.5!(context)$) {Recupero};
+    \node [data] at ($(context)!0.5!(llm)$) {Prompt};
+    \node [data] at ($(llm)!0.5!(output)$) {Risposta};
+\end{tikzpicture}
+
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=.8\linewidth]{figures/jumpstart-fm-rag.jpg}
+%    \caption{Flusso di una request ad un LLM integrato con un RAG}
+%    \label{fig:jumpstart-fm-rag}
+%\end{figure}
+RAG è un sistema che integra il processo di generazione del linguaggio con un meccanismo di recupero delle informazioni.
+Il funzionamento si articola in diverse fasi, come sopra illustrato.
 
 \subsection{Creazione degli Embedding}
 Il sistema RAG utilizza dati esterni al training set originale del LLM, provenienti da diverse fonti come:
@@ -350,7 +403,6 @@ Il sistema RAG inizia con una chiamata di funzione per ricercare nei dati di emb
     \item Il sistema cerca nei dati di embedding le informazioni pertinenti
     \item Se trovate, queste informazioni vengono aggiunte al prompt
 \end{itemize}
-
 \subsection{Fase 2: Recupero delle Informazioni}
 Quando l'utente sottopone una query:
 \begin{itemize}
@@ -367,18 +419,16 @@ Il sistema RAG arricchisce il prompt dell'utente:
     \item Fornisce al modello un contesto arricchito per generare risposte più accurate
 \end{itemize}
 
-\section{Gestione dell'Aggiornamento dei Dati}
-Per mantenere l'efficacia del sistema nel tempo:
-\begin{itemize}
-    \item Ricalcolo degli embedding per i nuovi dati
-    \item Possibilità di aggiornamenti in tempo reale o batch
-\end{itemize}
-
-Questo approccio permette di superare le limitazioni dei LLM, fornendo risposte più accurate e contestualizzate grazie all'integrazione di conoscenze esterne aggiornate.
+\section{Perchè RAG}
+Il RAG permette di superare le limitazioni dei LLM, fornendo risposte accurate e contestualizzate 
+grazie all'integrazione di conoscenze interne e personalizzate.
+Costruire un RAG è una valida alternativa al fine-tuning e permette di avere rapidamente aggiornamenti sulla base dati.
+Cosa più difficile da ottenere con il fine-tuning, che richiede tempo e risorse significative.
+Inoltre è più facile costruire un RAG che intervenire direttamente sul LLM solitamente di proprietà di terzi.
 
 \chapter{Implementazione di un Sistema RAG per lo Sviluppo del Software}
 
-\section{Obiettivi}
+\section{Obiettivo}
 
 Questo caso studio si propone di verificare il livello di personalizzazione e qualità delle risposte di un LLM potenziando la query nel prompt di input 
 attraverso la creazione di un sistema RAG di supporto.
@@ -534,7 +584,7 @@ Essendo il 10 gennaio 2025 un venerdì, ci aspettiamo come risposta:
 
 \section{Implementazione}
 \subsection{Creazione dei Chunk}
-I modelli di embedding hanno limiti massimi di input (512-4096 token)  per questo spezzare il codice in chunk di dimensioni adeguate è fondamentale.
+I modelli di embedding hanno limiti massimi di input (512-4096 token)  per questo spezzare il codice in chunk di dimensioni adeguate è fondamentale oltre che in ogni caso obbligatorio.
 Inoltre occorre prestare attenzione alla dimensione dei chunk generati, se troppo piccoli riducono il contesto disponibile per il modello mentre se troppo grandi perdono focalizzazione semantica.
 Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
 Il seguente codice Python mostra come suddividere i file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
@@ -614,18 +664,15 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
     # Salva i chunk in un file JSON
     with open("chunks.json", "w", encoding="utf-8") as f:
         json.dump(all_chunks, f, indent=4, ensure_ascii=False)
-    \end{lstlisting}
+\end{lstlisting}
+Il chunking è costruito in maniera specifica per codice java, i separatori sono stati scelti per tentare di segmentare il codice secondo la struttura tipica dei metodi e delle classi, garantendo che il chunk contenga blocchi di codice "interi".
+L'opzione \texttt{keep\_separator=True} fa sì che il separatore venga mantenuto nel chunk risultante.
+Per ciascun chunk, se nel testo è presente la stringa \texttt{class}, il codice estrae il nome della classe 
+(prendendo il testo che segue \texttt{class} fino al primo \texttt{\{}) e lo utilizza per creare un contesto 
+strutturale (es \texttt{Classe: NomeClasse}).
+Questo contesto viene preappeso al testo del chunk e salvato anche come valore nel campo "class".
 
-
-    Il chunking è costruito in maniera specifica per codice java.
-    I separatori sono stati scelti per tentare di segmentare il codice secondo la struttura tipica dei metodi e delle classi, garantendo che il chunk contenga blocchi di codice "interi".
-    L'opzione \texttt{keep\_separator=True} fa sì che il separatore venga mantenuto nel chunk risultante.
-    Per ciascun chunk, se nel testo è presente la stringa \texttt{class}, il codice estrae il nome della classe 
-    (prendendo il testo che segue \texttt{class} fino al primo \texttt{\{}) e lo utilizza per creare un contesto 
-    strutturale (es \texttt{Classe: NomeClasse}).
-    Questo contesto viene preappeso al testo del chunk e salvato anche come valore nel campo "class".
-
-    Il risultato nel file chunks.json è il seguente:
+\subsubsection{Il risultato nel file chunks.json è il seguente:}
     \begin{lstlisting}[language=json,firstnumber=1, caption={Esempio di chunks generati}, label={lst:chunks-example}]
         [
             {
@@ -646,53 +693,53 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
                 "end_line": 8,
                 "class": "GiorniMagici"
             }
+            ............continua
         ]
-        \end{lstlisting}
-        
-        Ogni chunk mantiene:
-        \begin{itemize}
-            \item Il riferimento al file sorgente
-            \item Il nome della classe
-            \item Le righe di inizio e fine nel file originale
-            \item Il contenuto del codice con la sua struttura
-        \end{itemize}
-
-        \subsection{Arricchire i chunk con metadati relativi al codice}
-        Oltre al testo del codice, è importante mantenere informazioni aggiuntive per facilitare la ricerca e l'interpretazione dei chunk.
-        La seguente funzione \texttt{extract\_method\_name} aggiunge una stringa contestuale per ogni chunk che include:
-        \begin{itemize}
-            \item Il nome del metodo o della classe
-            \item La classe di appartenenza
-            \item Le righe di inizio e fine del codice
-        \end{itemize}
-        
-        \begin{lstlisting}[language=Python, caption={Funzione extract\_method\_name}]
-        import re
-        
-        def extract_method_name(text):
-            # Cerca firme di metodi Java standard
-            method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
-            
-            # Cerca costruttori
-            constructor_pattern = r'(?:public|private|protected)\s+(\w+)\s*\([^)]*\)'
-            
-            matches = re.findall(method_pattern, text)
-            if matches:
-                return matches[0]  # Restituisce il primo metodo trovato
-            
-            constr_matches = re.findall(constructor_pattern, text)
-            if constr_matches:
-                return constr_matches[0] + " (costruttore)"
-            
-            # Cerca chiamate a metodi nel chunk
-            method_calls = re.findall(r'\.(\w+)\s*\(', text)
-            if method_calls:
-                return f"Chiamata a: {method_calls[-1]}"
-            
-            return "unknown_method"  # Default se non trova nulla
     \end{lstlisting}
         
-    \subsection{Generazione degli Embedding}
+    Ogni chunk mantiene:
+    \begin{itemize}
+        \item Il riferimento al file sorgente
+        \item Il nome della classe
+        \item Le righe di inizio e fine nel file originale
+        \item Il contenuto del codice con la sua struttura
+    \end{itemize}
+
+\subsection{Arricchire i chunk con metadati relativi al codice}
+    Oltre al testo del codice, è importante mantenere informazioni aggiuntive per facilitare la ricerca e l'interpretazione dei chunk.
+    La seguente funzione \texttt{extract\_method\_name} aggiunge una stringa contestuale per ogni chunk che include:
+    \begin{itemize}
+        \item Il nome del metodo o della classe
+        \item La classe di appartenenza
+        \item Le righe di inizio e fine del codice
+    \end{itemize}
+
+    \begin{lstlisting}[language=Python, caption={Funzione extract\_method\_name}]
+    import re
+    def extract_method_name(text):
+        # Cerca firme di metodi Java standard
+        method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
+        
+        # Cerca costruttori
+        constructor_pattern = r'(?:public|private|protected)\s+(\w+)\s*\([^)]*\)'
+        
+        matches = re.findall(method_pattern, text)
+        if matches:
+            return matches[0]  # Restituisce il primo metodo trovato
+        
+        constr_matches = re.findall(constructor_pattern, text)
+        if constr_matches:
+            return constr_matches[0] + " (costruttore)"
+        
+        # Cerca chiamate a metodi nel chunk
+        method_calls = re.findall(r'\.(\w+)\s*\(', text)
+        if method_calls:
+            return f"Chiamata a: {method_calls[-1]}"
+        
+        return "unknown_method"  # Default se non trova nulla
+    \end{lstlisting}
+        
+\subsection{Generazione degli Embedding}
     Gli embedding trasformano i chunk in rappresentazioni vettoriali che catturano il significato semantico.
     Il seguente codice Python mostra come generare gli embedding e creare un database Faiss.
     Il modello di embedding utilizzato è BGE-M3, un modello pre-addestrato per la generazione di embedding con dimesioni 1024(denso) + 250K (sparso).
@@ -730,190 +777,289 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
         print("Database FAISS creato e salvato in ./faiss_db.")
     \end{lstlisting}
 
-\subsection{Esecuzione di una Query sul Database FAISS}
-Una volta creato il database FAISS, è possibile eseguire ricerche semantiche sui chunk memorizzati:
+\subsection{Esecuzione di query sul Database FAISS}
+    Una volta creato il database FAISS, è possibile eseguire ricerche semantiche sui chunk memorizzati:
 
-\begin{lstlisting}[language=Python, caption={Codice Python per l'esecuzione di una query sul database FAISS}, label={lst:query}]
+    \begin{lstlisting}[language=Python, caption={Esecuzione di una query sul database FAISS}, label={lst:query}]
     from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings
+    from langchain_huggingface import HuggingFaceEmbeddings
 
-# 1. Carica il modello di embedding nel formato corretto
-embedder = HuggingFaceEmbeddings(
-    model_name="BAAI/bge-m3",
-    model_kwargs={'device': 'cpu'},  # Usa 'cuda' per GPU
-    encode_kwargs={'normalize_embeddings': True}
-)
-
-# 2. Carica il database FAISS esistente
-vector_store = FAISS.load_local(
-    folder_path="./faiss_db",
-    embeddings=embedder,
-    allow_dangerous_deserialization=True
-)
-
-# 3. Query di esempio
-query = "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?"
-
-# 4. Cerca i chunk piu' simili
-docs = vector_store.similarity_search_with_score(
-    query,
-    k=5,
-    score_threshold=0.90,  # bassa similarita'
-    search_type="similarity",  # Piu' efficace per il codice usare mmr per diversita'
-    lambda_mult=0.5       # Bilancia diversita'/rilevanza
-)
-
-# 5. Stampa i risultati con relativo score
-for i, (doc, score) in enumerate(docs):
-    print(f"Risultato {i+1} (Score: {score:.4f}):")
-    print(doc.page_content)
-    print("-" * 40)
-\end{lstlisting}
-
-\subsubsection{Query Base}
-Con la query: 
-\begin{quote}
-    \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
-\end{quote}
-viene restituito il chunk corretto con uno score di similarità di 0.6547. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
-
-\paragraph{Nota}
-È importante riscontrare che viene restituito un solo chunk nonostante \texttt{k=5}. Questo accade perché nessun altro chunk supera la soglia di similarità impostata. Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow} richiama un metodo presente nella libreria \texttt{DateUtilCustom}.
-
-\subsubsection{Query Migliorata}
-Per risolvere questo problema, la query è stata riformulata:
-\begin{quote}
-    \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
-\end{quote}
-
-\paragraph{Risultati Ottenuti}
-L'output fornisce 5 risultati:
-\begin{itemize}
-    \item Primo chunk (score: 0.5276): contiene la funzione \texttt{segnaleWow}
-    \item Secondo, terzo e quarto chunk (scores: 0.7188, 0.7258, 0.7605): contengono la funzione \texttt{getMessaggioMagico}
-    \item Quinto chunk (score: 0.8958): funzione non rilevante relativa alle date
-\end{itemize}
-
-\paragraph{Conclusione}
-Questa analisi ha portato alla decisione di abbassare lo \texttt{score\_threshold} da 0.90 a 0.80,
-è preferibile non ottenere risultati piuttosto che costruire risposte non coerenti.
- 
-\subsection{Creazione della Pipeline RAG}
-Il seguente codice Python mostra come configurare e utilizzare una pipeline RAG utilizzando FAISS, Ollama e i due LLM(LLAMA e CODEQWEN) per rispondere a domande specifiche sul codice Java:
-
-\begin{lstlisting}[language=Python, caption={Codice Python per la creazione della pipeline RAG}, label={lst:rag}]
-    from langchain_community.vectorstores import FAISS
-    from langchain_community.embeddings import HuggingFaceEmbeddings
-    from langchain_community.llms import Ollama
-    from langchain.chains import RetrievalQA
-    from langchain.prompts import PromptTemplate
-    
-# 1. Configurazione embedding
-embedder = HuggingFaceEmbeddings(
-    model_name="BAAI/bge-m3",
-    model_kwargs={'device': 'cpu'},
-    encode_kwargs={'normalize_embeddings': True}
-)
-
-# 2. Carica il database FAISS
-vector_store = FAISS.load_local(
-    folder_path="./faiss_db",
-    embeddings=embedder,
-    allow_dangerous_deserialization=True
-)
-
-# 3. Configurazione modelli Ollama
-LLAMA_TEMPLATE = """<|begin_of_text|>
-<|start_header_id|>system<|end_header_id|>
-Sei un esperto di programmazione. Rispondi in italiano basandoti esclusivamente sul contesto fornito.
-Contesto: {context}<|eot_id|>
-<|start_header_id|>user<|end_header_id|>
-Domanda: {question}<|eot_id|>
-<|start_header_id|>assistant<|end_header_id|>"""
-
-CODEQWEN_TEMPLATE = """<|im_start|>system
-Sei uno sviluppatore esperto. Fornisci risposte concise con codice basato sul contesto.<|im_end|>
-<|im_start|>user
-Contesto: {context}
-Domanda: {question}<|im_end|>
-<|im_start|>assistant
-"""
-
-# 4. Funzione per selezionare il modello
-def load_model(model_name):
-    models = {
-        "llama3": {
-            "template": LLAMA_TEMPLATE,
-            "params": {
-                "temperature": 0.7,
-                "system": "Rispondi in italiano come esperto di programmazione"
-            }
-        },
-        "codeqwen": {
-            "template": CODEQWEN_TEMPLATE,
-            "params": {
-                "temperature": 0.3,
-                "system": "Fornisci solo codice basato sul contesto"
-            }
-        }
-    }
-    
-    if model_name not in models:
-        raise ValueError(f"Modello non supportato: {model_name}")
-    
-    return Ollama(
-        model=model_name,
-        **models[model_name]["params"]
-    ), PromptTemplate(
-        template=models[model_name]["template"],
-        input_variables=["context", "question"]
+    # 1. Carica il modello di embedding nel formato corretto
+    embedder = HuggingFaceEmbeddings(
+        model_name="BAAI/bge-m3",
+        model_kwargs={'device': 'cpu'},  # Usa 'cuda' per GPU
+        encode_kwargs={'normalize_embeddings': True}
     )
 
-# 5. Inizializza il modello
-llm, prompt = load_model("codeqwen")
+    # 2. Carica il database FAISS esistente
+    vector_store = FAISS.load_local(
+        folder_path="./faiss_db",
+        embeddings=embedder,
+        allow_dangerous_deserialization=True
+    )
 
-# 6. Catena RAG corretta
-rag_chain = RetrievalQA.from_chain_type(
-    llm=llm,
-    chain_type="stuff",
+    # 3. Query di esempio
+    query = "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?"
+
+    # 4. Cerca i chunk piu' simili
+    docs = vector_store.similarity_search_with_score(
+        query,
+        k=5,
+        score_threshold=0.90,  # bassa similarita'
+        search_type="similarity",  # Piu' efficace per il codice usare mmr per diversita'
+        lambda_mult=0.5       # Bilancia diversita'/rilevanza
+    )
+
+    # 5. Stampa i risultati con relativo score
+    for i, (doc, score) in enumerate(docs):
+        print(f"Risultato {i+1} (Score: {score:.4f}):")
+        print(doc.page_content)
+        print("-" * 40)
+    \end{lstlisting}
+
+    \subsubsection{Query Base}
+    Con la query: 
+    \newline
+        \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
+    \newline
+    viene restituito il chunk corretto con uno score di similarità di 0.6547. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
+
+    \paragraph{Nota:}
+    È importante riscontrare che viene restituito un solo chunk nonostante \texttt{k=5}. Questo accade perché nessun altro chunk supera la soglia di similarità impostata. Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow} richiama un metodo presente nella libreria \texttt{DateUtilCustom}.
+
+    \subsubsection{Query Migliorata}
+    Per risolvere questo problema, la query è stata riformulata:
+    \begin{quote}
+        \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
+    \end{quote}
+
+    \paragraph{Risultati Ottenuti}
+    L'output fornisce 5 risultati:
+    \begin{itemize}
+        \item Primo chunk (score: 0.5276): contiene la funzione \texttt{segnaleWow}
+        \item Secondo, terzo e quarto chunk (scores: 0.7188, 0.7258, 0.7605): contengono la funzione \texttt{getMessaggioMagico}
+        \item Quinto chunk (score: 0.8958): funzione non rilevante relativa alle date
+    \end{itemize}
+
+    \paragraph{Conclusione}
+    Questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
+    è preferibile non ottenere risultati piuttosto che ricevere risposte non coerenti.
+    
+\subsection{Creazione della Pipeline RAG}
+\begin{lstlisting}[language=Python, caption={Pipeline RAG}, label={lst:rag}]
+    from langchain_community.vectorstores import FAISS
+    from langchain_huggingface import HuggingFaceEmbeddings
+    from langchain_ollama import OllamaLLM
+    from langchain.chains import create_retrieval_chain
+    from langchain.chains.combine_documents import create_stuff_documents_chain
+    from langchain.prompts import PromptTemplate
+    
+    # Configurazione embedding
+    embedder = HuggingFaceEmbeddings(
+        model_name="BAAI/bge-m3",
+        model_kwargs={'device': 'cpu'},
+        encode_kwargs={'normalize_embeddings': True}
+    )
+    
+    # Caricamento database FAISS
+    vector_store = FAISS.load_local(
+        folder_path="./faiss_db",
+        embeddings=embedder,
+        allow_dangerous_deserialization=True
+    )
+    # Aggiunta del database FAISS al retriever
     retriever=vector_store.as_retriever(
-        search_kwargs={"k": 3, "score_threshold": 0.4}
-    ),
-    chain_type_kwargs={"prompt": prompt},
-    return_source_documents=True,
-    verbose=False
-)
-
-# 7. Funzione query
-def ask_ollama(question):
-    try:
-        result = rag_chain.invoke({"query": question})
-        
-        print("\n\033[1;34mDOMANDA:\033[0m", question)
-        print("\n\033[1;32mRISPOSTA:\033[0m")
-        print(result["result"])
-        
-        print("\n\033[1;33mFONTI:\033[0m")
-        for i, doc in enumerate(result["source_documents"], 1):
-            print(f"{i}. {doc.page_content[:150]}...")
-            if 'source' in doc.metadata:
-                print(f"   Fonte: {doc.metadata['source']}")
-            print("-" * 80)
-    except Exception as e:
-        print(f"\033[1;31mERRORE:\033[0m {str(e)}")
-
-# 8. Esempio d'uso
-if __name__ == "__main__":
-    ask_ollama("Mostrami un esempio di formattazione della data in Java usando SimpleDateFormat")
+            search_kwargs={
+                "k": 5,                   # Piu' documenti per contesto
+                "score_threshold": 0.80, # medio-bassa similarita' inizialmente era 0.90
+                "search_type" :"similarity",  # Piu' efficace per il codice
+                "lambda_mult":0.5       # Bilancia diversita'/rilevanza
+            }
+        )
+    
+    # Configurazione Template del prompt specifici per i modelli
+    LLAMA_TEMPLATE = """<|begin_of_text|>
+    <|start_header_id|>system<|end_header_id|>
+    Contesto: {context}<|eot_id|>
+    <|start_header_id|>user<|end_header_id|>
+    Domanda: {input}<|eot_id|>
+    <|start_header_id|>assistant<|end_header_id|>"""
+    
+    CODEQWEN_TEMPLATE = """<|im_start|>system
+    {context}<|im_end|>
+    {{ if .Functions }}<|im_start|>functions
+    {{ .Functions }}<|im_end|>{{ end }}
+    <|im_start|>user
+    {input}<|im_end|>
+    <|im_start|>assistant
+    """
+    
+    COMMON_PARAMS = {
+        "temperature": 0.3,
+        "top_p": 0.85,  # Bilancia creativita'/controllo nei token generati
+        "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
+    }
+    
+    # Caricamento modello
+    def load_model(model_name):
+        models = {
+            "llama3.2": {
+                "template": LLAMA_TEMPLATE,
+                "params": COMMON_PARAMS
+            },
+            "codeqwen": {
+                "template": CODEQWEN_TEMPLATE,
+                "params": COMMON_PARAMS
+            }
+        }
+        if model_name not in models:
+            raise ValueError(f"Modello non supportato: {model_name}")
+        return OllamaLLM(
+            model=model_name,
+            **models[model_name]["params"]
+        ), PromptTemplate(
+            template=models[model_name]["template"],
+            input_variables=["input", "context"]
+        )
+    
+    # Inizializza il modello
+    llm, prompt = load_model("codeqwen")
+    
+    # Catena RAG
+    document_chain = create_stuff_documents_chain(llm, prompt)
+    rag_chain = create_retrieval_chain(
+        retriever,
+        document_chain
+    )
+    
+    # Funzione query
+    def ask_ollama(question):
+        try:
+            result = rag_chain.invoke({"input": question})
+            print("DOMANDA:", question)
+            print("RISPOSTA:")
+            print(result["answer"])
+            print("FONTI:")
+            for i, doc in enumerate(result["context"], 1):
+                print(f"{i}. {doc.page_content[:150]}...")
+                if 'source' in doc.metadata:
+                    print(f" Fonte: {doc.metadata['source']}")
+                print("-" * 80)
+        except Exception as e:
+            print(f"ERRORE: {str(e)}")
+    
+    # Esempio d'uso
+    if __name__ == "__main__":
+        ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
+        #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")
 \end{lstlisting}
+\subsubsection{Spiegazione pipeline}
+Come nei passaggi precedenti viene usata la stessa configurazione con il modello di embedder BAAI/bge-m3 e
+viene poi caricato il database FAISS precedentemente creato.
+La chiamata iniziale alla funzione \texttt{ask\_ollama()} chiede come parametro la query di input che verr\`a processata dalla pipeline RAG\@.
+Sfruttando la libreria LangChain, result ritorna la risposta("answer") e il contesto("context") fornito alla query.
+\newline\texttt{rag\_chain.invoke} esegue la catena RAG creata tramite il metodo \texttt{create\_retrieval\_chain} che prende come parametri il retriever e il document chain.
+\newline\texttt{document\_chain} è una catena di documenti che prende in input il modello LLM e il template del prompt.
+\newline\texttt{load\_model} carica il modello LLM e il template del prompt in base al modello scelto sfruttando OllamaLLM e PromptTemplate.
 
-\subsection{AI Agent}
-E' un componente che può chiamare delle funzioni (function calling) nel mio caso search
-il LLM capisce se deve chiamare o meno il RAG.
-\subsubsection{Function Calling}
-Il "function calling" è un meccanismo che permette a un modello di linguaggio di determinare quando è necessario chiamare una funzione esterna e con quali parametri, in questo caso il RAG.
+Per i due LLM è stata data una temperature molto bassa 0.3 per garantire risposte coerenti e precise senza che inventi.
+Il parametro \texttt{top\_p} è stato impostato a 0.85 per bilanciare creatività e controllo nei token generati.
+Mentre in system è stato specificato di rispondere in italiano come esperto di programmazione ma solo se è sicuro.
 
+\subsection{Risultati del Sistema RAG}
+\subsubsection{Query Base con informazioni incomplete}
+Come query di test è stata utilizzata:
+\begin{quote}
+    \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
+\end{quote}
+\subsubsection{Fonti aggiunte al prompt}
+Il RAG aggiunge solo il chunk dove è presente la funzione \texttt{segnaleWow} e non il chunk con la funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom
+per questo le risposte dei due modelli sono incomplete.
+\subsubsection{Output con LLM Llama3.2}
+L'output ottenuto utilizzando il modello Llama3.2 è stato:
+\begin{quote}
+Il metodo \texttt{segnaleWow} restituisce una stringa che contiene un messaggio Wow specifico in base al giorno indicato. Tuttavia, non è chiaro come il messaggio sia calcolato.
+\end{quote}
+\begin{lstlisting}[language=Java, caption={Implementazione del metodo segnaleWow}, label={lst:segnaleWow-impl}]
+public static String segnaleWow(LocalDate date) {
+    String wow = "il tuo segnale Wow e' :" + DateUtilCustom.getMessaggioMagico(date);
+    return wow;
+}
+\end{lstlisting}
+\begin{quote}
+In questo caso, il messaggio Wow viene calcolato chiamando l' metodo `getMessaggioMagico` di `DateUtilCustom`, che non è mostrato nel codice fornito. Tuttavia, possiamo supporre che questo metodo restituisca un valore di tipo stringa.
 
+Il problema è che il metodo `segnaleWow` non contiene alcun calcolo per determinare il segnale Wow in base al giorno indicato. Pertanto, senza conoscere il comportamento del 
+metodo `getMessaggioMagico`, non possiamo dire con certezza cosa ritorni il metodo `segnaleWow`.
+
+Tuttavia, se supponessimo che `DateUtilCustom.getMessaggioMagico` restituisca un valore di tipo stringa che contiene una data o un numero, allora il risultato del metodo `segnaleWow` dipenderebbe dal comportamento di questo metodo.
+
+Per esempio, se `DateUtilCustom.getMessaggioMagico` restituisce la data corrente, il metodo `segnaleWow` potrebbe restituire un messaggio Wow che contiene la data del 10 gennaio 2025:
+```java
+public static String segnaleWow (LocalDate date){
+    String wow = "il tuo segnale Wow è :" + DateUtilCustom.getMessaggioMagico(date) ;
+    return wow;
+}
+```
+
+In questo caso, il risultato del metodo `segnaleWow` con l'input `LocalDate.of(2025, 1, 10)` sarebbe:
+```java
+public static String segnaleWow (LocalDate date){
+    String wow = "il tuo segnale Wow è :" + DateUtilCustom.getMessaggioMagico(date) ;
+    return wow;
+}
+```
+In questo caso, il risultato sarebbe:
+```java
+"il tuo segnale Wow è :2025-01-10"
+```
+
+Tuttavia, senza conoscere il comportamento di `DateUtilCustom.getMessaggioMagico`, non possiamo essere certi del risultato.
+\end{quote}
+
+\subsubsection{Output con LLM CodeQwen}
+Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
+\begin{quote}
+    Se si chiama il metodo `segnaleWow` con un'istanza di `LocalDate` che corrisponde a "2025-01-10", il metodo restituirà una stringa che indica il segnale Wow associato ad tale data.
+
+    ```java
+    String result = GiorniMagici.segnaleWow(LocalDate.of(2025, 1, 10));
+    System.out.println(result);
+    
+    Il risultato sarà: "il tuo segnale Wow è : L'anno 2025 ha un giorno magico che non è un numero perfetto."
+    Questo è perchè la data specificata (2025-01-10) corrisponde ad un anno che non ha un numero perfetto come il 28 febbraio del 2024, quindi il metodo utilizza il messaggio "L'anno 2025 ha un giorno magico che non è un numero perfetto." proveniente da `DateUtilCustom.getMessaggioMagico(date)`.
+\end{quote}
+
+\subsubsection{Query Completa con tutte le informazioni richieste}
+\begin{quote}
+    \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
+\end{quote}
+\subsubsection{Fonti aggiunte al prompt}
+In questo caso il RAG aggiunge 4 chunk ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
+Ne consegue che le risposte date dai due modelli sono coerenti a quanto aspettato.
+\subsubsection{Output con LLM Llama3.2}
+RISPOSTA:
+Il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` ritorna un segnale Wow specifico in base al giorno indicato.
+
+Per determinare il segnale Wow, il metodo `getMessaggioMagico()` della libreria `DateUtilCustom` viene chiamato con la data `LocalDate.of(2025, 1, 10)` come argomento.
+
+La funzione `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di una data. In questo caso, il giorno è sabato (giorno 7), quindi il messaggio ritornato sarà:
+
+"Il giorno perfetto per scoprire segreti nascosti."
+
+Quindi, il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` restituirà la stringa "il tuo segnale Wow è : Il giorno perfetto per scoprire segreti nascosti.".
+
+\subsubsection{Output con LLM CodeQwen}
+Se si chiama il metodo `segnaleWow` con una data di 10 gennaio 2025, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:       
+
+```
+"il tuo segnale Wow è :Il giorno perfetto per scoprire segreti nascosti."
+```
+
+Questo è poiché, inizialmente, viene recuperata la data di 10 gennaio 2025 utilizzando `LocalDate.of(2025, 1, 10)`. Quindi, viene richiamato il metodo `getMessaggioMagico()` 
+passando questa data come parametro.
+
+Il metodo `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di tale data. In questo caso, la data 10 gennaio 2025 cade mercoledì, quindi viene restituito il messaggio "Il giorno perfetto per scoprire segreti nascosti."
 \chapter{Conclusioni}
 
 \section{Risultati Ottenuti}
