@@ -74,12 +74,12 @@
 \frontmatter \frontispiece
 
 \begin{abstract}	
-I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni utili e funzionanti.
-L'addestramento fatto sui modelli è però su fonti e soluzioni generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta utilizzando casistiche già create dal programmatore o dalla propria azienda per casi simili. Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
-Il fine-tuning di un \ac{LLM} è un processo molto costoso e non scalabile per essere aggiornato frequentemente, inoltre non è possibile addestrare il modello su tutte le casistiche possibili.
-Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di recuperare informazioni da una base di conoscenza esterna al modello, come librerie specifiche di un azienda, arricchendo il contesto della query.
-L'output di questa \textbf{matrice di conoscenza} si inserisce e completa la query inviata al LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
-Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} con un \ac{LLM} con lo scopo di ottenere dal LLM risposte personalizzate
+I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
+L'addestramento fatto sui modelli è però su fonti generiche, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta utilizzando casistiche già create dal programmatore o dalla propria azienda per casi simili. Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
+Il fine-tuning di un \ac{LLM} è un processo molto costoso e non scalabile per essere aggiornato frequentemente.
+Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette aumentare la conoscenza del modello, recuperando informazioni da una base di conoscenza esterna al modello, come librerie specifiche di un azienda, arricchendo il prompt della query di input.
+Ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, si inseriranno per completare la query inviata al LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
+Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} e un \ac{LLM} con lo scopo di ottenere dal LLM risposte personalizzate
 che solo con la conoscenza del LLM anche se estremamente performante e preparato sarebbe stato impossibile ottenere.
 \end{abstract}
 
@@ -91,7 +91,7 @@ A Giulia e ai miei figli, il dono più grande.
 
 %----------------------------------------------------------------------------------------
 \tableofcontents   
-\listoffigures     % (optional) comment if empty
+%\listoffigures     % (optional) comment if empty
 %\lstlistoflistings % (optional) comment if empty
 %----------------------------------------------------------------------------------------
 

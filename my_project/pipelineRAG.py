@@ -61,6 +61,10 @@ def load_model(model_name):
         "codeqwen": {
             "template": CODEQWEN_TEMPLATE,
             "params": COMMON_PARAMS
+        },
+        "deepseek-r1": {
+            "template": CODEQWEN_TEMPLATE,
+            "params": COMMON_PARAMS
         }
     }
     if model_name not in models:
@@ -74,7 +78,7 @@ def load_model(model_name):
     )
 
 # Inizializza il modello
-llm, prompt = load_model("codeqwen")
+llm, prompt = load_model("deepseek-r1")
 
 # Catena RAG
 document_chain = create_stuff_documents_chain(llm, prompt)
