@@ -104,12 +104,14 @@ A Giulia e ai miei figli, il dono più grande.
 
 \section{Essere programmatori nel 2025}
 Sono disponibili tantissimi (IDE) per lo sviluppo del codice uno di questi è \textbf{Visual Studio Code},
-mentre \textbf{Github} può essere lo strumento utilizzato condividere progetti per lavore in maniera collaborativa.
-Se richiesta memoria GPU per piccoli progetti accademici è disponibile \textbf{COLAB} che permette di eseguire in remoto codice offrendo anche gratuitamente utilizzo di GPU.
-Questi esempi mostrano una panoramica di strumenti vasta, complessa e in rapita evoluzione, con un frequente cambio di software per realizzare un programma.
-Un esempio d'utilizzo con gli strumenti sopra elencato potrebbe essere la realizzazione iniziale del progetto in locale utilizzado Visual Studio Code per poi riportare il tutto su GitHub.
-In un secondo momento il codice viene ripreso e aperto su Colab dove a sua volta il programma viene modificato ed infine rieseguito il Push sul progetto radice presente su GitHub.
-Ora nel 2025, la cosa che accomuna questi strumenti, è l'implemazione al loro interno di funzioni che basate sull'IA, in grado di completare il codice, suggerire correzioni e creare documentazione pertinente.
+mentre \textbf{GitHub} può essere lo strumento dove condividere i progetti e lavorare in team.
+Se richiesta memoria GPU per piccoli progetti accademici è disponibile \textbf{COLAB} che permette di eseguire in remoto codice utilizzando GPU senza costi.
+Questi esempi sono  parte di una panoramica di strumenti sempre più vasta, complessa e in rapita evoluzione, con un frequente cambio di software per realizzare un programma.
+Inoltre la complessità dei progettti è aumentanta disponendo sempre di più librerie e metodi per realizzare il codice.
+Un esempio d'utilizzo con gli strumenti sopra elencato potrebbe essere la realizzazione iniziale del progetto in locale utilizzado Visual Studio Code per poi riportare il tutto su GitHub,
+in un secondo momento il codice viene ripreso e aperto su Colab dove a sua volta il programma viene modificato ed infine rieseguito il Push sul progetto radice presente su GitHub.
+Ora nel 2025, la cosa che accomuna questi strumenti, è \textbf{l'implemazione al loro interno di funzioni basate sull'IA}, in grado di completare il codice, suggerire correzioni e creare documentazione pertinente.
+GitHub ha introdotto \textbf{Copilot}, un assistente IA per la scrittura del codice, questo strumento è integrabile per vari IDE tra cui proprio Visual Studo Code.
 Un esempio semplice ma che offre già un idea della vastità e della potenza di queste funzioni è l'utility di \textbf{Github Copilot} 'Generate Commit Message with Copilot'
 che propone il testo da utilizzare come descrizione di un commit, ho provato a riscontrare quanto fosse contestualizzato e coerente 
 con quanto aggiornato e ho ottenuto il seguente risultato:
@@ -130,14 +132,16 @@ quanto fatto.
 \end{figure}
 \newline
 L'intelligenza artificiale sta rivoluzionando il modo in cui il software viene sviluppato, strumenti come Copilot utilizzando tutto il loro potenziale, possono creare la spina dorsale di un progetto
-in pochi secondi lasciando al programmatore il compito di verificare e correggere solo in parte il codice proposto. 
-In progetti complessi questo non riduce il ruolo del programmatore, anzi lo eleva a compiti di precisione e ad alto valore aggiunto lasciando la stesura di parti del codice semplici e ripetitive al software stesso.
-Sapere cosa chiedere e formulare correttamente le domande al LLM è fondamentale, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice.
+in poco tempo lasciando al programmatore il compito di verificare e correggere solo in parte il codice proposto. 
+In progetti complessi questo non riduce il ruolo del programmatore, anzi lo eleva a compiti di precisione e ad alto valore aggiunto delegando la stesura di parti del codice semplici e ripetitive al software stesso.
+Per questi motivi capire come funzionano oggi questi strumenti è importante, sapere come chiedere e formulare correttamente le domande al LLM è fondamentale, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice per indirizzarlo nell'elaborazione e ragionamento corretto.
 Altro compito complesso per il programmatore è non farsi troppo ammaliare dalle soluzioni proposte perché non sempre necessarie per quanto richiesto oppure diverse da quanto già conosciuto
  per realizzare una determinata funzione.
-Questo nuovo modo di lavorare per mette di conoscere nuove soluzioni ma comporta test e tempo non sempre disponibile,
-il programmatore deve sempre avere il controllo del progetto accettando generazione del codice automatica solo dove consapevole di quanto proposto e del suo impatto anche in casi di revisione e manutenzione futuri.
-L'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte del LLM, per ottenere risposte coerenti con quanto già realizzato e conosciuto, per fare questo entra in gioco la RAG.
+Questo nuovo modo di lavorare permette di conoscere nuove soluzioni ma comporta test e tempo non sempre disponibile,
+il programmatore deve sempre avere il controllo del progetto, accettando generazione del codice automatica solo dove consapevole di quanto proposto e del suo impatto anche in casi di revisione e manutenzione futuri.
+Il codice deve rimanere rapidamente leggibile e coerente in tutte le sue parti, far generare il codice in automatico può portare ad una perdità di coerenza e leggibilità. 
+Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte del LLM, per ottenere risposte rimanendo nel contesto e nello stile di quanto già realizzato e conosciuto, per fare questo entra in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che verrano ampiamente approfonditi.
+
 \chapter{Addestrare un LLM per la Generazione del Codice}
 
 L'addestramento di LLM per la generazione di codice di programmazione richiede una serie di passaggi metodici e risorse computazionali significative.
