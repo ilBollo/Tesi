@@ -144,17 +144,16 @@ Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti 
 
 \chapter{Addestrare un LLM per la Generazione del Codice}
 
-L'addestramento di modelli di linguaggio di grandi dimensioni (LLM) per la generazione di codice di programmazione richiede una serie di passaggi e risorse computazionali significative.
-Conoscere questo processo è utile per la successiva integrazione con la RAG.
+L'addestramento di LLM per la generazione del codice di programmazione richiede una serie di passaggi complessi e costi significativi.
+Conoscere questo processo, senza addentrarsi nel dettaglio, è utile per poter poi comprendere al meglio la successiva implementazione con le tecniche di \textbf{RAG}.
 La procedura si divide nelle seguenti fasi:
-
 \section{Scelta Modello}
 Gli LLM utilizzano tipicamente architetture basate su trasformatori, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
 I trasformatori utilizzano meccanismi di auto-attenzione per valutare l'importanza di diversi elementi in una sequenza,
 permettendo al modello di comprendere le relazioni tra parole o token.
 Questa capacità è fondamentale nella generazione del codice, poiché le dipendenze tra variabili e funzioni possono estendersi su ampie sezioni del codice, richiedendo al modello di considerare un ampio contesto per trovare le risposte corrette.
 L'architettura del modello scelto influenzerà in maniera decisiva tutte le successive fasi di addestramento.
-
+È utile notare che sebbene i trasformatori siano attualmente lo standard, esistono anche altri approcci come le reti neurali ricorrenti (RNN e LSTM) e nuove tecniche in continua evoluzione come i Large Concept Models \cite{code-llm-survey-2024}.
 \section{Raccolta e Preparazione dei Dataset}
 La qualità e la quantità dei dati per l'addestramento è di primaria importanza per prepare un modello alla generazione di codice in maniera efficace.
 È quindi essenziale utilizzare per il training codice proveniente da molteplici fonti tra cui codice sorgente, file readme, documentazione tecnica, commenti nel codice,
@@ -167,11 +166,11 @@ I dati si dividono in due tipologie:
     \item \textbf{Dati non Strutturati}: non sono organizzati e sono quindi più difficili da interpretare dal modello. 
 \end{itemize}
 \subsection{Pulizia e Pre-Processo}
-La raccolta di dati va visionata con cura, se non si conosce la provenienza del codice è possibile che contenga bug o codice opsoleto che possono essere trasmessi al modello.
-I dati raccolti devono essere quindi puliti e pre-processati per rimuovere errori e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
-Con la rapida evoluzione del codice è importante rimuove frammenti di codice opsoleto \textbf{Cutilizzando questi LLM al giorno d'oggi capita spesso che propongano soluzioni utilizzando librerie deprecate.}
-Il modello per poter elaborare il dataset ha bisogno che quest'ultimo venga diviso in parti più piccole chiamate token per mantenere l'integrita del dato \cite{stanford-codegen}.
-I token possono essere parole, parti di parole o singoli caratteri, e questa suddivisione è fondamentale per:
+La raccolta di dati va visionata con cura, se non si conosce la provenienza del codice è possibile che contenga bug o codice obsoleto che possono essere trasmessi al modello.
+Con la rapida evoluzione del codice molte librerie e tecniche vengono rapidamente deprecate e superate per questo anche utilizzando i più noti modelli LLM ad oggi disponibili, può capitare di ricevere come output \textbf{codice obsoleto che risolve il quesito ma con soluzioni contenti tecniche, api e librerie deprecate o non più disponibili.}
+Per questo motivo i dati raccolti devono essere quindi puliti e pre-processati per rimuovere errori e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
+\newline Il modello per poter elaborare il dataset ha bisogno che quest'ultimo venga diviso in parti più piccole chiamate token per mantenere l'integrita del dato \cite{stanford-codegen},
+i token possono essere parole, parti di parole o singoli caratteri, e questa suddivisione è fondamentale per:
 
 \begin{itemize}
     \item \textbf{Gestione del contesto}: mantenere la relazione semantica tra i diversi elementi del codice
@@ -189,111 +188,27 @@ Ad esempio, nel codice Java, i token potrebbero includere:
 \end{itemize}
 
 \section{Pre-Addestramento}
-Il pre-addestramento di un LLM specializzato nella generazione di codice richiede un approccio specifico.
-A differenza del pre-addestramento generico, utilizzando i dataset precedentemente prepareti il modello deve imparare a:
-\begin{itemize}
-    \item Predire il completamento del codice
-    \item Comprendere la struttura sintattica dei linguaggi di programmazione
-    \item Riconoscere pattern comuni nel codice
-    \item Identificare le relazioni tra diversi blocchi di codice
-\end{itemize}
-Un esempio pratico di pre-addestramento può essere implementato utilizzando la libreria transformers \cite{huggingface-transformers, codebert}:
-
-\begin{lstlisting}[language=Python]
-from transformers import RobertaConfig, RobertaTokenizerFast
-
-# Configurazione del modello per il codice
-config = RobertaConfig(
-    vocab_size=50000,  # Dimensione del vocabolario
-    max_position_embeddings=514,  # Lunghezza massima sequenza
-    num_attention_heads=12,  # Teste di attenzione
-    num_hidden_layers=6,  # Strati nascosti
-    type_vocab_size=1  # Tipo di vocabolario
-)
-
-# Tokenizer specializzato per il codice
-tokenizer = RobertaTokenizerFast.from_pretrained(
-    "microsoft/codebert-base",
-    max_length=512,
-    truncation=True,
-    padding=True
-)
-\end{lstlisting}
-
-Durante questa fase, il modello sviluppa una comprensione profonda della sintassi e della semantica del codice, che verrà poi raffinata durante il fine-tuning per compiti specifici di generazione del codice.
+Il pre-addestramento di un LLM specializzato nella generazione di codice ha lo scopo di fornire al modello una conoscenza generale della sintassi e delle strutture logiche dei linguaggio di programmazione.
+Durante questa fase il modello impare a generare codice partendo da dati non etichettati utilizzando tecniche come il \emph{language modeling} autoregressivo per insegnare al modello di predire il token successivo in una sequenza.
+Questo approccio rende la generazione contestualmente e coerente di codice, sfruttando la capacità del modello di "ricordare" il contesto anche su ampie sequenze di dati.
 \section{Fine-Tuning}
-Il fine-tuning è la fase in cui il modello viene specializzato per la generazione di codice, documentazione e risposta a quesiti specifici del contesto di programmazione. Durante questa fase, il modello affina le sue capacità attraverso:
-
-\begin{itemize}
-    \item \textbf{Dataset Specializzati}: Utilizzo di dataset contenenti:
+Il fine-tuning è la fase in cui il modello già pre-addestrato viene ulteriormente specializzato per la generazione di codice adattando e migliorando il modello per specifici domini di applicazione.
+Durante questa fase, il modello affina le sue capacità attraverso dataset specializzati composti da coppie descrizione-codice, documentazione tecnica e commenti, esempi di bug-fixing e refactoring.
+\textbf{Tecniche di Apprendimento}:
     \begin{itemize}
-        \item Coppie di descrizioni-implementazioni
-        \item Documentazione tecnica e commenti
-        \item Esempi di bug fixing e refactoring
-    \end{itemize}
-    
-    \item \textbf{Tecniche di Apprendimento}:
-    \begin{itemize}
-        \item \textbf{Apprendimento Supervisionato}: Training su coppie input-output predefinite
-        \item \textbf{Apprendimento per Rinforzo}: Ottimizzazione basata su feedback e metriche di qualità
+        \item \textbf{Supervisionato}: Training su coppie input-output predefinite, il modello impara a mappare input di descrizione con linguaggio naturale a output di codice corrispondente.
+        \item \textbf{Per Rinforzo}: Ottimizzazione basata su feedback e metriche di qualità
         \item \textbf{Few-shot Learning}: Adattamento a nuovi contesti con pochi esempi
     \end{itemize}
-\end{itemize}
 
-Un esempio pratico di fine-tuning può essere implementato utilizzando la libreria transformers \cite{huggingface-transformers}:
-
-\begin{lstlisting}[language=Python]
-from transformers import Trainer, TrainingArguments
-from datasets import load_dataset
-
-# Caricamento del dataset per il fine-tuning
-dataset = load_dataset("code_search_net", "python")
-
-# Configurazione del training
-training_args = TrainingArguments(
-    output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
-    warmup_steps=500,
-    weight_decay=0.01,
-    logging_dir="./logs",
-    logging_steps=10,
-    evaluation_strategy="epoch"
-)
-
-# Inizializzazione del trainer
-trainer = Trainer(
-    model=model,                # Modello pre-addestrato
-    args=training_args,         # Argomenti di training
-    train_dataset=dataset["train"],
-    eval_dataset=dataset["validation"],
-    tokenizer=tokenizer,        # Tokenizer specializzato per il codice
-)
-
-# Avvio del fine-tuning
-trainer.train()
-\end{lstlisting}
-
-Durante il fine-tuning, il modello sviluppa capacità specifiche come:
-\begin{itemize}
-    \item Generazione di codice a partire da descrizioni in linguaggio naturale
-    \item Completamento intelligente del codice basato sul contesto
-    \item Creazione di documentazione tecnica
-    \item Identificazione e correzione di bug
-    \item Refactoring del codice seguendo best practices
-\end{itemize}
-
-Il processo di fine-tuning richiede un attento bilanciamento tra:
-\begin{itemize}
-    \item \textbf{Overfitting}: Evitare che il modello memorizzi i dati di training
-    \item \textbf{Generalizzazione}: Mantenere la capacità di adattarsi a nuovi contesti
-    \item \textbf{Prestazioni}: Ottimizzare la velocità e la qualità delle risposte
-\end{itemize}
+\subsection{Overfitting}
+Il processo di fine-tuning richiede un attento bilanciamento nell'apprendere dai dati di addestramento cercando di evitare di incorrere in overfitting.
+L'overfitting si verifica quando il modello si specializza troppo sui dati di addestramento, riducendo la sua capacità di generalizzazione producendo risposte errate o incoerenti su nuovi dati.
+Per evitare l'overfitting vengono utilizzati set di validazione, regolarizzazione e tecniche di dropout.
 
 \section{Pre-Addestramento vs Fine-Tuning}
-È importante comprendere la distinzione tra queste due fasi dell'addestramento:
-\subsection{Pre-Addestramento}
+È importante comprendere la distinzione tra queste due fasi:
+\subsubsection{Pre-Addestramento}
 Il pre-addestramento è la fase iniziale dove il modello:
 \begin{itemize}
     \item Acquisisce una comprensione \textbf{generale} del linguaggio di programmazione
@@ -302,18 +217,11 @@ Il pre-addestramento è la fase iniziale dove il modello:
     \item Non è ancora specializzato per compiti specifici
 \end{itemize}
 
-\subsection{Fine-Tuning}
+\subsubsection{Fine-Tuning}
 Il fine-tuning è invece la fase di specializzazione dove il modello:
 \begin{itemize}
     \item Si adatta a un \textbf{dominio specifico} o a compiti particolari
-    \item Utilizza dataset più piccoli ma \textbf{mirati}
-    \item Affina le conoscenze per generare codice per specifici casi d'uso
-\end{itemize}
-
-\textbf{Analogia}: Si può paragonare a:
-\begin{itemize}
-    \item Pre-addestramento: Imparare la grammatica e il vocabolario di base di una lingua
-    \item Fine-tuning: Specializzarsi nel linguaggio tecnico di un settore specifico
+    \item Utilizza dataset specifici e composti da dati strutturati 
 \end{itemize}
 
 \section{Valutazione e Ottimizzazione}
