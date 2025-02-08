@@ -118,7 +118,7 @@ con quanto aggiornato e ho ottenuto il seguente risultato:
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/commit.png}
-    \label{fig:Commeit-Autogenerato}
+    \label{fig:Commit-Autogenerato}
 \end{figure}
 \newline
 Nel mio caso quanto proposto era corretto ed ho quindi eseguito il Commit con la descrizione proposta.
@@ -144,28 +144,53 @@ Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti 
 
 \chapter{Addestrare un LLM per la Generazione del Codice}
 
-L'addestramento di LLM per la generazione di codice di programmazione richiede una serie di passaggi metodici e risorse computazionali significative.
+L'addestramento di modelli di linguaggio di grandi dimensioni (LLM) per la generazione di codice di programmazione richiede una serie di passaggi e risorse computazionali significative.
 Conoscere questo processo è utile per la successiva integrazione con la RAG.
-La procedura si divide nelle selle seguenti fasi:
+La procedura si divide nelle seguenti fasi:
 
-\section{Raccolta e Preparazione dei Dati}
+\section{Scelta Modello}
+Gli LLM utilizzano tipicamente architetture basate su trasformatori, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
+I trasformatori utilizzano meccanismi di auto-attenzione per valutare l'importanza di diversi elementi in una sequenza,
+permettendo al modello di comprendere le relazioni tra parole o token.
+Questa capacità è fondamentale nella generazione del codice, poiché le dipendenze tra variabili e funzioni possono estendersi su ampie sezioni del codice, richiedendo al modello di considerare un ampio contesto per trovare le risposte corrette.
+L'architettura del modello scelto influenzerà in maniera decisiva tutte le successive fasi di addestramento.
 
+\section{Raccolta e Preparazione dei Dataset}
 La qualità e la quantità dei dati per l'addestramento è di primaria importanza per prepare un modello alla generazione di codice in maniera efficace.
-È quindi essenziale utilizzare per il training codice sorgente proveniente da molteplici fonti tra cui codice sorgente, file Readme, documentazione tecnica, commenti nel codice,
-pagine Wiki, API e discussioni su forum specializzati in programmazione.
-In rete è possibile trovare diverso materiale open source tra cui dataset già etichettati. Alcuni dataset hanno un valore altissimo, per tutelare il costo per produrli per certi dataset è previsto il diritto d'autore.
+È quindi essenziale utilizzare per il training codice proveniente da molteplici fonti tra cui codice sorgente, file readme, documentazione tecnica, commenti nel codice,
+pagine Wiki, API e discussioni su forum specializzati in programmazione, arricchendo così il dataset con esempi pratici e ricchezza terminologica.
+In rete è possibile trovare diverso materiale open source tra cui dataset già etichettati. Alcuni dataset hanno un valore altissimo,
+per tutelare il costo per produrli per certi dataset è previsto il diritto d'autore.
 I dati si dividono in due tipologie:
 \begin{itemize}
-    \item \textbf{Dati Strutturati}: seguono un formato specifico e predefinito.
+    \item \textbf{Dati Strutturati}: seguono un formato specifico e predefinito, seguono la struttora in coppie (descrizione, codice).
     \item \textbf{Dati non Strutturati}: non sono organizzati e sono quindi più difficili da interpretare dal modello. 
 \end{itemize}
+\subsection{Pulizia e Pre-Processo}
 La raccolta di dati va visionata con cura, se non si conosce la provenienza del codice è possibile che contenga bug o codice opsoleto che possono essere trasmessi al modello.
 I dati raccolti devono essere quindi puliti e pre-processati per rimuovere errori e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
-Sui dataset viene utilizzato un tokenizer specializzato che riconosce costrutti di programmazione come keyword, operatori e strutture sintattiche.
+Con la rapida evoluzione del codice è importante rimuove frammenti di codice opsoleto \textbf{Cutilizzando questi LLM al giorno d'oggi capita spesso che propongano soluzioni utilizzando librerie deprecate.}
+Il modello per poter elaborare il dataset ha bisogno che quest'ultimo venga diviso in parti più piccole chiamate token per mantenere l'integrita del dato \cite{stanford-codegen}.
+I token possono essere parole, parti di parole o singoli caratteri, e questa suddivisione è fondamentale per:
+
+\begin{itemize}
+    \item \textbf{Gestione del contesto}: mantenere la relazione semantica tra i diversi elementi del codice
+    \item \textbf{Efficienza computazionale}: processare grandi quantità di testo in modo ottimizzato
+    \item \textbf{Limitazioni del modello}: rispettare i limiti massimi di input del modello (tipicamente tra 512 e 4096 token)
+    \item \textbf{Preservazione della struttura}: mantenere la struttura sintattica del codice sorgente
+\end{itemize}
+
+Ad esempio, nel codice Java, i token potrebbero includere:
+\begin{itemize}
+    \item Parole chiave (\texttt{public}, \texttt{class}, \texttt{static})
+    \item Identificatori (nomi di variabili e metodi)
+    \item Operatori e simboli (\texttt{+}, \texttt{=}, \texttt{\{}, \texttt{\}})
+    \item Stringhe letterali e commenti
+\end{itemize}
 
 \section{Pre-Addestramento}
-Il pre-addestramento di un LLM  da utilizzare per la generazione di codice richiede un approccio specifico.
-A differenza del pre-addestramento generico, utilizzando i dataset precedentemente prepareti il modello impara a:
+Il pre-addestramento di un LLM specializzato nella generazione di codice richiede un approccio specifico.
+A differenza del pre-addestramento generico, utilizzando i dataset precedentemente prepareti il modello deve imparare a:
 \begin{itemize}
     \item Predire il completamento del codice
     \item Comprendere la struttura sintattica dei linguaggi di programmazione
@@ -291,12 +316,6 @@ Il fine-tuning è invece la fase di specializzazione dove il modello:
     \item Fine-tuning: Specializzarsi nel linguaggio tecnico di un settore specifico
 \end{itemize}
 
-\section{Architettura del Modello}
-Gli LLM utilizzano tipicamente architetture basate su trasformatori, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
-I trasformatori utilizzano meccanismi di auto-attenzione per valutare l'importanza di diversi elementi in una sequenza,
-permettendo al modello di comprendere le relazioni tra parole o token.
-Questa capacità è fondamentale nella generazione del codice, poiché le dipendenze tra variabili e funzioni possono estendersi su ampie sezioni del codice, richiedendo al modello di considerare un ampio contesto per trovare le risposte corrette.
-
 \section{Valutazione e Ottimizzazione}
 Una volta addestrato, il modello deve essere rigorosamente valutato utilizzando metriche specifiche per la generazione di codice, come la correttezza sintattica, la funzionalità e l'efficienza del codice prodotto.
 I risultati della valutazione possono essere utilizzati per ulteriori ottimizzazioni, come aggiustamenti dei pesi del modello, modifiche all'architettura o includere dati di addestramento aggiuntivi per affrontare eventuali carenze.
@@ -316,6 +335,11 @@ I risultati della valutazione possono essere utilizzati per ulteriori ottimizzaz
 \end{itemize}
 
 \chapter{RAG}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/RAGDefinizione.png}
+    \label{fig:significa-RAG}
+\end{figure}
 \section{Introduzione}
 Il RAG \textbf{Retrieval-Augmented Generation}, (in italiano \textit{Generazione Aumentata tramite Recupero} )  è un sistema che permette di migliorare l'output di un LLM estendendo la sua conoscenza con nuove informazioni, al di fuori dai suoi dati di addestramento.
 Allo scopo di:
