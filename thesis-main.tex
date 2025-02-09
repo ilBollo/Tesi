@@ -244,50 +244,51 @@ I risultati della valutazione possono essere utilizzati per ulteriori ottimizzaz
 
 \chapter{RAG}
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\linewidth]{figures/RAGDefinizione.png}
+    \raggedright
+    \includegraphics[width=0.8\linewidth]{figures/RAGDefinizione.png}
     \label{fig:significa-RAG}
 \end{figure}
 \section{Introduzione}
-Il RAG \textbf{Retrieval-Augmented Generation}, (in italiano \textit{Generazione Aumentata tramite Recupero} )  è un sistema che permette di migliorare l'output di un LLM estendendo la sua conoscenza con nuove informazioni, al di fuori dai suoi dati di addestramento.
-Allo scopo di:
+RAG \textbf{Retrieval-Augmented Generation}, (in italiano \textit{Generazione Aumentata tramite Recupero} )  è un sistema che permette di migliorare l'output di un LLM estendendo la sua conoscenza con nuove informazioni, al di fuori dai suoi dati di addestramento allo scopo di:
 \begin{itemize}
-    \item ottenere risposte personalizzate provenienti da librerie e codice custom;
+    \item ottenere risposte mirate e personalizzate contenti knowledge relativa a librerie e codice custom;
     \item migliorare il codice generato rendendolo più specifico al dominio riducendo le allucinazioni;
     \item facilitare l'assistenza da parte del modello nella fase di debugging migliorando la sua comprensione di sistemi complessi;
     \item supportare la creazione di documentazione aggiornata;
     \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni;
     \item evitare risposte imprecise a causa della confusione terminologica, in cui diverse fonti utilizzano la stessa terminologia per parlare di cose diverse.
 \end{itemize}
-
+\newpage
 \section{Funzionamento}
-
-\begin{tikzpicture}[node distance=2.5cm]
+Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il prompt della richiesta.
+Il funzionamento si articola in diverse fasi qui sotto illustrate:
+\newline
+\begin{tikzpicture}[node distance=2cm]
     % Style definitions
     \tikzstyle{block} = [rectangle, draw, fill=white, 
-        text width=3cm, text centered, rounded corners, minimum height=3em]
+        text width=3cm, text centered, rounded corners, minimum height=2.5em]
     \tikzstyle{line} = [draw, -latex', thick]
-    \tikzstyle{data} = [text width=2.5cm, text centered]
+    \tikzstyle{data} = [text width=3cm, text centered]
     
     % Input nodes
     \node [block] (input) {Input\\(Query utente)};
-    \node [block, right=of input] (docs) {Documenti\\(Es:File java)};
+    \node [block, right=of input] (docs) {Dataset locale\\(Es:File java)};
     
     % Processing nodes
   %  \node [block, below=of input] (query) {Query\\Processor};
-    \node [block, below=of docs] (chunking) {Text\\Chunking};
+    \node [block, below=of docs] (chunking) {chunking};
     
     % Embedding layer
     \node [block, below=of input] (qembed) {Embedding};
-    \node [block, below=of chunking] (dembed) {Document\\Embedding};
+    \node [block, below=of chunking] (dembed) {Embedding};
     
     % Storage and retrieval
-    \node [block, below=2.5cm of qembed] (vector) {Vector Store\\(Es: FAISS)};
+    \node [block, below=2.5cm of qembed] (vector) {Vector database};
     
     % LLM components
-    \node [block, below=of vector] (context) {Context\\Builder};
-    \node [block, right=of context] (llm) {LLM\\(Es:CodeQwen)};
-    \node [block, below=of context] (output) {Response\\Generator};
+    \node [block, below=of vector] (context) {Top k similitary chunks};
+    \node [block, right=of context] (llm) {LLM Prompt};
+    \node [block, below=of context] (output) {LLM Answer};
     
     % Connections
     \path [line] (input) -- (qembed);
@@ -308,9 +309,10 @@ Allo scopo di:
     % Add data flow labels
     \node [data] at ($(input)!0.5!(qembed)$) {Vettorizzazione};
     \node [data] at ($(chunking)!0.5!(dembed)$) {Vettorizzazione};
+    \node [data] at ($(dembed)!0.5!(vector)$) {Crea};
     \node [data] at ($(vector)!0.5!(context)$) {Recupero};
-    \node [data] at ($(context)!0.5!(llm)$) {Prompt};
-    \node [data] at ($(llm)!0.5!(output)$) {Risposta};
+    \node [data] at ($(context)!0.5!(llm)$) {Integra};
+    \node [data] at ($(llm)!0.5!(output)$) {Genera};
 \end{tikzpicture}
 
 %\begin{figure}[h]
@@ -319,25 +321,34 @@ Allo scopo di:
 %    \caption{Flusso di una request ad un LLM integrato con un RAG}
 %    \label{fig:jumpstart-fm-rag}
 %\end{figure}
-RAG è un sistema che integra il processo di generazione del linguaggio con un meccanismo di recupero delle informazioni.
-Il funzionamento si articola in diverse fasi, come sopra illustrato.
 
-\subsection{Creazione degli Embedding}
-Il sistema RAG utilizza dati esterni al training set originale del LLM, provenienti da diverse fonti come:
+\subsection{Creazione Vector Database}
+La propria \emph{knowledge base} deve essere salvata in un database vettoriale, in modo da poter essere interrogata in maniera efficiente dal sistema RAG.
+Per creare questo database vengono utilizzati dati esterni al training set originale del LLM, provenienti da diverse fonti come:
 \begin{itemize}
     \item API e database interni
     \item Archivi documentali
     \item File di testo e codice
 \end{itemize}
-Questi dati vengono convertiti in rappresentazioni numeriche (embedding) e archiviati in un database vettoriale, creando una knowledge base accessibile dal RAG.
-
-\subsection{Fase 1: Function Calling}
-Il sistema RAG inizia con una chiamata di funzione per ricercare nei dati di embedding:
+La creazione di un database ben strutturato e la parte più importante di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la sucessiva fase di interrogazione.
+Il processo di creazione del Vector Database segue la seguente pipeline:
 \begin{itemize}
-    \item La query dell'utente attiva una chiamata di funzione
-    \item Il sistema cerca nei dati di embedding le informazioni pertinenti
-    \item Se trovate, queste informazioni vengono aggiunte al prompt
+    \item \textbf{Chunking}: Divisione del codice in chunk 
+    \item \textbf{Embedding}: Conversione dei chunk in vettori numerici
+    \item \textbf{Vector Store}: Memorizzazione degli embedding in un database vettoriale
 \end{itemize}
+%Creazione degli Embedding
+
+
+\subsection{FASE 1: User query e function calling}
+Data la query d'input da parte dell'utente, il sistema RAG è avviato da una chiamata di funzione per ricercare nel
+\textbf{Vector Database} i chunk più rilevanti per la query.
+Nei modelli più complessi in RAG è di fatto un agente integrato nel sistema che viene chiamato all'occorreza qunado la base di conoscenza del LLM non è sufficiente per fornire una risposta adeguata,
+in questo modo viene anche razionalizzato e ottimizzato il costo computazionale del processo,
+attivato solo quando strettamente neceassario.
+Rimane comunque questo passaggio una scelta configurabile in base allo specifico utilizzo del sistema,
+ad esempio per un azienda che utilizza il LLM solo per compiti specifici può essere configurato il sistema in modo che chiamii
+la funzione RAG sempre.
 \subsection{Fase 2: Recupero delle Informazioni}
 Quando l'utente sottopone una query:
 \begin{itemize}
@@ -347,19 +358,16 @@ Quando l'utente sottopone una query:
 \end{itemize}
 
 \subsection{Fase 3: Aumento del Prompt}
-Il sistema RAG arricchisce il prompt dell'utente:
-\begin{itemize}
-    \item Aggiunge le informazioni recuperate al contesto
-    \item Utilizza tecniche di prompt engineering per ottimizzare la comunicazione con il LLM
-    \item Fornisce al modello un contesto arricchito per generare risposte più accurate
-\end{itemize}
+Se trovate, il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
 
 \section{Perchè RAG}
-Il RAG permette di superare le limitazioni dei LLM, fornendo risposte accurate e contestualizzate 
+Il RAG permette di superare le limitazioni di conoscenza dei LLM, fornendo risposte accurate e contestualizzate 
 grazie all'integrazione di conoscenze interne e personalizzate.
-Costruire un RAG è una valida alternativa al fine-tuning e permette di avere rapidamente aggiornamenti sulla base dati.
-Cosa più difficile da ottenere con il fine-tuning, che richiede tempo e risorse significative.
-Inoltre è più facile costruire un RAG che intervenire direttamente sul LLM solitamente di proprietà di terzi.
+Dopo aver costruito un sistema RAG è possibile eseguire rapidamente aggiornamenti al \textbf{Vector database},
+cosa che sarebbe molto più difficile da ottenere con il fine-tuning, che richiede tempo e risorse significative.
+Avere un LLM addestrato fin da subito su misura per le proprie sarebbe fantastico ma per quasi
+tutte le aziende richiede risorse impossibili da sostenere ed è quindi molto più facile costruire un RAG
+che intervenire direttamente sulla conoscenza del LLM solitamente di proprietà di terzi.
 
 \chapter{Implementazione di un Sistema RAG per lo Sviluppo del Software}
 
