@@ -369,14 +369,13 @@ Avere un LLM addestrato fin da subito su misura per le proprie sarebbe fantastic
 tutte le aziende richiede risorse impossibili da sostenere ed è quindi molto più facile costruire un RAG
 che intervenire direttamente sulla conoscenza del LLM solitamente di proprietà di terzi.
 
-\chapter{Implementazione di un Sistema RAG per lo Sviluppo del Software}
-
+\chapter{Implementazione di un Sistema RAG per lo Sviluppo di codice per il linguaggio Java}
 \section{Obiettivo}
-
 Questo caso studio si propone di verificare il livello di personalizzazione e qualità delle risposte di un LLM potenziando la query nel prompt di input 
-attraverso la creazione di un sistema RAG di supporto.
+attraverso la creazione di un sistema RAG di supporto, analizzando singolarmente le varie fasi che compongono il processo.
 Il sistema RAG è testato con della \textbf{classi JAVA uniche} create appositamente per il caso studio.
-\newline\textbf{Problematica da affrontare:} chiamate a più livelli di classi e metodi, dove il RAG potrebbe non essere in grado di estrapolare
+\subsubsection{Problematica da affrontare:}
+Chiamate a più livelli di classi e metodi, dove il RAG potrebbe non essere in grado di estrapolare
 le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte coerenti con quanto richiesto.
 
 \section{Architettura del Sistema}
@@ -442,7 +441,6 @@ Il sistema RAG implementa un'architettura modulare composta da cinque componenti
     \end{itemize}
 \end{enumerate}
 
-
 \section{Software Utilizzati}
 \subsection{Ollama\hspace{0.3cm}\protect\includegraphics[width=0.03\linewidth]{figures/ollama.png}}
 Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM
@@ -450,9 +448,7 @@ senza dover dipendere da servizi cloud esterni.
 Il software è stato scelto per la sua flessibilità, permettendo di integrare facilmente i modelli LLM nel sistema RAG.
 \subsection{LLM}
 Ogni LLM è specializzato per determinati scopi,
-per questo motivo per rendere più completa la ricerca sono stati utilizzati due modelli.
-Nella scelta dei modelli è stato obbligatorio eseguire un pre filtraggio considerando solo modelli che permettessero di eseguire function calling.
-
+per questo motivo per rendere più completa la ricerca sono stati utilizzati due modelli con caratteristiche differenti:
 \subsubsection{Llama 3.2}
 Llama 3.2 3B \cite{llama3-2}, un modello di linguaggio open source.
 Il modello, con 3 miliardi di parametri, è ottimizzato per compiti di dialogo multilingue e si distingue per le sue capacità di recupero e sintesi delle informazioni.
@@ -473,7 +469,12 @@ Fornisce strumenti avanzati per integrare modelli con dati esterni ed API, crear
 e gestire database vettoriali, supportando l'implementazione di sistemi RAG.
 
 \subsection{BGE-M3}
-BGE-M3 \cite{bge-m3} è un database vettoriale open source per la gestione di dati strutturati e non strutturati multilingue, sviluppato da BigGraph Engine.
+BGE-M3 \cite{bge-m3} è un modello di embedding testuale open source per la gestione di dati strutturati e non strutturati multilingue.
+Il modello permettendo di convertire testo in vettori numerici ad alta dimensionalità.
+
+\subsection{FAISS}
+FAISS (Facebook AI Similarity Search) \cite{faiss} è una libreria open source per la ricerca efficiente di similarità e il clustering di vettori densi.
+Progettata per gestire dataset su larga scala, FAISS supporta operazioni di ricerca anche su insiemi di vettori che superano la capacità della RAM, grazie a tecniche di indicizzazione avanzate e ottimizzazioni computazionali.
 
 \section{Dataset}
 Il dataset creato appositamente è composto da tre classi Java:
@@ -481,25 +482,25 @@ Il dataset creato appositamente è composto da tre classi Java:
 \begin{description}
     \item[DateUtilCustom.java] Classe personalizzata per gestire le date
     \item[GiorniMagici.java] Classe per calcolare in maniera particolare dei giorni
-    \item[BasketballStats.java] Classe per calcolare statistiche relative al mondo del basket,
-     questa classe non ha nessuna relazione diretta con le altre due classi, mentre DateUtilCustom.java e GiorniMagici.java sono strettamente correlate.
-     Andremo a testare il sistema RAG con il seguente scenario: 
+    \item[BasketballStats.java] Classe per calcolare statistiche relative al mondo del basket.
 \end{description}
 
+\section{Scenario base del Caso Studio}
+La classe BasketballStats.java non ha nessuna relazione con le altre due classi,
+mentre DateUtilCustom.java e GiorniMagici.java sono strettamente correlate infatti GiorniMagici.java richiama metodi presenti in DateUtilCustom.java.
+Andremo a testare il sistema RAG con la seguente query: 
 \begin{itemize}
-    \item \textbf{Query:} Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 1, 10))}?
+    \item \textbf{Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 1, 10))}?}
 \end{itemize}
 
-\subsubsection{Codice di riferimento per rispondere alla query}
+\subsection{Codice di riferimento per rispondere alla query}
 In GiorniMagici.java è presente la seguente funzione:
-
 \begin{lstlisting}[language=Java, caption={Metodo segnaleWow in GiorniMagici.java}, label={lst:segnaleWow}]
 public static String segnaleWow(LocalDate data) {
     String wow = "il tuo segnale Wow e': " + DateUtilCustom.getMessaggioMagico(date);
     return wow;
 }
 \end{lstlisting}
-
 Questa funzione richiama il metodo \texttt{getMessaggioMagico} presente in DateUtilCustom.java:
 
 \begin{lstlisting}[language=Java, caption={Metodo getMessaggioMagico in DateUtilCustom.java}, label={lst:getMessaggioMagico}]
@@ -518,7 +519,7 @@ public static String getMessaggioMagico(LocalDate datamagica) throws DateTimePar
 }
 \end{lstlisting}
 
-\subsubsection{Risultato Atteso}
+\subsection{Risultato Atteso}
 Essendo il 10 gennaio 2025 un venerdì, ci aspettiamo come risposta:
 \begin{quote}
     \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}
@@ -526,7 +527,7 @@ Essendo il 10 gennaio 2025 un venerdì, ci aspettiamo come risposta:
 
 \section{Implementazione}
 \subsection{Creazione dei Chunk}
-I modelli di embedding hanno limiti massimi di input (512-4096 token)  per questo spezzare il codice in chunk di dimensioni adeguate è fondamentale oltre che in ogni caso obbligatorio.
+I modelli di embedding hanno limiti massimi di input (512-4096 token)  per questo spezzare il codice in chunk di dimensioni adeguate è obbligatorio oltre ad essere in ogni caso fondamentale.
 Inoltre occorre prestare attenzione alla dimensione dei chunk generati, se troppo piccoli riducono il contesto disponibile per il modello mentre se troppo grandi perdono focalizzazione semantica.
 Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
 Il seguente codice Python mostra come suddividere i file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
@@ -607,7 +608,7 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
     with open("chunks.json", "w", encoding="utf-8") as f:
         json.dump(all_chunks, f, indent=4, ensure_ascii=False)
 \end{lstlisting}
-Il chunking è costruito in maniera specifica per codice java, i separatori sono stati scelti per tentare di segmentare il codice secondo la struttura tipica dei metodi e delle classi, garantendo che il chunk contenga blocchi di codice "interi".
+Il chunking è costruito in maniera specifica per \textbf{codice java}, i separatori sono stati scelti per tentare di segmentare il codice secondo la struttura tipica dei metodi e delle classi, garantendo che il chunk contenga blocchi di codice "interi".
 L'opzione \texttt{keep\_separator=True} fa sì che il separatore venga mantenuto nel chunk risultante.
 Per ciascun chunk, se nel testo è presente la stringa \texttt{class}, il codice estrae il nome della classe 
 (prendendo il testo che segue \texttt{class} fino al primo \texttt{\{}) e lo utilizza per creare un contesto 
@@ -659,21 +660,23 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
     \begin{lstlisting}[language=Python, caption={Funzione extract\_method\_name}]
     import re
     def extract_method_name(text):
-        # Cerca firme di metodi Java standard
+        # Pattern per la firma di un metodo in Java
         method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
         
-        # Cerca costruttori
+        # Pattern per i costruttori
         constructor_pattern = r'(?:public|private|protected)\s+(\w+)\s*\([^)]*\)'
         
+        # Cerca la firma di un metodo
         matches = re.findall(method_pattern, text)
         if matches:
             return matches[0]  # Restituisce il primo metodo trovato
         
+        # Cerca costruttori
         constr_matches = re.findall(constructor_pattern, text)
         if constr_matches:
             return constr_matches[0] + " (costruttore)"
         
-        # Cerca chiamate a metodi nel chunk
+        # Cerca chiamate a metodi
         method_calls = re.findall(r'\.(\w+)\s*\(', text)
         if method_calls:
             return f"Chiamata a: {method_calls[-1]}"
@@ -684,10 +687,8 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
 \subsection{Generazione degli Embedding}
     Gli embedding trasformano i chunk in rappresentazioni vettoriali che catturano il significato semantico.
     Il seguente codice Python mostra come generare gli embedding e creare un database Faiss.
-    Il modello di embedding utilizzato è BGE-M3, un modello pre-addestrato per la generazione di embedding con dimesioni 1024(denso) + 250K (sparso).
-    Il modello usa due rappresentazioni per complementarietà, la rappresentazione denza cattura relazioni semantiche mentre quella sparsa cattura relazioni sintattiche.
-    Mentre FAISS \cite{faiss} (Facebook AI Similarity Search) è una libreria ottimizzata per la ricerca di similarità in spazi ad alta dimensionalità.
-    Utilizza la ricerca di somiglianza utilizzando la distanza euclidea tra i vettori.
+    Come precedentemente descritto, il modello di embedding utilizzato è BGE-M3, questo modello usa due rappresentazioni per complementarietà, la rappresentazione denza cattura relazioni semantiche mentre quella sparsa cattura relazioni sintattiche.
+    Mentre sul database FAISS ad alta dimensionalità verrà settata la ricerca di somiglianza utilizzando la distanza euclidea tra i vettori.
     
     \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database FAISS}, label={lst:embeddings}]
         import json
@@ -719,6 +720,9 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         print("Database FAISS creato e salvato in ./faiss_db.")
     \end{lstlisting}
 
+Il metodo \emph{encode()} del modello BGE-M3 genera gli embedding per ogni chunk,
+chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e creare vettori con relazioni semantiche strutturate.
+
 \subsection{Esecuzione di query sul Database FAISS}
     Una volta creato il database FAISS, è possibile eseguire ricerche semantiche sui chunk memorizzati:
 
@@ -729,7 +733,7 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
     # 1. Carica il modello di embedding nel formato corretto
     embedder = HuggingFaceEmbeddings(
         model_name="BAAI/bge-m3",
-        model_kwargs={'device': 'cpu'},  # Usa 'cuda' per GPU
+        model_kwargs={'device': 'cpu'},
         encode_kwargs={'normalize_embeddings': True}
     )
 
@@ -748,7 +752,7 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         query,
         k=5,
         score_threshold=0.90,  # bassa similarita'
-        search_type="similarity",  # Piu' efficace per il codice usare mmr per diversita'
+        search_type="similarity",  # Piu' efficace per il codice
         lambda_mult=0.5       # Bilancia diversita'/rilevanza
     )
 
@@ -759,33 +763,39 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         print("-" * 40)
     \end{lstlisting}
 
-    \subsubsection{Query Base}
-    Con la query: 
-    \newline
-        \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
-    \newline
-    viene restituito il chunk corretto con uno score di similarità di 0.6547. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
-
-    \paragraph{Nota:}
-    È importante riscontrare che viene restituito un solo chunk nonostante \texttt{k=5}. Questo accade perché nessun altro chunk supera la soglia di similarità impostata. Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow} richiama un metodo presente nella libreria \texttt{DateUtilCustom}.
-
-    \subsubsection{Query Migliorata}
-    Per risolvere questo problema, la query è stata riformulata:
-    \begin{quote}
-        \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
-    \end{quote}
-
-    \paragraph{Risultati Ottenuti}
-    L'output fornisce 5 risultati:
+    \subsubsection{Risultati con query base (senza alcun riferimento al metodo utilizzato all'interno di segnale Wow)}
     \begin{itemize}
-        \item Primo chunk (score: 0.5276): contiene la funzione \texttt{segnaleWow}
-        \item Secondo, terzo e quarto chunk (scores: 0.7188, 0.7258, 0.7605): contengono la funzione \texttt{getMessaggioMagico}
-        \item Quinto chunk (score: 0.8958): funzione non rilevante relativa alle date
+        \item \textbf{Query:} 
+            \newline
+                \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
+            \newline
+        \item \textbf{Output:}
+        viene restituito il chunk corretto con uno score di similarità di \textbf{0.6547}. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
     \end{itemize}
+    \paragraph{Nota:}
+    È importante riscontrare che viene restituito un solo chunk nonostante \texttt{k=5}.
+    Questo accade perché nessun altro chunk supera la soglia di similarità impostata.
+    Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow} richiama un metodo presente nella libreria \texttt{DateUtilCustom} che non viene estratto dal Dataset.
 
-    \paragraph{Conclusione}
-    Questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
-    è preferibile non ottenere risultati piuttosto che ricevere risposte non coerenti.
+    \subsubsection{Riformulazione query (aggiungendo riferimento al metodo utilizzato all'interno di segnale Wow)}
+        \begin{itemize}
+            \item \textbf{Per risolvere questo problema, la query è stata riformulata:}
+            \begin{quote}
+                \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
+            \end{quote}
+            \item \textbf{L'output fornisce 5 risultati:}
+            \begin{itemize}
+                \item Primo chunk \textbf{(score: 0.5276)}: contiene la funzione \texttt{segnaleWow}
+                \item Secondo, terzo e quarto chunk \textbf{(scores: 0.7188, 0.7258, 0.7605)}: contengono la funzione \texttt{getMessaggioMagico}
+                \item Quinto chunk \textbf{(score: 0.8958)}: funzione non rilevante relativa alle date
+            \end{itemize}
+        \end{itemize}
+
+    \paragraph{Conclusione:}
+    Sono state riscontrate due problematiche molto rilevanti, la prima riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
+    Mentre la seconda guarda i chunck estratti, lo score ottenuto non è particolarmente alto e questo con un database più ampio potrebbe portare a risultati non coerenti.
+    Per il secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
+    questa piccola correzione risolve in parte la problematica o almeno evita di propagarla ulteriormente preferendo non ottenere risultati piuttosto che ricevere risposte non coerenti.
     
 \subsection{Creazione della Pipeline RAG}
 \begin{lstlisting}[language=Python, caption={Pipeline RAG}, label={lst:rag}]
@@ -837,7 +847,7 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
     """
     
     COMMON_PARAMS = {
-        "temperature": 0.3,
+        "temperature": 0.3, #lasciamo una bassa creativita' non vogliamo che inventi risposte
         "top_p": 0.85,  # Bilancia creativita'/controllo nei token generati
         "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
     }
@@ -895,18 +905,23 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
         #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")
 \end{lstlisting}
-\subsubsection{Spiegazione pipeline}
-Come nei passaggi precedenti viene usata la stessa configurazione con il modello di embedder BAAI/bge-m3 e
-viene poi caricato il database FAISS precedentemente creato.
-La chiamata iniziale alla funzione \texttt{ask\_ollama()} chiede come parametro la query di input che verr\`a processata dalla pipeline RAG\@.
-Sfruttando la libreria LangChain, result ritorna la risposta("answer") e il contesto("context") fornito alla query.
-\newline\texttt{rag\_chain.invoke} esegue la catena RAG creata tramite il metodo \texttt{create\_retrieval\_chain} che prende come parametri il retriever e il document chain.
-\newline\texttt{document\_chain} è una catena di documenti che prende in input il modello LLM e il template del prompt.
-\newline\texttt{load\_model} carica il modello LLM e il template del prompt in base al modello scelto sfruttando OllamaLLM e PromptTemplate.
-
-Per i due LLM è stata data una temperature molto bassa 0.3 per garantire risposte coerenti e precise senza che inventi.
+\subsubsection{Spiegazione Pipeline del RAG}
+    Seguendo la struttura precedentemente creata, per eseguire l'embedder della query di input viene utilizzato il modello BAAI/bge-m3 e
+    caricato il database FAISS contenente la \textbf{knowledge base}.
+    La chiamata iniziale alla funzione \emph{ask\_ollama()} richiede come parametro \textbf{la query di input} che verrà processata dalla pipeline RAG.
+    Sfruttando le funzionalità della libreria LangChain \cite{langchain-retrieval-chain}, \textbf{\emph{result}} sarà un array contente la risposta("answer") e il contesto("context") fornito alla query.
+\subsubsection{\emph{rag\_chain.invoke()}}
+ Questa funzione esegue la catena RAG creata tramite il metodo \emph{create\_retrieval\_chain()} che prende come parametri il retriever e il document chain.
+ \begin{itemize}
+    \item la funzione \textbf{create\_stuff\_documents\_chain()} carica una catena di documenti prendendo in input il modello LLM e il template del prompt.
+    \item \textbf{load\_model()} carica il modello LLM e il template del prompt in base al modello scelto sfruttando OllamaLLM e PromptTemplate.
+ \end{itemize}
+ \subsubsection{Temperature}
+Per i due LLM è stata data una temperature molto bassa \textbf{0.3} in modo da garantire da parte dei LLM risposte coerenti e precise senza provi ad inventarle.
+\subsubsection{Top\_p}
 Il parametro \texttt{top\_p} è stato impostato a 0.85 per bilanciare creatività e controllo nei token generati.
-Mentre in system è stato specificato di rispondere in italiano come esperto di programmazione ma solo se è sicuro.
+\subsubsection{System}
+Come parametro di sistema da passare al LLM è stato esplicitamente richiesto di rispondere in italiano come esperto di programmazione ma solo se è sicuro.
 
 \subsection{Risultati del Sistema RAG}
 \subsubsection{Query Base con informazioni incomplete}
@@ -1046,7 +1061,8 @@ L'integrazione di strumenti basati su AI nel processo di sviluppo software sta r
 
 \nocite{*} % Remove this as soon as you have the first citation
 
-\bibliographystyle{alpha}
+\bibliographystyle{alphaurl}
+%\bibliographystyle{plainurl}
 \bibliography{bibliography}
 
 \end{document}

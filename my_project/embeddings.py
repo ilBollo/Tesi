@@ -5,20 +5,23 @@ from langchain_community.vectorstores import FAISS
 import re
 
 def extract_method_name(text):
+    # Pattern per la firma di un metodo in Java
     method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
     
-    # Cerca costruttori
+    # Pattern per i costruttori
     constructor_pattern = r'(?:public|private|protected)\s+(\w+)\s*\([^)]*\)'
     
+    # Cerca la firma di un metodo
     matches = re.findall(method_pattern, text)
     if matches:
         return matches[0]  # Restituisce il primo metodo trovato
     
+    # Cerca costruttori
     constr_matches = re.findall(constructor_pattern, text)
     if constr_matches:
         return constr_matches[0] + " (costruttore)"
     
-    # Cerca chiamate a metodi nel chunk
+    # Cerca chiamate a metodi
     method_calls = re.findall(r'\.(\w+)\s*\(', text)
     if method_calls:
         return f"Chiamata a: {method_calls[-1]}"
