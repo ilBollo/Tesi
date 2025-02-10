@@ -925,13 +925,12 @@ Come parametro di sistema da passare al LLM è stato esplicitamente richiesto di
 
 \subsection{Risultati del Sistema RAG}
 \subsubsection{Query Base con informazioni incomplete}
-Come query di test è stata utilizzata:
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
 \end{quote}
 \subsubsection{Fonti aggiunte al prompt}
 Il RAG aggiunge solo il chunk dove è presente la funzione \texttt{segnaleWow} e non il chunk con la funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom
-per questo le risposte dei due modelli sono incomplete.
+per questo le risposte dei due modelli sono incomplete:
 \subsubsection{Output con LLM Llama3.2}
 L'output ottenuto utilizzando il modello Llama3.2 è stato:
 \begin{quote}
@@ -993,36 +992,42 @@ Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
 \end{quote}
 \subsubsection{Fonti aggiunte al prompt}
 In questo caso il RAG aggiunge 4 chunk ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
-Ne consegue che le risposte date dai due modelli sono coerenti a quanto aspettato.
+Ne consegue che \textbf{le risposte date dai due modelli sono coerenti a quanto aspettato}.
 \subsubsection{Output con LLM Llama3.2}
 RISPOSTA:
 Il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` ritorna un segnale Wow specifico in base al giorno indicato.
-
 Per determinare il segnale Wow, il metodo `getMessaggioMagico()` della libreria `DateUtilCustom` viene chiamato con la data `LocalDate.of(2025, 1, 10)` come argomento.
-
 La funzione `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di una data. In questo caso, il giorno è sabato (giorno 7), quindi il messaggio ritornato sarà:
-
-"Il giorno perfetto per scoprire segreti nascosti."
-
+\textbf{"Il giorno perfetto per scoprire segreti nascosti."}
 Quindi, il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` restituirà la stringa "il tuo segnale Wow è : Il giorno perfetto per scoprire segreti nascosti.".
 
 \subsubsection{Output con LLM CodeQwen}
 Se si chiama il metodo `segnaleWow` con una data di 10 gennaio 2025, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:       
-
-```
-"il tuo segnale Wow è :Il giorno perfetto per scoprire segreti nascosti."
-```
-
+\textbf{```"il tuo segnale Wow è :Il giorno perfetto per scoprire segreti nascosti."```}
 Questo è poiché, inizialmente, viene recuperata la data di 10 gennaio 2025 utilizzando `LocalDate.of(2025, 1, 10)`. Quindi, viene richiamato il metodo `getMessaggioMagico()` 
 passando questa data come parametro.
-
 Il metodo `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di tale data. In questo caso, la data 10 gennaio 2025 cade mercoledì, quindi viene restituito il messaggio "Il giorno perfetto per scoprire segreti nascosti."
 
 \subsection{Valutazione del RAG}
 Sfruttando l'approccio "llm as a judge" per valutare automaticamente quanto prodotto dal sistema RAG
 operiamo una valutazione automatica delle risposte prodotte.
-..........
+Il dataset è stato arricchito di altre classi java generate sinteticamente da deepssek
 
+..........
+compito è quello di fornire un "punteggio totale" che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
+Date la vostra risposta su una scala da 1 a 5, dove 1 significa che la domanda non è affatto risolvibile in base al contesto e 5 significa che la domanda è chiaramente e inequivocabilmente risolvibile in base al contesto.
+...
+Motivazione: Tutte le domande sono perfettamente e univocamente risolvibili usando esclusivamente il contesto fornito. Ogni QA pair:
+
+Fa riferimento a metodi specifici implementati
+
+Utilizza parametri numerici esatti
+
+Ha una sola risposta corretta deterministica
+
+Non richiede conoscenze esterne
+
+È verificabile tramite esecuzione diretta del codice fornito
 \chapter{Conclusioni}
 
 da completare
@@ -1034,7 +1039,7 @@ da completare
 %\end{itemize}
 
 \section{Impatto sullo Sviluppo Software}
-L'integrazione di strumenti basati su AI nel processo di sviluppo software sta rivoluzionando il settore. Durante il periodo di sviluppo di questa tesi (Ottobre 2024 - Gennaio 2025), abbiamo osservato:
+L'integrazione di strumenti basati su AI nel processo di sviluppo software sta rivoluzionando il settore. Durante il periodo di sviluppo di questa tesi (Ottobre 2024 - Febbraio 2025), abbiamo osservato:
 \begin{itemize}
     \item Rapida evoluzione degli strumenti di AI per lo sviluppo software
     \item Crescente disponibilità di soluzioni open source
