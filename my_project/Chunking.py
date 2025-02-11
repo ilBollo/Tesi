@@ -46,7 +46,7 @@ def process_file(file_path):
     return chunk_metadata
 
 # Carica e suddividi i file Java
-files = ["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java"]
+files = ["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java", "my_project/Ventunoclassi.java"]
 all_chunks = []
 
 for file_path in files:
