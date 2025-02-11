@@ -75,12 +75,13 @@
 
 \begin{abstract}	
 I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
-L'addestramento fatto sui modelli è però su fonti generiche, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta utilizzando casistiche già create dal programmatore o dalla propria azienda per casi simili. Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
-Il fine-tuning di un \ac{LLM} è un processo molto costoso e non scalabile per essere aggiornato frequentemente.
-Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette aumentare la conoscenza del modello, recuperando informazioni da una base di conoscenza esterna al modello, come librerie specifiche di un azienda, arricchendo il prompt della query di input.
-Ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, si inseriranno per completare la query inviata al LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
-Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} e un \ac{LLM} con lo scopo di ottenere dal LLM risposte personalizzate
-che solo con la conoscenza del LLM anche se estremamente performante e preparato sarebbe stato impossibile ottenere.
+L'addestramento fatto sui modelli è però su fonti generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta utilizzando codice già creato dal programmatore o dalla propria azienda per casi simili.
+Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare ma
+il fine-tuning di un \ac{LLM} è un processo molto costoso e difficile da utilizzare per mantenere aggiornato frequentemente la base di conoscenza del modello.
+Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza, esterna al modello, come librerie specifiche di un azienda, arricchendo il prompt della query di input che sarà elaborata dal LLM.
+Il \ac{RAG}, ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, li inserirà per aumentare il prompt del LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
+Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} specifico per codice Java e un \ac{LLM} con lo scopo di ottenere dal LLM risposte personalizzate
+che solo con la conoscenza del LLM, anche se estremamente performante e completo, sarebbe stato impossibile ottenere.
 \end{abstract}
 
 \begin{dedication}
@@ -356,6 +357,12 @@ Quando l'utente sottopone una query:
     \item Il sistema cerca nel database vettoriale le informazioni più pertinenti
     \item Viene calcolata la rilevanza attraverso calcoli matematici vettoriali
 \end{itemize}
+
+\begin{figure}[h]
+    \raggedright
+    \includegraphics[width=0.8\linewidth]{figures/plotSearch.png}
+    \label{fig:Emempio distanze chunk e query}
+\end{figure}
 
 \subsection{Fase 3: Aumento del Prompt}
 Se trovate, il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
@@ -933,6 +940,7 @@ Il RAG aggiunge solo il chunk dove è presente la funzione \texttt{segnaleWow} e
 per questo le risposte dei due modelli sono incomplete:
 \subsubsection{Output con LLM Llama3.2}
 L'output ottenuto utilizzando il modello Llama3.2 è stato:
+``
 \begin{quote}
 Il metodo \texttt{segnaleWow} restituisce una stringa che contiene un messaggio Wow specifico in base al giorno indicato. Tuttavia, non è chiaro come il messaggio sia calcolato.
 \end{quote}
@@ -947,9 +955,7 @@ In questo caso, il messaggio Wow viene calcolato chiamando l' metodo `getMessagg
 
 Il problema è che il metodo `segnaleWow` non contiene alcun calcolo per determinare il segnale Wow in base al giorno indicato. Pertanto, senza conoscere il comportamento del 
 metodo `getMessaggioMagico`, non possiamo dire con certezza cosa ritorni il metodo `segnaleWow`.
-
 Tuttavia, se supponessimo che `DateUtilCustom.getMessaggioMagico` restituisca un valore di tipo stringa che contiene una data o un numero, allora il risultato del metodo `segnaleWow` dipenderebbe dal comportamento di questo metodo.
-
 Per esempio, se `DateUtilCustom.getMessaggioMagico` restituisce la data corrente, il metodo `segnaleWow` potrebbe restituire un messaggio Wow che contiene la data del 10 gennaio 2025:
 ```java
 public static String segnaleWow (LocalDate date){
@@ -971,10 +977,12 @@ In questo caso, il risultato sarebbe:
 ```
 
 Tuttavia, senza conoscere il comportamento di `DateUtilCustom.getMessaggioMagico`, non possiamo essere certi del risultato.
+''
 \end{quote}
 
 \subsubsection{Output con LLM CodeQwen}
 Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
+``
 \begin{quote}
     Se si chiama il metodo `segnaleWow` con un'istanza di `LocalDate` che corrisponde a "2025-01-10", il metodo restituirà una stringa che indica il segnale Wow associato ad tale data.
 
@@ -985,7 +993,7 @@ Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
     Il risultato sarà: "il tuo segnale Wow è : L'anno 2025 ha un giorno magico che non è un numero perfetto."
     Questo è perchè la data specificata (2025-01-10) corrisponde ad un anno che non ha un numero perfetto come il 28 febbraio del 2024, quindi il metodo utilizza il messaggio "L'anno 2025 ha un giorno magico che non è un numero perfetto." proveniente da `DateUtilCustom.getMessaggioMagico(date)`.
 \end{quote}
-
+''
 \subsubsection{Query Completa con tutte le informazioni richieste}
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
@@ -994,74 +1002,79 @@ Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
 In questo caso il RAG aggiunge 4 chunk ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
 Ne consegue che \textbf{le risposte date dai due modelli sono coerenti a quanto aspettato}.
 \subsubsection{Output con LLM Llama3.2}
-RISPOSTA:
-Il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` ritorna un segnale Wow specifico in base al giorno indicato.
+``Il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` ritorna un segnale Wow specifico in base al giorno indicato.
 Per determinare il segnale Wow, il metodo `getMessaggioMagico()` della libreria `DateUtilCustom` viene chiamato con la data `LocalDate.of(2025, 1, 10)` come argomento.
 La funzione `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di una data. In questo caso, il giorno è sabato (giorno 7), quindi il messaggio ritornato sarà:
 \textbf{"Il giorno perfetto per scoprire segreti nascosti."}
 Quindi, il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` restituirà la stringa "il tuo segnale Wow è : Il giorno perfetto per scoprire segreti nascosti.".
-
+''
 \subsubsection{Output con LLM CodeQwen}
-Se si chiama il metodo `segnaleWow` con una data di 10 gennaio 2025, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:       
+``Se si chiama il metodo `segnaleWow` con una data di 10 gennaio 2025, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:       
 \textbf{```"il tuo segnale Wow è :Il giorno perfetto per scoprire segreti nascosti."```}
 Questo è poiché, inizialmente, viene recuperata la data di 10 gennaio 2025 utilizzando `LocalDate.of(2025, 1, 10)`. Quindi, viene richiamato il metodo `getMessaggioMagico()` 
 passando questa data come parametro.
 Il metodo `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di tale data. In questo caso, la data 10 gennaio 2025 cade mercoledì, quindi viene restituito il messaggio "Il giorno perfetto per scoprire segreti nascosti."
-
+''
 \subsection{Valutazione del RAG}
-Sfruttando l'approccio "llm as a judge" per valutare automaticamente quanto prodotto dal sistema RAG
-operiamo una valutazione automatica delle risposte prodotte.
-Il dataset è stato arricchito di altre classi java generate sinteticamente da deepssek
-
-..........
-compito è quello di fornire un "punteggio totale" che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
+Sfruttando l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG
+operando una valutazione automatizzata delle rispotte prodotte.
+Il dataset è stato arricchito di altre classi java generate sinteticamente dal LLM Deepssek.
+\subsection{Domande}
+Passando il file contenente tutte le librerie a Deepssek, sono state generate 30 domande per valutare il sistema RAG.
+La domanda fatta al modello è stata:
+\begin{quote}
+    \texttt{``Dalle mie classi genera 30 domande/risposte per valutare il mio rag:
+    la prima è: Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))
+    che utilizza la funzione getMessaggioMagico() della libreria
+    DateUtilCustom?''}
+\end{quote}
+Il risulta è stato il seguente:
+\begin{lstlisting}[language=Python, caption={Domande generate da Deepssek}]
+    id,question,context
+Q1,"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico()?","GiorniMagici.java"
+Q2,"Come calcolare la media battuta con 25 valide su 80 turni?","CalcolatoreStatisticheBaseball.java"
+Q3,"Quale ERA risulta da 5 punti subiti in 7 inning?","CalcolatoreStatisticheBaseball.java"
+Q4,"Come validare una password 'Secret123!'?","GestionePassword.java"
+Q5,"Cosa restituisce invertiStringaMantenendoMaiuscole('AbCde')?","AnalizzatoreTesto.java"
+Q6,"Come convertire 10km in miglia?","ConvertitoreUnita.java"
+Q7,"Quale BMI risulta da 70kg e 1.75m?","CalcolatoreBMI.java"
+Q8,"Cosa significa un momentum [12,15] vs [8,10]?","BasketballStats.java"
+Q9,"Come cifrare 'HELLO' con Caesar shift 3?","StrumentiCrittografia.java"
+Q10,"Quale temperatura a Roma (41.9) a luglio?","SimulatoreMeteo.java"
+Q11,"Cosa restituisce isDataMagica(6, 5, 2030)?","GiorniMagici.java"
+Q12,"Come calcolare rata mutuo 100k al 4\% in 20 anni?","GestioneFinanzePersonali.java"
+Q13,"Cosa restituisce getMessaggioMagico(LocalDate.of(2024,12,25))?","DateUtilCustom.java"
+Q14,"Come calcolare VAN al 5% per flussi [100,200,300]?","AnalizzatoreInvestimenti.java"
+Q15,"Quale complessita' ciclomatica per codice con 3 if e 2 while?","AnalizzatoreCodice.java"
+Q16,"Cosa restituisce modelloPredaPredatore(100,50,0.1,0.05)?","SimulatoreEcologico.java"
+Q17,"Come generare password sicura di 12 caratteri?","GestionePassword.java"
+Q18,"Cosa restituisce convertiGrigio(0xFFAABB)?","StrumentiGrafica.java"
+Q19,"Come calcolare log base 3 di 27?","CalcolatriceScientifica.java"
+Q20,"Quale categoria BMI per 28.7?","CalcolatoreBMI.java"
+Q21,"Cosa restituisce isPastDate(1/1/2020)?","DateUtilCustom.java"
+Q22,"Come aggiungere 15 giorni al 1/1/2024?","DateUtilCustom.java"
+Q23,"Quale ROI per guadagno 1500 su costo 1000?","AnalizzatoreInvestimenti.java"
+Q24,"Cosa restituisce calcolaEfficienzaGiocatore(20,10,8,2,5)?","BasketballStats.java"
+Q25,"Come simulare crescita popolazione 1000 al 2% in 5 anni?","SimulatoreEcologico.java"
+Q26,"Cosa restituisce analisiStatisticheSquadra(85, 70, 12, 28)?","BasketballStats.java"
+Q27,"Come decifrare 'KHOOR' con Caesar shift 3?","StrumentiCrittografia.java"
+Q28,"Quale percussocritico per attivita' [5,8,3]?","GestoreProgetti.java"
+Q29,"Cosa restituisce giorniAlmiocompleannoSpecial(1/1/2000, 'Mario')?","DateUtilCustom.java"
+Q30,"Come calcolare radice 5a di 3125?","CalcolatriceScientifica.java"
+\end{lstlisting}
+\subsection{Valutazione delle domande}
+Per valutare le domande generate da Deepssek, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
+fornire un "punteggio totale" che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
 Date la vostra risposta su una scala da 1 a 5, dove 1 significa che la domanda non è affatto risolvibile in base al contesto e 5 significa che la domanda è chiaramente e inequivocabilmente risolvibile in base al contesto.
-...
-Motivazione: Tutte le domande sono perfettamente e univocamente risolvibili usando esclusivamente il contesto fornito. Ogni QA pair:
-...mistral:
-Ecco il punteggio totale per ogni domanda, basato sulla capacità di rispondere senza ambiguità con il contesto dato:
+\subsubsection{Risultati}
+Entrambi i modelli hanno valutato le domande generate da Deepssek con un punteggio medio di 4.63 su 5:
+\begin{itemize}
+    \item \textbf{GPT4o}: 139 su 150
+    \item \textbf{Mistral}: 139 su 150
+\end{itemize}
+\subsection{Risposta alle domande da parte dei LLM con RAG}
 
-1. **Q1**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-2. **Q2**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-3. **Q3**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-4. **Q4**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-5. **Q5**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-6. **Q6**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-7. **Q7**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-8. **Q8**: 4 - La domanda è risolvibile, ma potrebbe richiedere una comprensione specifica del contesto del basket.
-9. **Q9**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-10. **Q10**: 4 - La domanda è risolvibile, ma potrebbe richiedere dati meteorologici aggiornati.
-11. **Q11**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-12. **Q12**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-13. **Q13**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-14. **Q14**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-15. **Q15**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-16. **Q16**: 4 - La domanda è risolvibile, ma potrebbe richiedere una comprensione specifica del modello preda-predatore.
-17. **Q17**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-18. **Q18**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-19. **Q19**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-20. **Q20**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-21. **Q21**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-22. **Q22**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-23. **Q23**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-24. **Q24**: 4 - La domanda è risolvibile, ma potrebbe richiedere una comprensione specifica delle statistiche del basket.
-25. **Q25**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-26. **Q26**: 4 - La domanda è risolvibile, ma potrebbe richiedere una comprensione specifica delle statistiche del basket.
-27. **Q27**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-28. **Q28**: 4 - La domanda è risolvibile, ma potrebbe richiedere una comprensione specifica della gestione dei progetti.
-29. **Q29**: 4 - La domanda è risolvibile, ma potrebbe richiedere una comprensione specifica del contesto delle date.
-30. **Q30**: 5 - La domanda è chiaramente risolvibile in base al contesto fornito.
-
-Il punteggio totale è 139 su 150.
-Fa riferimento a metodi specifici implementati
-
-Utilizza parametri numerici esatti
-
-Ha una sola risposta corretta deterministica
-
-Non richiede conoscenze esterne
-
-È verificabile tramite esecuzione diretta del codice fornito
+\subsubsection{Risultati}
 \chapter{Conclusioni}
 
 da completare

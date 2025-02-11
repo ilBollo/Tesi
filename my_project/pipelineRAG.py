@@ -46,9 +46,9 @@ CODEQWEN_TEMPLATE = """<|im_start|>system
 """
 
 COMMON_PARAMS = {
-    "temperature": 0.3,
+    "temperature": 0,
     "top_p": 0.85,  # Bilancia creatività/controllo nei token generati
-    "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
+    "system": "Dai risposte sintetiche e concise."
 }
 
 # Caricamento modello
