@@ -31,18 +31,18 @@ retriever=vector_store.as_retriever(
         }
     )
 
+varStileLLM = "Rispondi in modo sintetico."
+
 # Configurazione Template del prompt specifici per i modelli
 LLAMA_TEMPLATE = """<|begin_of_text|>
-<|start_header_id|>system<|end_header_id|>
+<|start_header_id|>system""" + varStileLLM + """<|end_header_id|>
 Contesto: {context}<|eot_id|>
 <|start_header_id|>user<|end_header_id|>
 Domanda: {input}<|eot_id|>
 <|start_header_id|>assistant<|end_header_id|>"""
 
-CODEQWEN_TEMPLATE = """<|im_start|>system
+CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
 {context}<|im_end|>
-{{ if .Functions }}<|im_start|>functions
-{{ .Functions }}<|im_end|>{{ end }}
 <|im_start|>user
 {input}<|im_end|>
 <|im_start|>assistant
@@ -50,8 +50,7 @@ CODEQWEN_TEMPLATE = """<|im_start|>system
 
 COMMON_PARAMS = {
     "temperature": 0.3,
-    "top_p": 0.85,  # Bilancia creatività/controllo nei token generati
-    "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
+    "top_p": 0.85  # Bilancia creatività/controllo nei token generati
 }
 
 # Caricamento modello
@@ -62,10 +61,6 @@ def load_model(model_name):
             "params": COMMON_PARAMS
         },
         "codeqwen": {
-            "template": CODEQWEN_TEMPLATE,
-            "params": COMMON_PARAMS
-        },
-        "deepseek-r1": {
             "template": CODEQWEN_TEMPLATE,
             "params": COMMON_PARAMS
         }
@@ -81,7 +76,7 @@ def load_model(model_name):
     )
 
 # Inizializza il modello
-llm, prompt = load_model("deepseek-r1")
+llm, prompt = load_model("codeqwen")
 
 # Catena RAG
 document_chain = create_stuff_documents_chain(llm, prompt)
@@ -102,8 +97,7 @@ def process_questions(questions: List[Dict]) -> List[Dict]:
                 "answer": result["answer"],
                 "sources": [
                     {
-                        "content": doc.page_content[:500],  # Limita la lunghezza
-                        "metadata": doc.metadata if hasattr(doc, 'metadata') else {}
+                        "content": doc.page_content[:500]  # Limita la lunghezza
                     } 
                     for doc in result["context"]
                 ]

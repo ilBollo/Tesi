@@ -28,27 +28,26 @@ retriever=vector_store.as_retriever(
         }
     )
 
+varStileLLM = "Sei un programmatore che risponde conciso ma sintetico."
+
 # Configurazione Template del prompt specifici per i modelli
 LLAMA_TEMPLATE = """<|begin_of_text|>
-<|start_header_id|>system<|end_header_id|>
+<|start_header_id|>system""" + varStileLLM + """<|end_header_id|>
 Contesto: {context}<|eot_id|>
 <|start_header_id|>user<|end_header_id|>
 Domanda: {input}<|eot_id|>
 <|start_header_id|>assistant<|end_header_id|>"""
 
-CODEQWEN_TEMPLATE = """<|im_start|>system
+CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
 {context}<|im_end|>
-{{ if .Functions }}<|im_start|>functions
-{{ .Functions }}<|im_end|>{{ end }}
 <|im_start|>user
 {input}<|im_end|>
 <|im_start|>assistant
 """
 
 COMMON_PARAMS = {
-    "temperature": 0,
-    "top_p": 0.85,  # Bilancia creatività/controllo nei token generati
-    "system": "Dai risposte sintetiche e concise."
+    "temperature": 0.3,
+    "top_p": 0.85  # Bilancia creatività/controllo nei token generati
 }
 
 # Caricamento modello
@@ -78,7 +77,7 @@ def load_model(model_name):
     )
 
 # Inizializza il modello
-llm, prompt = load_model("deepseek-r1")
+llm, prompt = load_model("llama3.2")
 
 # Catena RAG
 document_chain = create_stuff_documents_chain(llm, prompt)
@@ -107,3 +106,4 @@ def ask_ollama(question):
 if __name__ == "__main__":
     ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
     #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")
+    #ask_ollama("Che giorno della settimana è il 10 gennaio 2025?")
