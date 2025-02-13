@@ -10,21 +10,26 @@ def process_file(file_path):
     text = ''.join(lines)
 
     splitter = RecursiveCharacterTextSplitter(
-    chunk_size=512,
-    chunk_overlap=128,
+    chunk_size=256, #molto basso per prevenire merge di metodi
+    chunk_overlap=64,
     separators=[
-        "\n}\n\npublic",  # I seguenti separatori sono stati usati per provare a mantenere i metodi uniti
-        "\n}\n\nprivate",
-        "\n}\n\nprotected",
-        "\n}\n\n//",       # Nuovo separatore per commenti
-        "\nclass ",
-        "\n@Override",     # Cattura le implementazioni di interfacce
-        "\n@Test",         # Per eventuali test case
-        "\n/**",           # Separatore per Javadoc
-        "\n * ",
+        # I seguenti separatori sono stati usati per mantenere i metodi uniti
+        # Prioritari: catturano la fine dei metodi
+        "\n}\n\npublic ",
+        "\n}\n\nprivate ",
+        "\n}\n\nprotected ",
+        "\n}\n\nstatic ",
+        "\n}\n\n// End of method", 
+        
+        # Secondari: separatori generici
+        "\n}\n",  # Qualsiasi chiusura di blocco
+        "\nclass ",  # Inizio nuove classi
+        "\n@",  # Annotazioni
+        "\n/**",  # Javadoc
+        "\n * ", 
         "\n"
     ],
-    keep_separator=True,
+    keep_separator=False, # per evitare riporto di separatori
     is_separator_regex=False
 )
 

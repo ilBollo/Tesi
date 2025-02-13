@@ -31,7 +31,7 @@ retriever=vector_store.as_retriever(
         }
     )
 
-varStileLLM = "Rispondi in modo sintetico."
+varStileLLM = "Rispondi come un programmatore esperto ma in modo sintetico."
 
 # Configurazione Template del prompt specifici per i modelli
 LLAMA_TEMPLATE = """<|begin_of_text|>

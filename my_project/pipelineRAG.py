@@ -46,8 +46,8 @@ CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
 """
 
 COMMON_PARAMS = {
-    "temperature": 0.3,
-    "top_p": 0.85  # Bilancia creatività/controllo nei token generati
+    "temperature": 0.2,
+    "top_p": 0.90  # Bilancia creatività/controllo nei token generati
 }
 
 # Caricamento modello
@@ -77,7 +77,7 @@ def load_model(model_name):
     )
 
 # Inizializza il modello
-llm, prompt = load_model("llama3.2")
+llm, prompt = load_model("codeqwen")
 
 # Catena RAG
 document_chain = create_stuff_documents_chain(llm, prompt)
@@ -104,6 +104,6 @@ def ask_ollama(question):
 
 # Esempio d'uso
 if __name__ == "__main__":
-    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
-    #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")
+    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
+    #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
     #ask_ollama("Che giorno della settimana è il 10 gennaio 2025?")

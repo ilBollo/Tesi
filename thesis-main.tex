@@ -503,7 +503,7 @@ La classe BasketballStats.java non ha nessuna relazione con le altre due classi,
 mentre DateUtilCustom.java e GiorniMagici.java sono strettamente correlate infatti GiorniMagici.java richiama metodi presenti in DateUtilCustom.java.
 Andremo a testare il sistema RAG con la seguente query: 
 \begin{itemize}
-    \item \textbf{Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 1, 10))}?}
+    \item \textbf{Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 2, 14))}?}
 \end{itemize}
 
 \subsection{Codice di riferimento per rispondere alla query}
@@ -533,7 +533,7 @@ public static String getMessaggioMagico(LocalDate datamagica) throws DateTimePar
 \end{lstlisting}
 
 \subsection{Risultato Atteso}
-Essendo il 10 gennaio 2025 un venerdì, ci aspettiamo come risposta:
+Essendo il 14 Febbraio 2025 un venerdì, ci aspettiamo come risposta:
 \begin{quote}
     \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}
 \end{quote}
@@ -557,21 +557,26 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
         text = ''.join(lines)
     
         splitter = RecursiveCharacterTextSplitter(
-        chunk_size=512,
-        chunk_overlap=128,
+        chunk_size=256, #molto basso per prevenire merge di metodi
+        chunk_overlap=64,
         separators=[
-            "\n}\n\npublic",  # I seguenti separatori sono stati usati per provare a mantenere i metodi uniti
-            "\n}\n\nprivate",
-            "\n}\n\nprotected",
-            "\n}\n\n//",       # Nuovo separatore per commenti
-            "\nclass ",
-            "\n@Override",     # Cattura le implementazioni di interfacce
-            "\n@Test",         # Per eventuali test case
-            "\n/**",           # Separatore per Javadoc
-            "\n * ",
+            # I seguenti separatori sono stati usati per mantenere i metodi uniti
+            # Prioritari: catturano la fine dei metodi
+            "\n}\n\npublic ",
+            "\n}\n\nprivate ",
+            "\n}\n\nprotected ",
+            "\n}\n\nstatic ",
+            "\n}\n\n// End of method", 
+            
+            # Secondari: separatori generici
+            "\n}\n",  # Qualsiasi chiusura di blocco
+            "\nclass ",  # Inizio nuove classi
+            "\n@",  # Annotazioni
+            "\n/**",  # Javadoc
+            "\n * ", 
             "\n"
         ],
-        keep_separator=True,
+        keep_separator=False, # per evitare riporto di separatori
         is_separator_regex=False
     )
     
@@ -622,7 +627,7 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
         json.dump(all_chunks, f, indent=4, ensure_ascii=False)
 \end{lstlisting}
 Il chunking è costruito in maniera specifica per \textbf{codice java}, i separatori sono stati scelti per tentare di segmentare il codice secondo la struttura tipica dei metodi e delle classi, garantendo che il chunk contenga blocchi di codice "interi".
-L'opzione \texttt{keep\_separator=True} fa sì che il separatore venga mantenuto nel chunk risultante.
+L'opzione \texttt{keep\_separator=False} crea punti di split più naturali per il codice Java, allineandosi meglio con la struttura dei metodi e delle classi.
 Per ciascun chunk, se nel testo è presente la stringa \texttt{class}, il codice estrae il nome della classe 
 (prendendo il testo che segue \texttt{class} fino al primo \texttt{\{}) e lo utilizza per creare un contesto 
 strutturale (es \texttt{Classe: NomeClasse}).
@@ -633,21 +638,21 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         [
             {
                 "id": 1,
-                "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\npublic class DateUtilCustom {\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n            case WEDNESDAY: return \"Il velo tra i mondi e' sottile oggi.\";\n            case THURSDAY: return \"L'energia magica e' potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno e' avvolto nel mistero...\";\n        }\n    }\n}",
+                "text": "// File: my_project/DateUtilCustom.java\nimport java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeParseException;\nimport java.util.Calendar;\nimport java.util.Date;",
                 "source": "my_project/DateUtilCustom.java",
                 "type": "code",
                 "start_line": 1,
-                "end_line": 29,
-                "class": "DateUtilCustom"
+                "end_line": 7,
+                "class": ""
             },
             {
                 "id": 2,
-                "text": "// File: my_project/GiorniMagici.java\nClasse: GiorniMagici\npublic class GiorniMagici {\n    public static String segnaleWow(LocalDate data) {\n        String wow = \"il tuo segnale Wow e': \" + DateUtilCustom.getMessaggioMagico(date);\n        return wow;\n    }\n}",
-                "source": "my_project/GiorniMagici.java",
+                "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;\npublic class DateUtilCustom {\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.",
+                "source": "my_project/DateUtilCustom.java",
                 "type": "code",
-                "start_line": 1,
-                "end_line": 8,
-                "class": "GiorniMagici"
+                "start_line": 7,
+                "end_line": 16,
+                "class": "DateUtilCustom\n"
             }
             ............continua
         ]
@@ -842,15 +847,17 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
             }
         )
     
+    varStileLLM = "Sei un programmatore che risponde conciso ma sintetico."
+    
     # Configurazione Template del prompt specifici per i modelli
     LLAMA_TEMPLATE = """<|begin_of_text|>
-    <|start_header_id|>system<|end_header_id|>
+    <|start_header_id|>system""" + varStileLLM + """<|end_header_id|>
     Contesto: {context}<|eot_id|>
     <|start_header_id|>user<|end_header_id|>
     Domanda: {input}<|eot_id|>
     <|start_header_id|>assistant<|end_header_id|>"""
     
-    CODEQWEN_TEMPLATE = """<|im_start|>system
+    CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
     {context}<|im_end|>
     {{ if .Functions }}<|im_start|>functions
     {{ .Functions }}<|im_end|>{{ end }}
@@ -861,8 +868,7 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
     
     COMMON_PARAMS = {
         "temperature": 0.3, #lasciamo una bassa creativita' non vogliamo che inventi risposte
-        "top_p": 0.85,  # Bilancia creativita'/controllo nei token generati
-        "system": "Rispondi in italiano come esperto di programmazione ma solo se sei sicuro."
+        "top_p": 0.85  # Bilancia creativita'/controllo nei token generati
     }
     
     # Caricamento modello
@@ -939,7 +945,7 @@ Come parametro di sistema da passare al LLM è stato esplicitamente richiesto di
 \subsection{Risultati del Sistema RAG}
 \subsubsection{Query Base con informazioni incomplete}
 \begin{quote}
-    \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
+    \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?''}
 \end{quote}
 \subsubsection{Fonti aggiunte al prompt}
 Il RAG aggiunge solo il chunk dove è presente la funzione \texttt{segnaleWow} e non il chunk con la funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom
@@ -948,96 +954,72 @@ per questo le risposte dei due modelli sono incomplete:
 L'output ottenuto utilizzando il modello Llama3.2 è stato:
 ``
 \begin{quote}
-Il metodo \texttt{segnaleWow} restituisce una stringa che contiene un messaggio Wow specifico in base al giorno indicato. Tuttavia, non è chiaro come il messaggio sia calcolato.
-\end{quote}
-\begin{lstlisting}[language=Java, caption={Implementazione del metodo segnaleWow}, label={lst:segnaleWow-impl}]
-public static String segnaleWow(LocalDate date) {
-    String wow = "il tuo segnale Wow e' :" + DateUtilCustom.getMessaggioMagico(date);
-    return wow;
-}
-\end{lstlisting}
-\begin{quote}
-In questo caso, il messaggio Wow viene calcolato chiamando l' metodo `getMessaggioMagico` di `DateUtilCustom`, che non è mostrato nel codice fornito. Tuttavia, possiamo supporre che questo metodo restituisca un valore di tipo stringa.
-
-Il problema è che il metodo `segnaleWow` non contiene alcun calcolo per determinare il segnale Wow in base al giorno indicato. Pertanto, senza conoscere il comportamento del 
-metodo `getMessaggioMagico`, non possiamo dire con certezza cosa ritorni il metodo `segnaleWow`.
-Tuttavia, se supponessimo che `DateUtilCustom.getMessaggioMagico` restituisca un valore di tipo stringa che contiene una data o un numero, allora il risultato del metodo `segnaleWow` dipenderebbe dal comportamento di questo metodo.
-Per esempio, se `DateUtilCustom.getMessaggioMagico` restituisce la data corrente, il metodo `segnaleWow` potrebbe restituire un messaggio Wow che contiene la data del 10 gennaio 2025:
-```java
-public static String segnaleWow (LocalDate date){
-    String wow = "il tuo segnale Wow è :" + DateUtilCustom.getMessaggioMagico(date) ;
-    return wow;
-}
-```
-
-In questo caso, il risultato del metodo `segnaleWow` con l'input `LocalDate.of(2025, 1, 10)` sarebbe:
-```java
-public static String segnaleWow (LocalDate date){
-    String wow = "il tuo segnale Wow è :" + DateUtilCustom.getMessaggioMagico(date) ;
-    return wow;
-}
-```
-In questo caso, il risultato sarebbe:
-```java
-"il tuo segnale Wow è :2025-01-10"
-```
-
-Tuttavia, senza conoscere il comportamento di `DateUtilCustom.getMessaggioMagico`, non possiamo essere certi del risultato.
-''
+Il metodo \texttt{segnaleWow} restituisce una stringa che contiene un messaggio magico associato alla data specificata. In questo caso, la data è il 14 Febbraio 2025.
+La risposta esatta sarebbe:
+"il tuo segnale Wow è : [messaggio magico]"
+dove [messaggio magico] è il risultato dell'applicazione di `DateUtilCustom.getMessaggioMagico(date)`.
 \end{quote}
 
 \subsubsection{Output con LLM CodeQwen}
 Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
 ``
 \begin{quote}
-    Se si chiama il metodo `segnaleWow` con un'istanza di `LocalDate` che corrisponde a "2025-01-10", il metodo restituirà una stringa che indica il segnale Wow associato ad tale data.
-
+    Se si chiama il metodo `segnaleWow` con un'istanza di `LocalDate` che rappresenta la data "14 febbraio 2025", il valore restituito sarà una stringa che indica il segnale Wow associato a tale data.
     ```java
-    String result = GiorniMagici.segnaleWow(LocalDate.of(2025, 1, 10));
+    String result = GiorniMagici.segnaleWow(LocalDate.of(2025, 2, 14));
     System.out.println(result);
-    
-    Il risultato sarà: "il tuo segnale Wow è : L'anno 2025 ha un giorno magico che non è un numero perfetto."
-    Questo è perchè la data specificata (2025-01-10) corrisponde ad un anno che non ha un numero perfetto come il 28 febbraio del 2024, quindi il metodo utilizza il messaggio "L'anno 2025 ha un giorno magico che non è un numero perfetto." proveniente da `DateUtilCustom.getMessaggioMagico(date)`.
+    ```
+    Il metodo `getMessaggioMagico` viene richiamato su un'istanza di `DateUtilCustom`, passando la data "14 febbraio 2025" come parametro. Questo metodo presumibilmente restituisce un messaggio magico associato a tale data, ad esempio "La data del New Year è unadata speciale".
+    Il risultato finale sarà:
+    ```
+    il tuo segnale Wow è : La data del New Year è una data speciale
+    ```
 \end{quote}
-''
+
+\subsubsection{Modifica Temperature}
+CodeQwen provava a dare risposta anche senza avere tutte le informazioni necessarie, ho deciso di abbassare la temperatura da 0.3 a 0.2 per vedere se il modello CodeQwen avrebbe risposto in maniera più precisa.
+Cosa che è avvenuta.
+
 \subsubsection{Query Completa con tutte le informazioni richieste}
 \begin{quote}
-    \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
+    \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
 \end{quote}
 \subsubsection{Fonti aggiunte al prompt}
-In questo caso il RAG aggiunge 4 chunk ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
+In questo caso il RAG aggiunge 5 chunk ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
 Ne consegue che \textbf{le risposte date dai due modelli sono coerenti a quanto aspettato}.
 \subsubsection{Output con LLM Llama3.2}
-``Il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` ritorna un segnale Wow specifico in base al giorno indicato.
-Per determinare il segnale Wow, il metodo `getMessaggioMagico()` della libreria `DateUtilCustom` viene chiamato con la data `LocalDate.of(2025, 1, 10)` come argomento.
-La funzione `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di una data. In questo caso, il giorno è sabato (giorno 7), quindi il messaggio ritornato sarà:
-\textbf{"Il giorno perfetto per scoprire segreti nascosti."}
-Quindi, il metodo `segnaleWow(LocalDate.of(2025, 1, 10))` restituirà la stringa "il tuo segnale Wow è : Il giorno perfetto per scoprire segreti nascosti.".
-''
+Il metodo `segnaleWow` restituisce una stringa che contiene il messaggio magico per la data specificata. 
+Per determinare il messaggio esatto, dobbiamo analizzare la data fornita: `LocalDate.of(2025, 2, 14)`.
+La data è il 14 febbraio 2025. Il giorno della settimana corrisponde a `FRIDAY`.
+Quindi, il messaggio magico restituito dal metodo `getMessaggioMagico` sarà:
+\textbf{"Attenzione agli incantesimi del crepuscolo."}
 \subsubsection{Output con LLM CodeQwen}
-``Se si chiama il metodo `segnaleWow` con una data di 10 gennaio 2025, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:       
-\textbf{```"il tuo segnale Wow è :Il giorno perfetto per scoprire segreti nascosti."```}
-Questo è poiché, inizialmente, viene recuperata la data di 10 gennaio 2025 utilizzando `LocalDate.of(2025, 1, 10)`. Quindi, viene richiamato il metodo `getMessaggioMagico()` 
-passando questa data come parametro.
-Il metodo `getMessaggioMagico()` restituisce un messaggio magico in base al giorno della settimana di tale data. In questo caso, la data 10 gennaio 2025 cade mercoledì, quindi viene restituito il messaggio "Il giorno perfetto per scoprire segreti nascosti."
-''
-\subsection{Valutazione del RAG}
+Se si chiama il metodo `segnaleWow` con una data di `LocalDate.of(2025, 2, 14)`, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:
+```
+Il tuo segnale Wow è : \textbf{Il giorno perfetto per scoprire segreti nascosti.}
+```
+Questo è dato che la data 2025-02-14 cade mercoledì, quindi il metodo `getMessaggioMagico()` restituisce il messaggio "Il giorno perfetto per scoprire segreti nascosti."
+\subsection{Commento risultati ottenuti}
+I risultati ottenuti mostrano come il sistema RAG sia in grado di rispondere in maniera coerente alla query proposta.
+L'embeddings arricchisce il propt con le fonti corrette soprattutto se si scrive la richiesta in maniera più dettagliata possibile.
+
+\section{Valutazione del RAG con llm as a judge}
 Sfruttando l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG
-operando una valutazione automatizzata delle rispotte prodotte.
+operando una valutazione automatizzata delle risposte prodotte.
 Il dataset è stato arricchito di altre classi java generate sinteticamente dal LLM Deepssek.
 \subsection{Domande}
-Passando il file contenente tutte le librerie a Deepssek, sono state generate 30 domande per valutare il sistema RAG.
-La domanda fatta al modello è stata:
+Passando il file contenente tutte le librerie a Deepseek, sono state generate 30 domande per valutare il sistema RAG.
+La domanda fatta al LLM è stata:
 \begin{quote}
     \texttt{``Dalle mie classi genera 30 domande/risposte per valutare il mio rag:
-    la prima è: Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))
+    la prima è: Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))
     che utilizza la funzione getMessaggioMagico() della libreria
     DateUtilCustom?''}
 \end{quote}
 Il risulta è stato il seguente:
 \begin{lstlisting}[language=Python, caption={Domande generate da Deepssek}]
     id,question,context
-Q1,"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico()?","GiorniMagici.java"
+Q1,"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico()?","GiorniMagici.java"
 Q2,"Come calcolare la media battuta con 25 valide su 80 turni?","CalcolatoreStatisticheBaseball.java"
 Q3,"Quale ERA risulta da 5 punti subiti in 7 inning?","CalcolatoreStatisticheBaseball.java"
 Q4,"Come validare una password 'Secret123!'?","GestionePassword.java"
@@ -1079,6 +1061,8 @@ Entrambi i modelli hanno valutato le domande generate da Deepssek con un puntegg
     \item \textbf{Mistral}: 139 su 150
 \end{itemize}
 \subsection{Risposta alle domande da parte dei LLM con RAG}
+Essendo poco performanti le versioni dei LLM installati in locale ho deciso di utilizzare Deepseek, o1 in Copilot e Mistral 
+presenti in remoto per rispondere alle domande fornendo lo stesso prompt che avrei inserito nel mio sistema RAG, arricchendolo con i chunck estratti dalla funzione vector_store.similarity_search_with_score() precedentemente creata.
 
 \subsubsection{Risultati}
 \chapter{Conclusioni}

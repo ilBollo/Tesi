@@ -1,646 +1,1240 @@
 [
     {
         "id": 1,
-        "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\nimport java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeParseException;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;\n\npublic class DateUtilCustom {\n\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {",
+        "text": "// File: my_project/DateUtilCustom.java\nimport java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeParseException;\nimport java.util.Calendar;\nimport java.util.Date;",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
         "start_line": 1,
-        "end_line": 18,
-        "class": "DateUtilCustom\n"
-    },
-    {
-        "id": 2,
-        "text": "// File: my_project/DateUtilCustom.java\n* @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {\n        SimpleDateFormat sdf = new SimpleDateFormat(\"dd/MM/yyyy\");\n        return sdf.format(date);\n    }\n\n    /**\n     * Formatta una data nel formato specificato.\n     *\n     * @param date   La data da formattare.\n     * @param format Il formato desiderato (es. \"yyyy-MM-dd\").\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {",
-        "source": "my_project/DateUtilCustom.java",
-        "type": "code",
-        "start_line": 18,
-        "end_line": 33,
+        "end_line": 7,
         "class": ""
     },
     {
-        "id": 3,
-        "text": "// File: my_project/DateUtilCustom.java\n* @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.format(date);\n    }\n\n    /**\n     * Converte una stringa in un oggetto Date.\n     *\n     * @param dateString La stringa da convertire (es. \"31/12/2023\").\n     * @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.",
+        "id": 2,
+        "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;\npublic class DateUtilCustom {\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 33,
-        "end_line": 44,
+        "start_line": 7,
+        "end_line": 16,
+        "class": "DateUtilCustom\n"
+    },
+    {
+        "id": 3,
+        "text": "// File: my_project/DateUtilCustom.java\n*\n     * @param date La data da formattare.\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date) {\n        SimpleDateFormat sdf = new SimpleDateFormat(\"dd/MM/yyyy\");\n        return sdf.format(date);",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 16,
+        "end_line": 26,
         "class": ""
     },
     {
         "id": 4,
-        "text": "// File: my_project/DateUtilCustom.java\n* @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.\n     * @throws ParseException Se la stringa non è nel formato corretto.\n     */\n    public static Date parseDate(String dateString, String format) throws ParseException {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.parse(dateString);\n    }\n\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.",
+        "text": "// File: my_project/DateUtilCustom.java\nreturn sdf.format(date);\n    }\n    /**\n     * Formatta una data nel formato specificato.\n     *\n     * @param date   La data da formattare.\n     * @param format Il formato desiderato (es. \"yyyy-MM-dd\").",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 44,
-        "end_line": 58,
+        "start_line": 26,
+        "end_line": 30,
         "class": ""
     },
     {
         "id": 5,
-        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */\n    public static long getDifferenceInDays(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Calcola la differenza in ore tra due date.\n     *",
+        "text": "// File: my_project/DateUtilCustom.java\n* @param format Il formato desiderato (es. \"yyyy-MM-dd\").\n     * @return La data formattata come stringa.\n     */\n    public static String formatDate(Date date, String format) {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 58,
-        "end_line": 73,
+        "start_line": 30,
+        "end_line": 38,
         "class": ""
     },
     {
         "id": 6,
-        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in ore.\n     */\n    public static long getDifferenceInHours(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());\n        return TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.",
+        "text": "// File: my_project/DateUtilCustom.java\nSimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.format(date);\n    }\n    /**\n     * Converte una stringa in un oggetto Date.\n     *\n     * @param dateString La stringa da convertire (es. \"31/12/2023\").",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 73,
-        "end_line": 90,
+        "start_line": 38,
+        "end_line": 43,
         "class": ""
     },
     {
         "id": 7,
-        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n\n    /**",
+        "text": "// File: my_project/DateUtilCustom.java\n* @param format     Il formato della stringa (es. \"dd/MM/yyyy\").\n     * @return L'oggetto Date corrispondente.\n     * @throws ParseException Se la stringa non è nel formato corretto.\n     */",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 90,
-        "end_line": 104,
+        "start_line": 43,
+        "end_line": 49,
         "class": ""
     },
     {
         "id": 8,
-        "text": "// File: my_project/DateUtilCustom.java\ncalendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n\n    /**\n     * Verifica se una data è nel passato rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel passato, altrimenti False.\n     */\n    public static boolean isPastDate(Date date) {\n        Date currentDate = new Date();\n        return date.before(currentDate);\n    }\n\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.",
+        "text": "// File: my_project/DateUtilCustom.java\n*/\n    public static Date parseDate(String dateString, String format) throws ParseException {\n        SimpleDateFormat sdf = new SimpleDateFormat(format);\n        return sdf.parse(dateString);\n    }\n    /**",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 104,
-        "end_line": 116,
+        "start_line": 49,
+        "end_line": 55,
         "class": ""
     },
     {
         "id": 9,
-        "text": "// File: my_project/DateUtilCustom.java\nreturn date.before(currentDate);\n    }\n\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.\n     * @param dataNascita\n     * @param nome\n     * @return messaggio giorni che mancano al tuo compleanno\n     */\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n\n    /**",
+        "text": "// File: my_project/DateUtilCustom.java\nreturn sdf.parse(dateString);\n    }\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 116,
-        "end_line": 134,
+        "start_line": 55,
+        "end_line": 61,
         "class": ""
     },
     {
         "id": 10,
-        "text": "// File: my_project/DateUtilCustom.java\n}\n\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }",
+        "text": "// File: my_project/DateUtilCustom.java\n* @return La differenza in giorni.\n     */\n    public static long getDifferenceInDays(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 134,
-        "end_line": 142,
+        "start_line": 61,
+        "end_line": 67,
         "class": ""
     },
     {
         "id": 11,
-        "text": "// File: my_project/DateUtilCustom.java\n*\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n\n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n        DayOfWeek giornoSettimana = datamagica.getDayOfWeek();",
+        "text": "// File: my_project/DateUtilCustom.java\nreturn TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n    /**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 142,
-        "end_line": 147,
+        "start_line": 67,
+        "end_line": 72,
         "class": ""
     },
     {
         "id": 12,
-        "text": "// File: my_project/DateUtilCustom.java\nDayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n            case WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";",
+        "text": "// File: my_project/DateUtilCustom.java\n* @param endDate   La data di fine.\n     * @return La differenza in ore.\n     */\n    public static long getDifferenceInHours(Date startDate, Date endDate) {\n        long diffInMillies = Math.abs(endDate.getTime() - startDate.getTime());",
         "source": "my_project/DateUtilCustom.java",
         "type": "code",
-        "start_line": 147,
-        "end_line": 147,
-        "class": ""
-    },
-    {
-        "id": 13,
-        "text": "// File: my_project/DateUtilCustom.java\ncase FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n            case SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno è avvolto nel mistero...\";\n        }\n    }\n}",
-        "source": "my_project/DateUtilCustom.java",
-        "type": "code",
-        "start_line": 147,
-        "end_line": 147,
-        "class": ""
-    },
-    {
-        "id": 14,
-        "text": "// File: my_project/GiorniMagici.java\nClasse: GiorniMagici\nimport java.time.LocalDate;\n\npublic class GiorniMagici {\n    /**\n     * Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)\n     * @param giorno Il giorno della data.\n     * @param mese Il mese della data.\n     * @param anno L'anno della data.\n     * @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {\n        int ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }",
-        "source": "my_project/GiorniMagici.java",
-        "type": "code",
-        "start_line": 1,
-        "end_line": 14,
-        "class": "GiorniMagici\n"
-    },
-    {
-        "id": 15,
-        "text": "// File: my_project/GiorniMagici.java\nint ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno\n     * @return Il numero magico generato.\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {\n        int somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);\n        return somma * somma;\n    }\n    \n    \n\n    \n    /**",
-        "source": "my_project/GiorniMagici.java",
-        "type": "code",
-        "start_line": 14,
-        "end_line": 34,
-        "class": ""
-    },
-    {
-        "id": 16,
-        "text": "// File: my_project/GiorniMagici.java\nreturn somma * somma;\n    }\n    \n    \n\n    \n    /**\n     * Verifica se un numero è magico.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n\n    /**\n     * Somma le cifre di un numero.\n     * @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */",
-        "source": "my_project/GiorniMagici.java",
-        "type": "code",
-        "start_line": 34,
-        "end_line": 50,
-        "class": ""
-    },
-    {
-        "id": 17,
-        "text": "// File: my_project/GiorniMagici.java\n* @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */\n    private static int sommaCifre(int numero) {\n        int somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;\n            numero /= 10;\n        }\n        return somma;\n    }\n    \n    /**\n     * Verifica se un numero è primo.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */",
-        "source": "my_project/GiorniMagici.java",
-        "type": "code",
-        "start_line": 50,
-        "end_line": 66,
-        "class": ""
-    },
-    {
-        "id": 18,
-        "text": "// File: my_project/GiorniMagici.java\n* @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**",
-        "source": "my_project/GiorniMagici.java",
-        "type": "code",
-        "start_line": 66,
+        "start_line": 72,
         "end_line": 79,
         "class": ""
     },
     {
-        "id": 19,
-        "text": "// File: my_project/GiorniMagici.java\nif (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è di Fibonacci, false altrimenti.\n     */\n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }",
-        "source": "my_project/GiorniMagici.java",
+        "id": 13,
+        "text": "// File: my_project/DateUtilCustom.java\nreturn TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.",
+        "source": "my_project/DateUtilCustom.java",
         "type": "code",
         "start_line": 79,
-        "end_line": 97,
+        "end_line": 87,
+        "class": ""
+    },
+    {
+        "id": 14,
+        "text": "// File: my_project/DateUtilCustom.java\n* @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 87,
+        "end_line": 93,
+        "class": ""
+    },
+    {
+        "id": 15,
+        "text": "// File: my_project/DateUtilCustom.java\ncalendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n    /**\n     * Verifica se una data è nel passato rispetto alla data corrente.\n     *\n     * @param date La data da verificare.",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 93,
+        "end_line": 102,
+        "class": ""
+    },
+    {
+        "id": 16,
+        "text": "// File: my_project/DateUtilCustom.java\n*\n     * @param date La data da verificare.\n     * @return True se la data è nel passato, altrimenti False.\n     */\n    public static boolean isPastDate(Date date) {\n        Date currentDate = new Date();\n        return date.before(currentDate);\n    }",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 102,
+        "end_line": 109,
+        "class": ""
+    },
+    {
+        "id": 17,
+        "text": "// File: my_project/DateUtilCustom.java\nreturn date.before(currentDate);\n    }\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.\n     * @param dataNascita\n     * @param nome\n     * @return messaggio giorni che mancano al tuo compleanno\n     */",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 109,
+        "end_line": 114,
+        "class": ""
+    },
+    {
+        "id": 18,
+        "text": "// File: my_project/DateUtilCustom.java\n*/\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n    /**",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 114,
+        "end_line": 125,
+        "class": ""
+    },
+    {
+        "id": 19,
+        "text": "// File: my_project/DateUtilCustom.java\n}\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 125,
+        "end_line": 133,
         "class": ""
     },
     {
         "id": 20,
-        "text": "// File: my_project/GiorniMagici.java\nint test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }\n    \n    /**\n     * Verifica se è un quadrato perfetto.\n     * @param n Il numero da verificare.\n     * @return true se il numero è un quadrato perfetto, false altrimenti.\n     */\n    private static boolean isPerfectSquare(int n) {\n        int sqrt = (int) Math.sqrt(n);\n        return sqrt * sqrt == n;\n    }\n\n        /**\n     * Restituisce un segnale Wow specifico in base al giorno indicato",
+        "text": "// File: my_project/DateUtilCustom.java\n*/\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 133,
+        "end_line": 137,
+        "class": ""
+    },
+    {
+        "id": 21,
+        "text": "// File: my_project/DateUtilCustom.java\n*\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 137,
+        "end_line": 140,
+        "class": ""
+    },
+    {
+        "id": 22,
+        "text": "// File: my_project/DateUtilCustom.java\n* @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 140,
+        "end_line": 143,
+        "class": ""
+    },
+    {
+        "id": 23,
+        "text": "// File: my_project/DateUtilCustom.java\nDayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 143,
+        "end_line": 147,
+        "class": ""
+    },
+    {
+        "id": 24,
+        "text": "// File: my_project/DateUtilCustom.java\ncase WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 147,
+        "end_line": 147,
+        "class": ""
+    },
+    {
+        "id": 25,
+        "text": "// File: my_project/DateUtilCustom.java\ncase SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno è avvolto nel mistero...\";\n        }\n    }\n}",
+        "source": "my_project/DateUtilCustom.java",
+        "type": "code",
+        "start_line": 147,
+        "end_line": 147,
+        "class": ""
+    },
+    {
+        "id": 26,
+        "text": "// File: my_project/GiorniMagici.java\nClasse: GiorniMagici\nimport java.time.LocalDate;\npublic class GiorniMagici {\n    /**\n     * Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)\n     * @param giorno Il giorno della data.\n     * @param mese Il mese della data.",
         "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 1,
+        "end_line": 7,
+        "class": "GiorniMagici\n"
+    },
+    {
+        "id": 27,
+        "text": "// File: my_project/GiorniMagici.java\n* @param mese Il mese della data.\n     * @param anno L'anno della data.\n     * @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 7,
+        "end_line": 12,
+        "class": ""
+    },
+    {
+        "id": 28,
+        "text": "// File: my_project/GiorniMagici.java\nint ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 12,
+        "end_line": 21,
+        "class": ""
+    },
+    {
+        "id": 29,
+        "text": "// File: my_project/GiorniMagici.java\n* @param giorno\n     * @param mese\n     * @param anno\n     * @return Il numero magico generato.\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 21,
+        "end_line": 24,
+        "class": ""
+    },
+    {
+        "id": 30,
+        "text": "// File: my_project/GiorniMagici.java\nint somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);\n        return somma * somma;\n    }\n    \n    \n    \n    /**\n     * Verifica se un numero è magico.\n     * @param numero Il numero da verificare.",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 24,
+        "end_line": 35,
+        "class": ""
+    },
+    {
+        "id": 31,
+        "text": "// File: my_project/GiorniMagici.java\n* @param numero Il numero da verificare.\n     * @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n    /**",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 35,
+        "end_line": 44,
+        "class": ""
+    },
+    {
+        "id": 32,
+        "text": "// File: my_project/GiorniMagici.java\n}\n    \n    /**\n     * Somma le cifre di un numero.\n     * @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */\n    private static int sommaCifre(int numero) {\n        int somma = 0;",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 44,
+        "end_line": 51,
+        "class": ""
+    },
+    {
+        "id": 33,
+        "text": "// File: my_project/GiorniMagici.java\nint somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;\n            numero /= 10;\n        }\n        return somma;\n    }\n    \n    /**\n     * Verifica se un numero è primo.",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 51,
+        "end_line": 61,
+        "class": ""
+    },
+    {
+        "id": 34,
+        "text": "// File: my_project/GiorniMagici.java\n}\n    \n    /**\n     * Verifica se un numero è primo.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */\n    private static boolean isPrime(int numero) {",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 61,
+        "end_line": 65,
+        "class": ""
+    },
+    {
+        "id": 35,
+        "text": "// File: my_project/GiorniMagici.java\n*/\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 65,
+        "end_line": 74,
+        "class": ""
+    },
+    {
+        "id": 36,
+        "text": "// File: my_project/GiorniMagici.java\nfor (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 74,
+        "end_line": 79,
+        "class": ""
+    },
+    {
+        "id": 37,
+        "text": "// File: my_project/GiorniMagici.java\n}\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è di Fibonacci, false altrimenti.\n     */\n    private static boolean isFibonacci(int numero) {",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 79,
+        "end_line": 86,
+        "class": ""
+    },
+    {
+        "id": 38,
+        "text": "// File: my_project/GiorniMagici.java\n*/\n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }\n    \n    /**",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 86,
+        "end_line": 94,
+        "class": ""
+    },
+    {
+        "id": 39,
+        "text": "// File: my_project/GiorniMagici.java\n}\n    \n    /**\n     * Verifica se è un quadrato perfetto.\n     * @param n Il numero da verificare.\n     * @return true se il numero è un quadrato perfetto, false altrimenti.\n     */\n    private static boolean isPerfectSquare(int n) {",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 94,
+        "end_line": 101,
+        "class": ""
+    },
+    {
+        "id": 40,
+        "text": "// File: my_project/GiorniMagici.java\n*/\n    private static boolean isPerfectSquare(int n) {\n        int sqrt = (int) Math.sqrt(n);\n        return sqrt * sqrt == n;\n    }\n        /**\n     * Restituisce un segnale Wow specifico in base al giorno indicato\n     * @param date",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 101,
+        "end_line": 101,
+        "class": ""
+    },
+    {
+        "id": 41,
+        "text": "// File: my_project/GiorniMagici.java\n* @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}",
+        "source": "my_project/GiorniMagici.java",
+        "type": "code",
+        "start_line": 101,
+        "end_line": 101,
+        "class": ""
+    },
+    {
+        "id": 42,
+        "text": "// File: my_project/BasketballStats.java\nClasse: BasketballStats\nimport java.util.Arrays;\nimport java.time.LocalDate;\npublic class BasketballStats {\n    \n    /**\n     * Calcola l'efficienza di un giocatore usando la formula PER (Player Efficiency Rating).",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 1,
+        "end_line": 7,
+        "class": "BasketballStats\n"
+    },
+    {
+        "id": 43,
+        "text": "// File: my_project/BasketballStats.java\n* Formula semplificata: (punti + rimbalzi + assist) - (palle perse + tiri sbagliati)\n     * \n     * @param punti Punti segnati\n     * @param rimbalzi Rimbalzi presi\n     * @param assist Assist effettuati\n     * @param pallePerse Palle perse",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 7,
+        "end_line": 13,
+        "class": ""
+    },
+    {
+        "id": 44,
+        "text": "// File: my_project/BasketballStats.java\n* @param pallePerse Palle perse\n     * @param tiriSbagliati Tiri sbagliati\n     * @return Il rating di efficienza del giocatore\n     */\n    public static double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist,",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 13,
+        "end_line": 18,
+        "class": ""
+    },
+    {
+        "id": 45,
+        "text": "// File: my_project/BasketballStats.java\nint pallePerse, int tiriSbagliati) {\n        return (punti + rimbalzi + assist) - (pallePerse + tiriSbagliati);\n    }\n    /**",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 18,
+        "end_line": 19,
+        "class": ""
+    },
+    {
+        "id": 46,
+        "text": "// File: my_project/BasketballStats.java\n}\n    /**\n     * Determina la valutazione di un tiro in base alla distanza e alla pressione difensiva.\n     * \n     * @param distanzaCanestro Distanza dal canestro in metri",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 19,
+        "end_line": 25,
+        "class": ""
+    },
+    {
+        "id": 47,
+        "text": "// File: my_project/BasketballStats.java\n* @param distanzaCanestro Distanza dal canestro in metri\n     * @param pressioneDifensiva Valore da 1 a 10 che indica la pressione difensiva\n     * @return Un messaggio che valuta la qualità del tiro\n     */",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 25,
+        "end_line": 29,
+        "class": ""
+    },
+    {
+        "id": 48,
+        "text": "// File: my_project/BasketballStats.java\n*/\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5) {\n            return \"Tiro facile sotto canestro\";\n        } else if (distanzaCanestro < 6.75 && pressioneDifensiva < 7) {",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 29,
+        "end_line": 33,
+        "class": ""
+    },
+    {
+        "id": 49,
+        "text": "// File: my_project/BasketballStats.java\nreturn \"Buon tiro da due punti\";\n        } else if (distanzaCanestro >= 6.75 && pressioneDifensiva > 8) {\n            return \"Tiro da tre difficile sotto pressione\";\n        } else {\n            return \"Tiro da tre con buon margine\";\n        }",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 33,
+        "end_line": 42,
+        "class": ""
+    },
+    {
+        "id": 50,
+        "text": "// File: my_project/BasketballStats.java\nreturn \"Tiro da tre con buon margine\";\n        }\n    }\n    /**\n     * Analizza le statistiche di una squadra in una partita.\n     * \n     * @param puntiSegnati Punti segnati dalla squadra\n     * @param tiriTentati Tiri tentati totali",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 42,
+        "end_line": 47,
+        "class": ""
+    },
+    {
+        "id": 51,
+        "text": "// File: my_project/BasketballStats.java\n* @param tiriTentati Tiri tentati totali\n     * @param rimbalziOffensivi Rimbalzi offensivi presi\n     * @param rimbalziDifensivi Rimbalzi difensivi presi\n     * @return Un report dettagliato delle prestazioni\n     */",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 47,
+        "end_line": 51,
+        "class": ""
+    },
+    {
+        "id": 52,
+        "text": "// File: my_project/BasketballStats.java\n* @return Un report dettagliato delle prestazioni\n     */\n    public static String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, \n                                                  int rimbalziOffensivi, int rimbalziDifensivi) {",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 51,
+        "end_line": 54,
+        "class": ""
+    },
+    {
+        "id": 53,
+        "text": "// File: my_project/BasketballStats.java\ndouble percentualeRealizzazione = (double) puntiSegnati / (tiriTentati * 2) * 100;\n        int rimbalziTotali = rimbalziOffensivi + rimbalziDifensivi;\n        \n        StringBuilder report = new StringBuilder();",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 54,
+        "end_line": 58,
+        "class": ""
+    },
+    {
+        "id": 54,
+        "text": "// File: my_project/BasketballStats.java\nStringBuilder report = new StringBuilder();\n        report.append(\"Report Statistiche Squadra:\\n\");\n        report.append(\"- Punti Segnati: \").append(puntiSegnati).append(\"\\n\");",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 58,
+        "end_line": 59,
+        "class": ""
+    },
+    {
+        "id": 55,
+        "text": "// File: my_project/BasketballStats.java\nreport.append(\"- Percentuale Realizzazione: \").append(String.format(\"%.1f%%\", percentualeRealizzazione)).append(\"\\n\");\n        report.append(\"- Rimbalzi Totali: \").append(rimbalziTotali).append(\"\\n\");",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 59,
+        "end_line": 66,
+        "class": ""
+    },
+    {
+        "id": 56,
+        "text": "// File: my_project/BasketballStats.java\nreport.append(\"- Ratio Rimbalzi Off/Dif: \").append(String.format(\"%.2f\", (double)rimbalziOffensivi/rimbalziDifensivi));\n        \n        return report.toString();\n    }\n    /**",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 66,
+        "end_line": 69,
+        "class": ""
+    },
+    {
+        "id": 57,
+        "text": "// File: my_project/BasketballStats.java\nreturn report.toString();\n    }\n    /**\n     * Prevede il vincitore di una partita basandosi sulle statistiche precedenti.\n     * \n     * @param squadraCasa Array con [puntiMedi, rimbalziMedi, assistMedi]",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 69,
+        "end_line": 73,
+        "class": ""
+    },
+    {
+        "id": 58,
+        "text": "// File: my_project/BasketballStats.java\n* @param squadraOspite Array con [puntiMedi, rimbalziMedi, assistMedi]\n     * @param dataPartita Data della partita\n     * @return Previsione del vincitore con margine\n     */",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 73,
+        "end_line": 74,
+        "class": ""
+    },
+    {
+        "id": 59,
+        "text": "// File: my_project/BasketballStats.java\n* @return Previsione del vincitore con margine\n     */\n    public static String previsioneVincitore(double[] squadraCasa, double[] squadraOspite, LocalDate dataPartita) {",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 74,
+        "end_line": 77,
+        "class": ""
+    },
+    {
+        "id": 60,
+        "text": "// File: my_project/BasketballStats.java\ndouble valutazioneCasa = squadraCasa[0] * 0.4 + squadraCasa[1] * 0.3 + squadraCasa[2] * 0.3;\n        double valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 77,
+        "end_line": 81,
+        "class": ""
+    },
+    {
+        "id": 61,
+        "text": "// File: my_project/BasketballStats.java\ndouble margine = Math.abs(valutazioneCasa - valutazioneOspite);\n        \n        if (valutazioneCasa > valutazioneOspite) {\n            return String.format(\"Vittoria casa prevista con margine di %.1f punti\", margine);",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 81,
+        "end_line": 84,
+        "class": ""
+    },
+    {
+        "id": 62,
+        "text": "// File: my_project/BasketballStats.java\n} else if (valutazioneOspite > valutazioneCasa) {\n            return String.format(\"Vittoria ospite prevista con margine di %.1f punti\", margine);\n        } else {\n            return \"Partita equilibrata, impossibile fare previsioni\";\n        }",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 84,
+        "end_line": 92,
+        "class": ""
+    },
+    {
+        "id": 63,
+        "text": "// File: my_project/BasketballStats.java\n}\n    }\n    /**\n     * Calcola il \"momentum\" della partita basato sugli ultimi eventi.\n     * \n     * @param ultimiPuntiCasa Ultimi punti segnati dalla squadra di casa\n     * @param ultimiPuntiOspite Ultimi punti segnati dalla squadra ospite",
+        "source": "my_project/BasketballStats.java",
+        "type": "code",
+        "start_line": 92,
+        "end_line": 97,
+        "class": ""
+    },
+    {
+        "id": 64,
+        "text": "// File: my_project/BasketballStats.java\n* @return Descrizione del momentum della partita\n     */\n    public static String calcolaMomentum(int[] ultimiPuntiCasa, int[] ultimiPuntiOspite) {\n        int sommaCasa = Arrays.stream(ultimiPuntiCasa).sum();",
+        "source": "my_project/BasketballStats.java",
         "type": "code",
         "start_line": 97,
         "end_line": 101,
         "class": ""
     },
     {
-        "id": 21,
-        "text": "// File: my_project/GiorniMagici.java\nreturn sqrt * sqrt == n;\n    }\n\n        /**\n     * Restituisce un segnale Wow specifico in base al giorno indicato\n     * @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}",
-        "source": "my_project/GiorniMagici.java",
-        "type": "code",
-        "start_line": 101,
-        "end_line": 101,
-        "class": ""
-    },
-    {
-        "id": 22,
-        "text": "// File: my_project/BasketballStats.java\nClasse: BasketballStats\nimport java.util.Arrays;\nimport java.time.LocalDate;\n\npublic class BasketballStats {\n    \n    /**\n     * Calcola l'efficienza di un giocatore usando la formula PER (Player Efficiency Rating).\n     * Formula semplificata: (punti + rimbalzi + assist) - (palle perse + tiri sbagliati)\n     * \n     * @param punti Punti segnati\n     * @param rimbalzi Rimbalzi presi\n     * @param assist Assist effettuati\n     * @param pallePerse Palle perse\n     * @param tiriSbagliati Tiri sbagliati",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 1,
-        "end_line": 14,
-        "class": "BasketballStats\n"
-    },
-    {
-        "id": 23,
-        "text": "// File: my_project/BasketballStats.java\n* @param assist Assist effettuati\n     * @param pallePerse Palle perse\n     * @param tiriSbagliati Tiri sbagliati\n     * @return Il rating di efficienza del giocatore\n     */\n    public static double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist, \n                                                   int pallePerse, int tiriSbagliati) {\n        return (punti + rimbalzi + assist) - (pallePerse + tiriSbagliati);\n    }\n\n    /**",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 14,
-        "end_line": 25,
-        "class": ""
-    },
-    {
-        "id": 24,
-        "text": "// File: my_project/BasketballStats.java\nreturn (punti + rimbalzi + assist) - (pallePerse + tiriSbagliati);\n    }\n\n    /**\n     * Determina la valutazione di un tiro in base alla distanza e alla pressione difensiva.\n     * \n     * @param distanzaCanestro Distanza dal canestro in metri\n     * @param pressioneDifensiva Valore da 1 a 10 che indica la pressione difensiva\n     * @return Un messaggio che valuta la qualità del tiro\n     */\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 25,
-        "end_line": 33,
-        "class": ""
-    },
-    {
-        "id": 25,
-        "text": "// File: my_project/BasketballStats.java\n*/\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5) {\n            return \"Tiro facile sotto canestro\";\n        } else if (distanzaCanestro < 6.75 && pressioneDifensiva < 7) {\n            return \"Buon tiro da due punti\";\n        } else if (distanzaCanestro >= 6.75 && pressioneDifensiva > 8) {\n            return \"Tiro da tre difficile sotto pressione\";\n        } else {\n            return \"Tiro da tre con buon margine\";\n        }",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 33,
-        "end_line": 47,
-        "class": ""
-    },
-    {
-        "id": 26,
-        "text": "// File: my_project/BasketballStats.java\n} else {\n            return \"Tiro da tre con buon margine\";\n        }\n    }\n\n    /**\n     * Analizza le statistiche di una squadra in una partita.\n     * \n     * @param puntiSegnati Punti segnati dalla squadra\n     * @param tiriTentati Tiri tentati totali\n     * @param rimbalziOffensivi Rimbalzi offensivi presi\n     * @param rimbalziDifensivi Rimbalzi difensivi presi\n     * @return Un report dettagliato delle prestazioni\n     */",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 47,
-        "end_line": 54,
-        "class": ""
-    },
-    {
-        "id": 27,
-        "text": "// File: my_project/BasketballStats.java\n* @param rimbalziDifensivi Rimbalzi difensivi presi\n     * @return Un report dettagliato delle prestazioni\n     */\n    public static String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, \n                                                  int rimbalziOffensivi, int rimbalziDifensivi) {\n        double percentualeRealizzazione = (double) puntiSegnati / (tiriTentati * 2) * 100;\n        int rimbalziTotali = rimbalziOffensivi + rimbalziDifensivi;",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 54,
-        "end_line": 60,
-        "class": ""
-    },
-    {
-        "id": 28,
-        "text": "// File: my_project/BasketballStats.java\nint rimbalziTotali = rimbalziOffensivi + rimbalziDifensivi;\n        \n        StringBuilder report = new StringBuilder();\n        report.append(\"Report Statistiche Squadra:\\n\");\n        report.append(\"- Punti Segnati: \").append(puntiSegnati).append(\"\\n\");\n        report.append(\"- Percentuale Realizzazione: \").append(String.format(\"%.1f%%\", percentualeRealizzazione)).append(\"\\n\");\n        report.append(\"- Rimbalzi Totali: \").append(rimbalziTotali).append(\"\\n\");",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 60,
-        "end_line": 72,
-        "class": ""
-    },
-    {
-        "id": 29,
-        "text": "// File: my_project/BasketballStats.java\nreport.append(\"- Rimbalzi Totali: \").append(rimbalziTotali).append(\"\\n\");\n        report.append(\"- Ratio Rimbalzi Off/Dif: \").append(String.format(\"%.2f\", (double)rimbalziOffensivi/rimbalziDifensivi));\n        \n        return report.toString();\n    }\n\n    /**\n     * Prevede il vincitore di una partita basandosi sulle statistiche precedenti.\n     * \n     * @param squadraCasa Array con [puntiMedi, rimbalziMedi, assistMedi]\n     * @param squadraOspite Array con [puntiMedi, rimbalziMedi, assistMedi]",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 72,
-        "end_line": 80,
-        "class": ""
-    },
-    {
-        "id": 30,
-        "text": "// File: my_project/BasketballStats.java\n* @param squadraOspite Array con [puntiMedi, rimbalziMedi, assistMedi]\n     * @param dataPartita Data della partita\n     * @return Previsione del vincitore con margine\n     */\n    public static String previsioneVincitore(double[] squadraCasa, double[] squadraOspite, LocalDate dataPartita) {\n        double valutazioneCasa = squadraCasa[0] * 0.4 + squadraCasa[1] * 0.3 + squadraCasa[2] * 0.3;\n        double valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 80,
-        "end_line": 92,
-        "class": ""
-    },
-    {
-        "id": 31,
-        "text": "// File: my_project/BasketballStats.java\ndouble valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;\n        \n        double margine = Math.abs(valutazioneCasa - valutazioneOspite);\n        \n        if (valutazioneCasa > valutazioneOspite) {\n            return String.format(\"Vittoria casa prevista con margine di %.1f punti\", margine);\n        } else if (valutazioneOspite > valutazioneCasa) {\n            return String.format(\"Vittoria ospite prevista con margine di %.1f punti\", margine);",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 92,
-        "end_line": 101,
-        "class": ""
-    },
-    {
-        "id": 32,
-        "text": "// File: my_project/BasketballStats.java\nreturn String.format(\"Vittoria ospite prevista con margine di %.1f punti\", margine);\n        } else {\n            return \"Partita equilibrata, impossibile fare previsioni\";\n        }\n    }\n\n    /**\n     * Calcola il \"momentum\" della partita basato sugli ultimi eventi.\n     * \n     * @param ultimiPuntiCasa Ultimi punti segnati dalla squadra di casa\n     * @param ultimiPuntiOspite Ultimi punti segnati dalla squadra ospite\n     * @return Descrizione del momentum della partita\n     */",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 101,
-        "end_line": 110,
-        "class": ""
-    },
-    {
-        "id": 33,
-        "text": "// File: my_project/BasketballStats.java\n* @return Descrizione del momentum della partita\n     */\n    public static String calcolaMomentum(int[] ultimiPuntiCasa, int[] ultimiPuntiOspite) {\n        int sommaCasa = Arrays.stream(ultimiPuntiCasa).sum();\n        int sommaOspite = Arrays.stream(ultimiPuntiOspite).sum();\n        \n        if (sommaCasa > sommaOspite + 10) {\n            return \"Momentum fortemente a favore della squadra di casa!\";\n        } else if (sommaOspite > sommaCasa + 10) {",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 110,
-        "end_line": 110,
-        "class": ""
-    },
-    {
-        "id": 34,
-        "text": "// File: my_project/BasketballStats.java\nreturn \"Momentum fortemente a favore della squadra di casa!\";\n        } else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";\n        } else {\n            return \"Leggero momentum a favore della squadra \" + \n                   (sommaCasa > sommaOspite ? \"di casa\" : \"ospite\");\n        }\n    }\n}",
-        "source": "my_project/BasketballStats.java",
-        "type": "code",
-        "start_line": 110,
-        "end_line": 110,
-        "class": ""
-    },
-    {
-        "id": 35,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: BasketballStats\nimport java.util.Arrays;\nimport java.time.LocalDate;\nimport java.util.Random;\nimport java.util.ArrayList;\nimport java.util.HashMap;\n\npublic class BasketballStats {\n    // ... (mantenere implementazione esistente invariata) ...\n}\n\nclass DateUtilCustom {\n    // ... (mantenere implementazione esistente invariata) ...\n}\n\nclass GiorniMagici {\n    // ... (mantenere implementazione esistente invariata) ...\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 1,
-        "end_line": 17,
-        "class": "BasketballStats\n"
-    },
-    {
-        "id": 36,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: CalcolatoreStatisticheBaseball\nclass CalcolatoreStatisticheBaseball {\n    /**\n     * Calcola la media battuta di un giocatore\n     * @param hits Numero di valide\n     * @param atBats Numero di turni di battuta\n     * @return Media battuta formattata\n     */\n    public static String calcolaMediaBattuta(int hits, int atBats) {\n        return String.format(\"%.3f\", (double)hits / atBats);\n    }\n\n    /**\n     * Determina il valore ERA di un lanciatore\n     * @param earnedRuns Punti subiti\n     * @param innings Inning lanciati",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 17,
-        "end_line": 33,
-        "class": "CalcolatoreStatisticheBaseball\n"
-    },
-    {
-        "id": 37,
-        "text": "// File: my_project/Ventunoclassi.java\n* Determina il valore ERA di un lanciatore\n     * @param earnedRuns Punti subiti\n     * @param innings Inning lanciati\n     * @return ERA formattato\n     */\n    public static String calcolaERA(int earnedRuns, double innings) {\n        return String.format(\"%.2f\", (earnedRuns * 9) / innings);\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 33,
-        "end_line": 44,
-        "class": ""
-    },
-    {
-        "id": 38,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: GestioneFinanzePersonali\nclass GestioneFinanzePersonali {\n    /**\n     * Calcola il risparmio mensile in base agli obiettivi\n     * @param reddito Reddito mensile\n     * @param spese Spese fisse\n     * @param obiettivo Obiettivo annuale\n     * @return Risparmio necessario mensilmente\n     */\n    public static double calcolaRisparmioMensile(double reddito, double spese, double obiettivo) {\n        return (obiettivo / 12) + (reddito - spese);\n    }\n\n    /**\n     * Genera un piano di ammortamento",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 44,
-        "end_line": 58,
-        "class": "GestioneFinanzePersonali\n"
-    },
-    {
-        "id": 39,
-        "text": "// File: my_project/Ventunoclassi.java\nreturn (obiettivo / 12) + (reddito - spese);\n    }\n\n    /**\n     * Genera un piano di ammortamento\n     * @param importoPrestito Importo totale\n     * @param tassoInteresse Tasso annuo\n     * @param anni Durata\n     * @return Rata mensile\n     */\n    public static double calcolaRataMutuo(double importoPrestito, double tassoInteresse, int anni) {\n        double tassoMensile = tassoInteresse / 1200;\n        int mesi = anni * 12;",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 58,
-        "end_line": 70,
-        "class": ""
-    },
-    {
-        "id": 40,
-        "text": "// File: my_project/Ventunoclassi.java\ndouble tassoMensile = tassoInteresse / 1200;\n        int mesi = anni * 12;\n        return (importoPrestito * tassoMensile) / (1 - Math.pow(1 + tassoMensile, -mesi));\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 70,
-        "end_line": 74,
-        "class": ""
-    },
-    {
-        "id": 41,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: GestioneInventario\nclass GestioneInventario {\n    /**\n     * Calcola il valore totale dell'inventario\n     * @param quantita Array delle quantità\n     * @param prezzi Array dei prezzi\n     * @return Valore totale\n     */\n    public static double calcolaValoreInventario(int[] quantita, double[] prezzi) {\n        double totale = 0;\n        for(int i = 0; i < quantita.length; i++) {\n            totale += quantita[i] * prezzi[i];\n        }\n        return totale;\n    }\n\n    /**\n     * Trova gli articoli sotto il livello minimo",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 74,
-        "end_line": 89,
-        "class": "GestioneInventario\n"
-    },
-    {
-        "id": 42,
-        "text": "// File: my_project/Ventunoclassi.java\n}\n        return totale;\n    }\n\n    /**\n     * Trova gli articoli sotto il livello minimo\n     * @param quantita Quantità corrente\n     * @param livelloMin Livello minimo\n     * @return Array di indici degli articoli da riordinare\n     */\n    public static int[] trovaDaRiordinare(int[] quantita, int livelloMin) {\n        return java.util.stream.IntStream.range(0, quantita.length)\n            .filter(i -> quantita[i] < livelloMin)\n            .toArray();\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 89,
-        "end_line": 108,
-        "class": ""
-    },
-    {
-        "id": 43,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: AnalizzatoreTesto\nclass AnalizzatoreTesto {\n    /**\n     * Conta le parole in una stringa\n     * @param testo Testo da analizzare\n     * @return Numero di parole\n     */\n    public static int contaParole(String testo) {\n        return testo.split(\"\\\\s+\").length;\n    }\n\n    /**\n     * Inverte una stringa mantenendo la posizione delle maiuscole\n     * @param input Stringa originale\n     * @return Stringa invertita\n     */\n    public static String invertiStringaMantenendoMaiuscole(String input) {",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 108,
-        "end_line": 121,
-        "class": "AnalizzatoreTesto\n"
-    },
-    {
-        "id": 44,
-        "text": "// File: my_project/Ventunoclassi.java\n* @return Stringa invertita\n     */\n    public static String invertiStringaMantenendoMaiuscole(String input) {\n        char[] chars = input.toCharArray();\n        int i = 0;\n        int j = chars.length - 1;\n        \n        while (i < j) {\n            boolean iUpper = Character.isUpperCase(chars[i]);\n            boolean jUpper = Character.isUpperCase(chars[j]);\n            \n            char temp = chars[i];\n            chars[i] = Character.isUpperCase(chars[j]) ?",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 121,
-        "end_line": 137,
-        "class": ""
-    },
-    {
-        "id": 45,
-        "text": "// File: my_project/Ventunoclassi.java\nchar temp = chars[i];\n            chars[i] = Character.isUpperCase(chars[j]) ? \n                Character.toUpperCase(chars[j]) : Character.toLowerCase(chars[j]);\n            \n            chars[j] = Character.isUpperCase(temp) ? \n                Character.toUpperCase(temp) : Character.toLowerCase(temp);\n            \n            i++;\n            j--;\n        }\n        return new String(chars);\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 137,
-        "end_line": 151,
-        "class": ""
-    },
-    {
-        "id": 46,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: CalcolatriceScientifica\nclass CalcolatriceScientifica {\n    /**\n     * Calcola il logaritmo in base personalizzata\n     * @param numero Valore positivo\n     * @param base Base del logaritmo\n     * @return Risultato del logaritmo\n     */\n    public static double logBase(double numero, double base) {\n        return Math.log(numero) / Math.log(base);\n    }\n\n    /**\n     * Calcola la radice n-esima\n     * @param numero Radicando\n     * @param indice Indice della radice\n     * @return Risultato\n     */",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 151,
-        "end_line": 166,
-        "class": "CalcolatriceScientifica\n"
-    },
-    {
-        "id": 47,
-        "text": "// File: my_project/Ventunoclassi.java\n* @param numero Radicando\n     * @param indice Indice della radice\n     * @return Risultato\n     */\n    public static double radiceN(double numero, int indice) {\n        return Math.pow(numero, 1.0 / indice);\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 166,
-        "end_line": 174,
-        "class": ""
-    },
-    {
-        "id": 48,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: GestionePassword\nclass GestionePassword {\n    private static final String CARATTERI = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*\";\n\n    /**\n     * Genera una password casuale sicura\n     * @param lunghezza Lunghezza della password\n     * @return Password generata\n     */\n    public static String generaPassword(int lunghezza) {\n        Random random = new Random();\n        StringBuilder sb = new StringBuilder();\n        for(int i = 0; i < lunghezza; i++) {",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 174,
-        "end_line": 189,
-        "class": "GestionePassword\n"
-    },
-    {
-        "id": 49,
-        "text": "// File: my_project/Ventunoclassi.java\nStringBuilder sb = new StringBuilder();\n        for(int i = 0; i < lunghezza; i++) {\n            sb.append(CARATTERI.charAt(random.nextInt(CARATTERI.length())));\n        }\n        return sb.toString();\n    }\n\n    /**\n     * Verifica la complessità della password\n     * @param password Password da verificare\n     * @return true se la password è valida\n     */\n    public static boolean validaPassword(String password) {",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 189,
-        "end_line": 202,
-        "class": ""
-    },
-    {
-        "id": 50,
-        "text": "// File: my_project/Ventunoclassi.java\n* @return true se la password è valida\n     */\n    public static boolean validaPassword(String password) {\n        return password.matches(\"^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[@$!%*?&])[A-Za-z\\\\d@$!%*?&]{8,}$\");\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 202,
-        "end_line": 212,
-        "class": ""
-    },
-    {
-        "id": 51,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: CalcolatoreBMI\nclass CalcolatoreBMI {\n    /**\n     * Calcola l'indice di massa corporea\n     * @param peso Peso in kg\n     * @param altezza Altezza in metri\n     * @return Valore BMI\n     */\n    public static double calcolaBMI(double peso, double altezza) {\n        return peso / (altezza * altezza);\n    }\n\n    /**\n     * Restituisce la categoria del BMI\n     * @param bmi Valore BMI calcolato\n     * @return Categoria di peso\n     */\n    public static String getCategoriaBMI(double bmi) {",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 212,
-        "end_line": 231,
-        "class": "CalcolatoreBMI\n"
-    },
-    {
-        "id": 52,
-        "text": "// File: my_project/Ventunoclassi.java\n* @return Categoria di peso\n     */\n    public static String getCategoriaBMI(double bmi) {\n        if(bmi < 18.5) return \"Sottopeso\";\n        else if(bmi < 25) return \"Normale\";\n        else if(bmi < 30) return \"Sovrappeso\";\n        else return \"Obeso\";\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 231,
-        "end_line": 240,
-        "class": ""
-    },
-    {
-        "id": 53,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: ConvertitoreUnita\nclass ConvertitoreUnita {\n    /**\n     * Converti chilometri in miglia\n     * @param km Valore in chilometri\n     * @return Valore in miglia\n     */\n    public static double kmToMiglia(double km) {\n        return km * 0.621371;\n    }\n\n    /**\n     * Converti Celsius in Fahrenheit\n     * @param celsius Temperatura in Celsius\n     * @return Temperatura in Fahrenheit\n     */\n    public static double celsiusToFahrenheit(double celsius) {\n        return (celsius * 9/5) + 32;\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 240,
-        "end_line": 257,
-        "class": "ConvertitoreUnita\n"
-    },
-    {
-        "id": 54,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: AnalizzatoreInvestimenti\nclass AnalizzatoreInvestimenti {\n    /**\n     * Calcola il Return on Investment (ROI)\n     * @param guadagno Guadagno totale\n     * @param costo Costo iniziale\n     * @return ROI percentuale\n     */\n    public static double calcolaROI(double guadagno, double costo) {\n        return ((guadagno - costo) / costo) * 100;\n    }\n\n    /**\n     * Calcola il Valore Attuale Netto (VAN)\n     * @param tasso Tasso di sconto\n     * @param flussi Flussi di cassa\n     * @return Valore VAN\n     */",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 257,
-        "end_line": 270,
-        "class": "AnalizzatoreInvestimenti\n"
-    },
-    {
-        "id": 55,
-        "text": "// File: my_project/Ventunoclassi.java\n* @param tasso Tasso di sconto\n     * @param flussi Flussi di cassa\n     * @return Valore VAN\n     */\n    public static double calcolaVAN(double tasso, double[] flussi) {\n        double van = 0;\n        for(int i = 0; i < flussi.length; i++) {\n            van += flussi[i] / Math.pow(1 + tasso, i);\n        }\n        return van;\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 270,
-        "end_line": 282,
-        "class": ""
-    },
-    {
-        "id": 56,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: GestoreProgetti\nclass GestoreProgetti {\n    /**\n     * Calcola la durata del progetto usando il metodo PERT\n     * @param ottimistica Tempo ottimistico\n     * @param probabile Tempo probabile\n     * @param pessimistica Tempo pessimistico\n     * @return Durata stimata\n     */\n    public static double stimaDurataPERT(double ottimistica, double probabile, double pessimistica) {\n        return (ottimistica + 4 * probabile + pessimistica) / 6;\n    }\n\n    /**\n     * Calcola il percorso critico",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 282,
-        "end_line": 294,
-        "class": "GestoreProgetti\n"
-    },
-    {
-        "id": 57,
-        "text": "// File: my_project/Ventunoclassi.java\nreturn (ottimistica + 4 * probabile + pessimistica) / 6;\n    }\n\n    /**\n     * Calcola il percorso critico\n     * @param attivita Lista di attività con durate\n     * @return Durata totale del percorso critico\n     */\n    public static double calcolaPercorsoCritico(double[] attivita) {\n        return Arrays.stream(attivita).sum();\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 294,
-        "end_line": 306,
-        "class": ""
-    },
-    {
-        "id": 58,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: SimulatoreEcologico\nclass SimulatoreEcologico {\n    /**\n     * Simula la crescita della popolazione\n     * @param popolazioneIniziale Popolazione iniziale\n     * @param tassoCrescita Tasso di crescita annuo\n     * @param anni Numero di anni\n     * @return Popolazione finale\n     */\n    public static int simulaCrescitaPopolazione(int popolazioneIniziale, double tassoCrescita, int anni) {\n        return (int) (popolazioneIniziale * Math.pow(1 + tassoCrescita, anni));\n    }\n\n    /**",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 306,
-        "end_line": 320,
-        "class": "SimulatoreEcologico\n"
-    },
-    {
-        "id": 59,
-        "text": "// File: my_project/Ventunoclassi.java\nreturn (int) (popolazioneIniziale * Math.pow(1 + tassoCrescita, anni));\n    }\n\n    /**\n     * Modello preda-predatore (equazioni Lotka-Volterra)\n     * @param x Popolazione prede\n     * @param y Popolazione predatori\n     * @param alpha Parametro alpha\n     * @param beta Parametro beta\n     * @return Array con nuove popolazioni [nuovePrede, nuoviPredatori]\n     */\n    public static double[] modelloPredaPredatore(double x, double y, double alpha, double beta) {",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 320,
-        "end_line": 337,
-        "class": ""
-    },
-    {
-        "id": 60,
-        "text": "// File: my_project/Ventunoclassi.java\n*/\n    public static double[] modelloPredaPredatore(double x, double y, double alpha, double beta) {\n        double dx = x * (1 - x) - alpha * x * y;\n        double dy = -y * (1 - y) + beta * x * y;\n        return new double[]{x + dx, y + dy};\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 337,
-        "end_line": 346,
-        "class": ""
-    },
-    {
-        "id": 61,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: StrumentiCrittografia\nclass StrumentiCrittografia {\n    /**\n     * Cifratura Caesar\n     * @param testo Testo originale\n     * @param shift Spostamento\n     * @return Testo cifrato\n     */\n    public static String cifraCaesar(String testo, int shift) {\n        StringBuilder risultato = new StringBuilder();\n        for(char c : testo.toCharArray()) {\n            if(Character.isLetter(c)) {\n                char base = Character.isLowerCase(c) ? 'a' : 'A';\n                c = (char)(((c - base + shift) % 26) + base);\n            }",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 346,
-        "end_line": 363,
-        "class": "StrumentiCrittografia\n"
-    },
-    {
-        "id": 62,
-        "text": "// File: my_project/Ventunoclassi.java\nc = (char)(((c - base + shift) % 26) + base);\n            }\n            risultato.append(c);\n        }\n        return risultato.toString();\n    }\n\n    /**\n     * Decifratura Caesar\n     * @param testo Testo cifrato\n     * @param shift Spostamento originale\n     * @return Testo decifrato\n     */\n    public static String decifraCaesar(String testo, int shift) {\n        return cifraCaesar(testo, 26 - (shift % 26));\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 363,
-        "end_line": 381,
-        "class": ""
-    },
-    {
-        "id": 63,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: AnalizzatoreCodice\nclass AnalizzatoreCodice {\n    /**\n     * Conta le linee di codice in una stringa\n     * @param codice Codice sorgente\n     * @return Numero di linee\n     */\n    public static int contaLineeCodice(String codice) {\n        return codice.split(\"\\n\").length;\n    }\n\n    /**\n     * Calcola la complessità ciclomatica approssimativa\n     * @param codice Codice sorgente\n     * @return Numero di decisioni + 1\n     */\n    public static int calcolaComplessitaCiclomatica(String codice) {\n        int count = 1;",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 381,
-        "end_line": 395,
-        "class": "AnalizzatoreCodice\n"
-    },
-    {
-        "id": 64,
-        "text": "// File: my_project/Ventunoclassi.java\n*/\n    public static int calcolaComplessitaCiclomatica(String codice) {\n        int count = 1;\n        String[] keywords = {\"if\", \"while\", \"for\", \"case\", \"catch\", \"&&\", \"||\"};\n        for(String keyword : keywords) {\n            count += codice.split(keyword).length - 1;\n        }\n        return count;\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
-        "type": "code",
-        "start_line": 395,
-        "end_line": 410,
-        "class": ""
-    },
-    {
         "id": 65,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: GestoreInventario\nclass GestoreInventario {\n    private ArrayList<String> articoli = new ArrayList<>();\n\n    /**\n     * Aggiungi un articolo all'inventario (FIFO)\n     * @param articolo Articolo da aggiungere\n     */\n    public void aggiungiArticolo(String articolo) {\n        articoli.add(articolo);\n    }\n\n    /**\n     * Rimuovi un articolo dall'inventario (FIFO)\n     * @return Articolo rimosso\n     */\n    public String rimuoviArticolo() {\n        return articoli.remove(0);\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
+        "text": "// File: my_project/BasketballStats.java\nint sommaCasa = Arrays.stream(ultimiPuntiCasa).sum();\n        int sommaOspite = Arrays.stream(ultimiPuntiOspite).sum();\n        \n        if (sommaCasa > sommaOspite + 10) {\n            return \"Momentum fortemente a favore della squadra di casa!\";",
+        "source": "my_project/BasketballStats.java",
         "type": "code",
-        "start_line": 410,
-        "end_line": 426,
-        "class": "GestoreInventario\n"
+        "start_line": 101,
+        "end_line": 106,
+        "class": ""
     },
     {
         "id": 66,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: SimulatoreMeteo\nclass SimulatoreMeteo {\n    private static final String[] CONDIZIONI = {\"Soleggiato\", \"Nuvoloso\", \"Pioggia\", \"Temporale\"};\n    private static Random rand = new Random();\n\n    /**\n     * Genera una previsione meteo casuale\n     * @return Condizione meteo\n     */\n    public static String generaPrevisione() {\n        return CONDIZIONI[rand.nextInt(CONDIZIONI.length)];\n    }\n\n    /**\n     * Simula la temperatura per una regione\n     * @param latitudine Coordinata latitudine",
-        "source": "my_project/Ventunoclassi.java",
+        "text": "// File: my_project/BasketballStats.java\n} else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";",
+        "source": "my_project/BasketballStats.java",
         "type": "code",
-        "start_line": 426,
-        "end_line": 441,
-        "class": "SimulatoreMeteo\n"
+        "start_line": 106,
+        "end_line": 110,
+        "class": ""
     },
     {
         "id": 67,
-        "text": "// File: my_project/Ventunoclassi.java\n}\n\n    /**\n     * Simula la temperatura per una regione\n     * @param latitudine Coordinata latitudine\n     * @param mese Mese dell'anno (1-12)\n     * @return Temperatura simulata\n     */\n    public static double simulaTemperatura(double latitudine, int mese) {\n        return 20 + 10 * Math.sin(Math.toRadians(mese * 30)) + latitudine * 0.1;\n    }\n}",
-        "source": "my_project/Ventunoclassi.java",
+        "text": "// File: my_project/BasketballStats.java\nreturn \"Partita in equilibrio, momentum neutro\";\n        } else {\n            return \"Leggero momentum a favore della squadra \" + \n                   (sommaCasa > sommaOspite ? \"di casa\" : \"ospite\");\n        }\n    }\n}",
+        "source": "my_project/BasketballStats.java",
         "type": "code",
-        "start_line": 441,
-        "end_line": 448,
+        "start_line": 110,
+        "end_line": 110,
         "class": ""
     },
     {
         "id": 68,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: GestoreReteNeurale\nclass GestoreReteNeurale {\n    /**\n     * Funzione di attivazione ReLU\n     * @param x Valore di input\n     * @return Valore di output\n     */\n    public static double relu(double x) {\n        return Math.max(0, x);\n    }\n\n    /**\n     * Calcola l'errore quadratico medio\n     * @param previsioni Array di previsioni\n     * @param target Valori target\n     * @return Errore medio\n     */\n    public static double calcolaErrore(double[] previsioni, double[] target) {\n        double errore = 0;",
+        "text": "// File: my_project/Ventunoclassi.java\nClasse: BasketballStats\nimport java.util.Arrays;\nimport java.time.LocalDate;\nimport java.util.Random;\nimport java.util.ArrayList;\nimport java.util.HashMap;\n\npublic class BasketballStats {\n    // ... (mantenere implementazione esistente invariata) ...",
         "source": "my_project/Ventunoclassi.java",
         "type": "code",
-        "start_line": 448,
-        "end_line": 471,
-        "class": "GestoreReteNeurale\n"
+        "start_line": 1,
+        "end_line": 8,
+        "class": "BasketballStats\n"
     },
     {
         "id": 69,
-        "text": "// File: my_project/Ventunoclassi.java\n*/\n    public static double calcolaErrore(double[] previsioni, double[] target) {\n        double errore = 0;\n        for(int i = 0; i < previsioni.length; i++) {\n            errore += Math.pow(previsioni[i] - target[i], 2);\n        }\n        return errore / previsioni.length;\n    }\n}",
+        "text": "// File: my_project/Ventunoclassi.java\nClasse: DateUtilCustom\nclass DateUtilCustom {\n    // ... (mantenere implementazione esistente invariata) ...\n}\n\nclass GiorniMagici {\n    // ... (mantenere implementazione esistente invariata) ...",
         "source": "my_project/Ventunoclassi.java",
         "type": "code",
-        "start_line": 471,
-        "end_line": 474,
-        "class": ""
+        "start_line": 8,
+        "end_line": 16,
+        "class": "DateUtilCustom\n"
     },
     {
         "id": 70,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: StrumentiGrafica\nclass StrumentiGrafica {\n    /**\n     * Converte un'immagine in scala di grigi\n     * @param rgb Valore RGB originale\n     * @return Valore RGB in scala di grigi\n     */\n    public static int convertiGrigio(int rgb) {\n        int r = (rgb >> 16) & 0xFF;\n        int g = (rgb >> 8) & 0xFF;\n        int b = rgb & 0xFF;\n        int media = (r + g + b) / 3;\n        return (media << 16) | (media << 8) | media;\n    }\n\n    /**\n     * Regola la luminosità di un colore\n     * @param rgb Valore RGB originale",
+        "text": "// File: my_project/Ventunoclassi.java\nCalcolatoreStatisticheBaseball {\n    /**\n     * Calcola la media battuta di un giocatore\n     * @param hits Numero di valide\n     * @param atBats Numero di turni di battuta\n     * @return Media battuta formattata\n     */",
         "source": "my_project/Ventunoclassi.java",
         "type": "code",
-        "start_line": 474,
-        "end_line": 474,
-        "class": "StrumentiGrafica\n"
+        "start_line": 16,
+        "end_line": 24,
+        "class": ""
     },
     {
         "id": 71,
-        "text": "// File: my_project/Ventunoclassi.java\n}\n\n    /**\n     * Regola la luminosità di un colore\n     * @param rgb Valore RGB originale\n     * @param percentuale Percentuale di luminosità\n     * @return Nuovo valore RGB\n     */\n    public static int regolaLuminosita(int rgb, double percentuale) {\n        int r = (int)(((rgb >> 16) & 0xFF) * percentuale);\n        int g = (int)(((rgb >> 8) & 0xFF) * percentuale);\n        int b = (int)((rgb & 0xFF) * percentuale);\n        return (Math.min(r, 255) << 16) | (Math.min(g, 255) << 8) | Math.min(b, 255);",
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Media battuta formattata\n     */\n    public static String calcolaMediaBattuta(int hits, int atBats) {\n        return String.format(\"%.3f\", (double)hits / atBats);\n    }\n    /**\n     * Determina il valore ERA di un lanciatore",
         "source": "my_project/Ventunoclassi.java",
         "type": "code",
-        "start_line": 474,
-        "end_line": 474,
+        "start_line": 24,
+        "end_line": 32,
         "class": ""
     },
     {
         "id": 72,
-        "text": "// File: my_project/Ventunoclassi.java\nreturn (Math.min(r, 255) << 16) | (Math.min(g, 255) << 8) | Math.min(b, 255);\n    }\n}",
+        "text": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Determina il valore ERA di un lanciatore\n     * @param earnedRuns Punti subiti\n     * @param innings Inning lanciati\n     * @return ERA formattato\n     */\n    public static String calcolaERA(int earnedRuns, double innings) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 32,
+        "end_line": 41,
+        "class": ""
+    },
+    {
+        "id": 73,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn String.format(\"%.2f\", (earnedRuns * 9) / innings);\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 41,
+        "end_line": 43,
+        "class": ""
+    },
+    {
+        "id": 74,
+        "text": "// File: my_project/Ventunoclassi.java\nGestioneFinanzePersonali {\n    /**\n     * Calcola il risparmio mensile in base agli obiettivi\n     * @param reddito Reddito mensile\n     * @param spese Spese fisse\n     * @param obiettivo Obiettivo annuale\n     * @return Risparmio necessario mensilmente",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 43,
+        "end_line": 49,
+        "class": ""
+    },
+    {
+        "id": 75,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Risparmio necessario mensilmente\n     */\n    public static double calcolaRisparmioMensile(double reddito, double spese, double obiettivo) {\n        return (obiettivo / 12) + (reddito - spese);\n    }\n    /**",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 49,
+        "end_line": 56,
+        "class": ""
+    },
+    {
+        "id": 76,
+        "text": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Genera un piano di ammortamento\n     * @param importoPrestito Importo totale\n     * @param tassoInteresse Tasso annuo\n     * @param anni Durata\n     * @return Rata mensile\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 56,
+        "end_line": 61,
+        "class": ""
+    },
+    {
+        "id": 77,
+        "text": "// File: my_project/Ventunoclassi.java\n* @param anni Durata\n     * @return Rata mensile\n     */\n    public static double calcolaRataMutuo(double importoPrestito, double tassoInteresse, int anni) {\n        double tassoMensile = tassoInteresse / 1200;\n        int mesi = anni * 12;",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 61,
+        "end_line": 69,
+        "class": ""
+    },
+    {
+        "id": 78,
+        "text": "// File: my_project/Ventunoclassi.java\nint mesi = anni * 12;\n        return (importoPrestito * tassoMensile) / (1 - Math.pow(1 + tassoMensile, -mesi));\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 69,
+        "end_line": 72,
+        "class": ""
+    },
+    {
+        "id": 79,
+        "text": "// File: my_project/Ventunoclassi.java\nGestioneInventario {\n    /**\n     * Calcola il valore totale dell'inventario\n     * @param quantita Array delle quantità\n     * @param prezzi Array dei prezzi\n     * @return Valore totale\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 72,
+        "end_line": 77,
+        "class": ""
+    },
+    {
+        "id": 80,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Valore totale\n     */\n    public static double calcolaValoreInventario(int[] quantita, double[] prezzi) {\n        double totale = 0;\n        for(int i = 0; i < quantita.length; i++) {\n            totale += quantita[i] * prezzi[i];\n        }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 77,
+        "end_line": 86,
+        "class": ""
+    },
+    {
+        "id": 81,
+        "text": "// File: my_project/Ventunoclassi.java\ntotale += quantita[i] * prezzi[i];\n        }\n        return totale;\n    }\n    /**\n     * Trova gli articoli sotto il livello minimo\n     * @param quantita Quantità corrente\n     * @param livelloMin Livello minimo",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 86,
+        "end_line": 90,
+        "class": ""
+    },
+    {
+        "id": 82,
+        "text": "// File: my_project/Ventunoclassi.java\n* @param livelloMin Livello minimo\n     * @return Array di indici degli articoli da riordinare\n     */\n    public static int[] trovaDaRiordinare(int[] quantita, int livelloMin) {\n        return java.util.stream.IntStream.range(0, quantita.length)",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 90,
+        "end_line": 102,
+        "class": ""
+    },
+    {
+        "id": 83,
+        "text": "// File: my_project/Ventunoclassi.java\n.filter(i -> quantita[i] < livelloMin)\n            .toArray();\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 102,
+        "end_line": 106,
+        "class": ""
+    },
+    {
+        "id": 84,
+        "text": "// File: my_project/Ventunoclassi.java\nAnalizzatoreTesto {\n    /**\n     * Conta le parole in una stringa\n     * @param testo Testo da analizzare\n     * @return Numero di parole\n     */\n    public static int contaParole(String testo) {\n        return testo.split(\"\\\\s+\").length;\n    }\n    /**",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 106,
+        "end_line": 112,
+        "class": ""
+    },
+    {
+        "id": 85,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn testo.split(\"\\\\s+\").length;\n    }\n    /**\n     * Inverte una stringa mantenendo la posizione delle maiuscole\n     * @param input Stringa originale\n     * @return Stringa invertita\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 112,
+        "end_line": 117,
+        "class": ""
+    },
+    {
+        "id": 86,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Stringa invertita\n     */\n    public static String invertiStringaMantenendoMaiuscole(String input) {\n        char[] chars = input.toCharArray();\n        int i = 0;\n        int j = chars.length - 1;\n        \n        while (i < j) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 117,
+        "end_line": 123,
+        "class": ""
+    },
+    {
+        "id": 87,
+        "text": "// File: my_project/Ventunoclassi.java\nwhile (i < j) {\n            boolean iUpper = Character.isUpperCase(chars[i]);\n            boolean jUpper = Character.isUpperCase(chars[j]);\n            \n            char temp = chars[i];",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 123,
+        "end_line": 129,
+        "class": ""
+    },
+    {
+        "id": 88,
+        "text": "// File: my_project/Ventunoclassi.java\nchar temp = chars[i];\n            chars[i] = Character.isUpperCase(chars[j]) ? \n                Character.toUpperCase(chars[j]) : Character.toLowerCase(chars[j]);\n            \n            chars[j] = Character.isUpperCase(temp) ?",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 129,
+        "end_line": 139,
+        "class": ""
+    },
+    {
+        "id": 89,
+        "text": "// File: my_project/Ventunoclassi.java\nchars[j] = Character.isUpperCase(temp) ? \n                Character.toUpperCase(temp) : Character.toLowerCase(temp);\n            \n            i++;\n            j--;\n        }\n        return new String(chars);\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 139,
+        "end_line": 147,
+        "class": ""
+    },
+    {
+        "id": 90,
+        "text": "// File: my_project/Ventunoclassi.java\nCalcolatriceScientifica {\n    /**\n     * Calcola il logaritmo in base personalizzata\n     * @param numero Valore positivo\n     * @param base Base del logaritmo\n     * @return Risultato del logaritmo\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 147,
+        "end_line": 156,
+        "class": ""
+    },
+    {
+        "id": 91,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Risultato del logaritmo\n     */\n    public static double logBase(double numero, double base) {\n        return Math.log(numero) / Math.log(base);\n    }\n    /**\n     * Calcola la radice n-esima\n     * @param numero Radicando",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 156,
+        "end_line": 161,
+        "class": ""
+    },
+    {
+        "id": 92,
+        "text": "// File: my_project/Ventunoclassi.java\n* Calcola la radice n-esima\n     * @param numero Radicando\n     * @param indice Indice della radice\n     * @return Risultato\n     */\n    public static double radiceN(double numero, int indice) {\n        return Math.pow(numero, 1.0 / indice);\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 161,
+        "end_line": 167,
+        "class": ""
+    },
+    {
+        "id": 93,
+        "text": "// File: my_project/Ventunoclassi.java\nGestionePassword {\n    private static final String CARATTERI = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*\";\n    /**\n     * Genera una password casuale sicura\n     * @param lunghezza Lunghezza della password",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 167,
+        "end_line": 176,
+        "class": ""
+    },
+    {
+        "id": 94,
+        "text": "// File: my_project/Ventunoclassi.java\n* @param lunghezza Lunghezza della password\n     * @return Password generata\n     */\n    public static String generaPassword(int lunghezza) {\n        Random random = new Random();\n        StringBuilder sb = new StringBuilder();",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 176,
+        "end_line": 184,
+        "class": ""
+    },
+    {
+        "id": 95,
+        "text": "// File: my_project/Ventunoclassi.java\nStringBuilder sb = new StringBuilder();\n        for(int i = 0; i < lunghezza; i++) {\n            sb.append(CARATTERI.charAt(random.nextInt(CARATTERI.length())));\n        }\n        return sb.toString();\n    }\n    /**",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 184,
+        "end_line": 190,
+        "class": ""
+    },
+    {
+        "id": 96,
+        "text": "// File: my_project/Ventunoclassi.java\n}\n        return sb.toString();\n    }\n    /**\n     * Verifica la complessità della password\n     * @param password Password da verificare\n     * @return true se la password è valida\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 190,
+        "end_line": 198,
+        "class": ""
+    },
+    {
+        "id": 97,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return true se la password è valida\n     */\n    public static boolean validaPassword(String password) {\n        return password.matches(\"^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[@$!%*?&])[A-Za-z\\\\d@$!%*?&]{8,}$\");\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 198,
+        "end_line": 206,
+        "class": ""
+    },
+    {
+        "id": 98,
+        "text": "// File: my_project/Ventunoclassi.java\nCalcolatoreBMI {\n    /**\n     * Calcola l'indice di massa corporea\n     * @param peso Peso in kg\n     * @param altezza Altezza in metri\n     * @return Valore BMI\n     */\n    public static double calcolaBMI(double peso, double altezza) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 206,
+        "end_line": 217,
+        "class": ""
+    },
+    {
+        "id": 99,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn peso / (altezza * altezza);\n    }\n    /**\n     * Restituisce la categoria del BMI\n     * @param bmi Valore BMI calcolato\n     * @return Categoria di peso\n     */\n    public static String getCategoriaBMI(double bmi) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 217,
+        "end_line": 224,
+        "class": ""
+    },
+    {
+        "id": 100,
+        "text": "// File: my_project/Ventunoclassi.java\n*/\n    public static String getCategoriaBMI(double bmi) {\n        if(bmi < 18.5) return \"Sottopeso\";\n        else if(bmi < 25) return \"Normale\";\n        else if(bmi < 30) return \"Sovrappeso\";\n        else return \"Obeso\";\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 224,
+        "end_line": 233,
+        "class": ""
+    },
+    {
+        "id": 101,
+        "text": "// File: my_project/Ventunoclassi.java\nConvertitoreUnita {\n    /**\n     * Converti chilometri in miglia\n     * @param km Valore in chilometri\n     * @return Valore in miglia\n     */\n    public static double kmToMiglia(double km) {\n        return km * 0.621371;\n    }\n    /**",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 233,
+        "end_line": 241,
+        "class": ""
+    },
+    {
+        "id": 102,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn km * 0.621371;\n    }\n    /**\n     * Converti Celsius in Fahrenheit\n     * @param celsius Temperatura in Celsius\n     * @return Temperatura in Fahrenheit\n     */\n    public static double celsiusToFahrenheit(double celsius) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 241,
+        "end_line": 247,
+        "class": ""
+    },
+    {
+        "id": 103,
+        "text": "// File: my_project/Ventunoclassi.java\npublic static double celsiusToFahrenheit(double celsius) {\n        return (celsius * 9/5) + 32;\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 247,
+        "end_line": 254,
+        "class": ""
+    },
+    {
+        "id": 104,
+        "text": "// File: my_project/Ventunoclassi.java\nAnalizzatoreInvestimenti {\n    /**\n     * Calcola il Return on Investment (ROI)\n     * @param guadagno Guadagno totale\n     * @param costo Costo iniziale\n     * @return ROI percentuale\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 254,
+        "end_line": 259,
+        "class": ""
+    },
+    {
+        "id": 105,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return ROI percentuale\n     */\n    public static double calcolaROI(double guadagno, double costo) {\n        return ((guadagno - costo) / costo) * 100;\n    }\n    /**\n     * Calcola il Valore Attuale Netto (VAN)\n     * @param tasso Tasso di sconto",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 259,
+        "end_line": 266,
+        "class": ""
+    },
+    {
+        "id": 106,
+        "text": "// File: my_project/Ventunoclassi.java\n* @param tasso Tasso di sconto\n     * @param flussi Flussi di cassa\n     * @return Valore VAN\n     */\n    public static double calcolaVAN(double tasso, double[] flussi) {\n        double van = 0;\n        for(int i = 0; i < flussi.length; i++) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 266,
+        "end_line": 276,
+        "class": ""
+    },
+    {
+        "id": 107,
+        "text": "// File: my_project/Ventunoclassi.java\nfor(int i = 0; i < flussi.length; i++) {\n            van += flussi[i] / Math.pow(1 + tasso, i);\n        }\n        return van;\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 276,
+        "end_line": 278,
+        "class": ""
+    },
+    {
+        "id": 108,
+        "text": "// File: my_project/Ventunoclassi.java\nGestoreProgetti {\n    /**\n     * Calcola la durata del progetto usando il metodo PERT\n     * @param ottimistica Tempo ottimistico\n     * @param probabile Tempo probabile\n     * @param pessimistica Tempo pessimistico\n     * @return Durata stimata\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 278,
+        "end_line": 283,
+        "class": ""
+    },
+    {
+        "id": 109,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Durata stimata\n     */\n    public static double stimaDurataPERT(double ottimistica, double probabile, double pessimistica) {\n        return (ottimistica + 4 * probabile + pessimistica) / 6;\n    }\n    /**\n     * Calcola il percorso critico",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 283,
+        "end_line": 292,
+        "class": ""
+    },
+    {
+        "id": 110,
+        "text": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Calcola il percorso critico\n     * @param attivita Lista di attività con durate\n     * @return Durata totale del percorso critico\n     */\n    public static double calcolaPercorsoCritico(double[] attivita) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 292,
+        "end_line": 296,
+        "class": ""
+    },
+    {
+        "id": 111,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn Arrays.stream(attivita).sum();\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 296,
+        "end_line": 296,
+        "class": ""
+    },
+    {
+        "id": 112,
+        "text": "// File: my_project/Ventunoclassi.java\nSimulatoreEcologico {\n    /**\n     * Simula la crescita della popolazione\n     * @param popolazioneIniziale Popolazione iniziale\n     * @param tassoCrescita Tasso di crescita annuo\n     * @param anni Numero di anni\n     * @return Popolazione finale\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 296,
+        "end_line": 308,
+        "class": ""
+    },
+    {
+        "id": 113,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Popolazione finale\n     */\n    public static int simulaCrescitaPopolazione(int popolazioneIniziale, double tassoCrescita, int anni) {\n        return (int) (popolazioneIniziale * Math.pow(1 + tassoCrescita, anni));\n    }\n    /**",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 308,
+        "end_line": 312,
+        "class": ""
+    },
+    {
+        "id": 114,
+        "text": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Modello preda-predatore (equazioni Lotka-Volterra)\n     * @param x Popolazione prede\n     * @param y Popolazione predatori\n     * @param alpha Parametro alpha\n     * @param beta Parametro beta",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 312,
+        "end_line": 322,
+        "class": ""
+    },
+    {
+        "id": 115,
+        "text": "// File: my_project/Ventunoclassi.java\n* @param beta Parametro beta\n     * @return Array con nuove popolazioni [nuovePrede, nuoviPredatori]\n     */\n    public static double[] modelloPredaPredatore(double x, double y, double alpha, double beta) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 322,
+        "end_line": 327,
+        "class": ""
+    },
+    {
+        "id": 116,
+        "text": "// File: my_project/Ventunoclassi.java\ndouble dx = x * (1 - x) - alpha * x * y;\n        double dy = -y * (1 - y) + beta * x * y;\n        return new double[]{x + dx, y + dy};\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 327,
+        "end_line": 334,
+        "class": ""
+    },
+    {
+        "id": 117,
+        "text": "// File: my_project/Ventunoclassi.java\nStrumentiCrittografia {\n    /**\n     * Cifratura Caesar\n     * @param testo Testo originale\n     * @param shift Spostamento\n     * @return Testo cifrato\n     */\n    public static String cifraCaesar(String testo, int shift) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 334,
+        "end_line": 343,
+        "class": ""
+    },
+    {
+        "id": 118,
+        "text": "// File: my_project/Ventunoclassi.java\npublic static String cifraCaesar(String testo, int shift) {\n        StringBuilder risultato = new StringBuilder();\n        for(char c : testo.toCharArray()) {\n            if(Character.isLetter(c)) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 343,
+        "end_line": 348,
+        "class": ""
+    },
+    {
+        "id": 119,
+        "text": "// File: my_project/Ventunoclassi.java\nif(Character.isLetter(c)) {\n                char base = Character.isLowerCase(c) ? 'a' : 'A';\n                c = (char)(((c - base + shift) % 26) + base);\n            }\n            risultato.append(c);\n        }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 348,
+        "end_line": 356,
+        "class": ""
+    },
+    {
+        "id": 120,
+        "text": "// File: my_project/Ventunoclassi.java\n}\n            risultato.append(c);\n        }\n        return risultato.toString();\n    }\n    /**\n     * Decifratura Caesar\n     * @param testo Testo cifrato\n     * @param shift Spostamento originale\n     * @return Testo decifrato\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 356,
+        "end_line": 364,
+        "class": ""
+    },
+    {
+        "id": 121,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Testo decifrato\n     */\n    public static String decifraCaesar(String testo, int shift) {\n        return cifraCaesar(testo, 26 - (shift % 26));\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 364,
+        "end_line": 371,
+        "class": ""
+    },
+    {
+        "id": 122,
+        "text": "// File: my_project/Ventunoclassi.java\nAnalizzatoreCodice {\n    /**\n     * Conta le linee di codice in una stringa\n     * @param codice Codice sorgente\n     * @return Numero di linee\n     */\n    public static int contaLineeCodice(String codice) {\n        return codice.split(\"\\n\").length;\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 371,
+        "end_line": 381,
+        "class": ""
+    },
+    {
+        "id": 123,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn codice.split(\"\\n\").length;\n    }\n    /**\n     * Calcola la complessità ciclomatica approssimativa\n     * @param codice Codice sorgente\n     * @return Numero di decisioni + 1\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 381,
+        "end_line": 389,
+        "class": ""
+    },
+    {
+        "id": 124,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Numero di decisioni + 1\n     */\n    public static int calcolaComplessitaCiclomatica(String codice) {\n        int count = 1;\n        String[] keywords = {\"if\", \"while\", \"for\", \"case\", \"catch\", \"&&\", \"||\"};",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 389,
+        "end_line": 394,
+        "class": ""
+    },
+    {
+        "id": 125,
+        "text": "// File: my_project/Ventunoclassi.java\nfor(String keyword : keywords) {\n            count += codice.split(keyword).length - 1;\n        }\n        return count;\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 394,
+        "end_line": 399,
+        "class": ""
+    },
+    {
+        "id": 126,
+        "text": "// File: my_project/Ventunoclassi.java\nGestoreInventario {\n    private ArrayList<String> articoli = new ArrayList<>();\n    /**\n     * Aggiungi un articolo all'inventario (FIFO)\n     * @param articolo Articolo da aggiungere\n     */\n    public void aggiungiArticolo(String articolo) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 399,
+        "end_line": 410,
+        "class": ""
+    },
+    {
+        "id": 127,
+        "text": "// File: my_project/Ventunoclassi.java\n*/\n    public void aggiungiArticolo(String articolo) {\n        articoli.add(articolo);\n    }\n    /**\n     * Rimuovi un articolo dall'inventario (FIFO)\n     * @return Articolo rimosso\n     */\n    public String rimuoviArticolo() {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 410,
+        "end_line": 416,
+        "class": ""
+    },
+    {
+        "id": 128,
+        "text": "// File: my_project/Ventunoclassi.java\n*/\n    public String rimuoviArticolo() {\n        return articoli.remove(0);\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 416,
+        "end_line": 418,
+        "class": ""
+    },
+    {
+        "id": 129,
+        "text": "// File: my_project/Ventunoclassi.java\nSimulatoreMeteo {\n    private static final String[] CONDIZIONI = {\"Soleggiato\", \"Nuvoloso\", \"Pioggia\", \"Temporale\"};\n    private static Random rand = new Random();\n    /**\n     * Genera una previsione meteo casuale\n     * @return Condizione meteo\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 418,
+        "end_line": 428,
+        "class": ""
+    },
+    {
+        "id": 130,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Condizione meteo\n     */\n    public static String generaPrevisione() {\n        return CONDIZIONI[rand.nextInt(CONDIZIONI.length)];\n    }\n    /**\n     * Simula la temperatura per una regione\n     * @param latitudine Coordinata latitudine",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 428,
+        "end_line": 435,
+        "class": ""
+    },
+    {
+        "id": 131,
+        "text": "// File: my_project/Ventunoclassi.java\n* @param latitudine Coordinata latitudine\n     * @param mese Mese dell'anno (1-12)\n     * @return Temperatura simulata\n     */\n    public static double simulaTemperatura(double latitudine, int mese) {",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 435,
+        "end_line": 443,
+        "class": ""
+    },
+    {
+        "id": 132,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn 20 + 10 * Math.sin(Math.toRadians(mese * 30)) + latitudine * 0.1;\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 443,
+        "end_line": 445,
+        "class": ""
+    },
+    {
+        "id": 133,
+        "text": "// File: my_project/Ventunoclassi.java\nGestoreReteNeurale {\n    /**\n     * Funzione di attivazione ReLU\n     * @param x Valore di input\n     * @return Valore di output\n     */\n    public static double relu(double x) {\n        return Math.max(0, x);\n    }\n    /**",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 445,
+        "end_line": 448,
+        "class": ""
+    },
+    {
+        "id": 134,
+        "text": "// File: my_project/Ventunoclassi.java\nreturn Math.max(0, x);\n    }\n    /**\n     * Calcola l'errore quadratico medio\n     * @param previsioni Array di previsioni\n     * @param target Valori target\n     * @return Errore medio\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 448,
+        "end_line": 458,
+        "class": ""
+    },
+    {
+        "id": 135,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Errore medio\n     */\n    public static double calcolaErrore(double[] previsioni, double[] target) {\n        double errore = 0;\n        for(int i = 0; i < previsioni.length; i++) {\n            errore += Math.pow(previsioni[i] - target[i], 2);",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 458,
+        "end_line": 468,
+        "class": ""
+    },
+    {
+        "id": 136,
+        "text": "// File: my_project/Ventunoclassi.java\nerrore += Math.pow(previsioni[i] - target[i], 2);\n        }\n        return errore / previsioni.length;\n    }",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 468,
+        "end_line": 472,
+        "class": ""
+    },
+    {
+        "id": 137,
+        "text": "// File: my_project/Ventunoclassi.java\nStrumentiGrafica {\n    /**\n     * Converte un'immagine in scala di grigi\n     * @param rgb Valore RGB originale\n     * @return Valore RGB in scala di grigi\n     */\n    public static int convertiGrigio(int rgb) {\n        int r = (rgb >> 16) & 0xFF;",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 472,
+        "end_line": 474,
+        "class": ""
+    },
+    {
+        "id": 138,
+        "text": "// File: my_project/Ventunoclassi.java\nint r = (rgb >> 16) & 0xFF;\n        int g = (rgb >> 8) & 0xFF;\n        int b = rgb & 0xFF;\n        int media = (r + g + b) / 3;\n        return (media << 16) | (media << 8) | media;\n    }\n    /**\n     * Regola la luminosità di un colore",
         "source": "my_project/Ventunoclassi.java",
         "type": "code",
         "start_line": 474,
@@ -648,17 +1242,53 @@
         "class": ""
     },
     {
-        "id": 73,
-        "text": "// File: my_project/Ventunoclassi.java\nClasse: GestoreDatabase\nclass GestoreDatabase {\n    private HashMap<Integer, String> dati = new HashMap<>();\n    private int nextId = 1;\n\n    /**\n     * Inserisci un nuovo record\n     * @param valore Valore da inserire\n     * @return ID del record\n     */\n    public int inserisci(String valore) {\n        dati.put(nextId, valore);\n        return nextId++;\n    }\n\n    /**\n     * Cerca un record per ID\n     * @param id ID del record\n     * @return Valore trovato o null\n     */\n    public String cerca(int id) {",
+        "id": 139,
+        "text": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Regola la luminosità di un colore\n     * @param rgb Valore RGB originale\n     * @param percentuale Percentuale di luminosità\n     * @return Nuovo valore RGB\n     */\n    public static int regolaLuminosita(int rgb, double percentuale) {",
         "source": "my_project/Ventunoclassi.java",
         "type": "code",
         "start_line": 474,
         "end_line": 474,
-        "class": "GestoreDatabase\n"
+        "class": ""
     },
     {
-        "id": 74,
-        "text": "// File: my_project/Ventunoclassi.java\n* @param id ID del record\n     * @return Valore trovato o null\n     */\n    public String cerca(int id) {\n        return dati.get(id);\n    }\n}",
+        "id": 140,
+        "text": "// File: my_project/Ventunoclassi.java\nint r = (int)(((rgb >> 16) & 0xFF) * percentuale);\n        int g = (int)(((rgb >> 8) & 0xFF) * percentuale);\n        int b = (int)((rgb & 0xFF) * percentuale);\n        return (Math.min(r, 255) << 16) | (Math.min(g, 255) << 8) | Math.min(b, 255);",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 474,
+        "end_line": 474,
+        "class": ""
+    },
+    {
+        "id": 141,
+        "text": "// File: my_project/Ventunoclassi.java\n}",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 474,
+        "end_line": 474,
+        "class": ""
+    },
+    {
+        "id": 142,
+        "text": "// File: my_project/Ventunoclassi.java\nGestoreDatabase {\n    private HashMap<Integer, String> dati = new HashMap<>();\n    private int nextId = 1;\n    /**\n     * Inserisci un nuovo record\n     * @param valore Valore da inserire\n     * @return ID del record\n     */",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 474,
+        "end_line": 474,
+        "class": ""
+    },
+    {
+        "id": 143,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return ID del record\n     */\n    public int inserisci(String valore) {\n        dati.put(nextId, valore);\n        return nextId++;\n    }\n    /**\n     * Cerca un record per ID\n     * @param id ID del record\n     * @return Valore trovato o null",
+        "source": "my_project/Ventunoclassi.java",
+        "type": "code",
+        "start_line": 474,
+        "end_line": 474,
+        "class": ""
+    },
+    {
+        "id": 144,
+        "text": "// File: my_project/Ventunoclassi.java\n* @return Valore trovato o null\n     */\n    public String cerca(int id) {\n        return dati.get(id);\n    }\n}",
         "source": "my_project/Ventunoclassi.java",
         "type": "code",
         "start_line": 474,
