@@ -942,8 +942,10 @@ Il parametro \texttt{top\_p} è stato impostato a 0.85 per bilanciare creativit�
 \subsubsection{System}
 Come parametro di sistema da passare al LLM è stato esplicitamente richiesto di rispondere in italiano come esperto di programmazione ma solo se è sicuro.
 
-\subsection{Risultati del Sistema RAG}
-\subsubsection{Query Base con informazioni incomplete}
+\section{Test Sistema RAG}
+Valutiamo se il sistema RAG  è in grado di rispondere in maniera coerente alla query proposta.
+Ricordiamo che il risultato atteso è: \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}    
+\subsection{Query base senza riferimenti al metodo utilizzato all'interno di segnaleWow}
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?''}
 \end{quote}
@@ -952,60 +954,58 @@ Il RAG aggiunge solo il chunk dove è presente la funzione \texttt{segnaleWow} e
 per questo le risposte dei due modelli sono incomplete:
 \subsubsection{Output con LLM Llama3.2}
 L'output ottenuto utilizzando il modello Llama3.2 è stato:
-``
 \begin{quote}
-Il metodo \texttt{segnaleWow} restituisce una stringa che contiene un messaggio magico associato alla data specificata. In questo caso, la data è il 14 Febbraio 2025.
+    ``Il metodo \texttt{segnaleWow} restituisce una stringa che contiene un messaggio magico associato alla data specificata. In questo caso, la data è il 14 Febbraio 2025.
 La risposta esatta sarebbe:
 "il tuo segnale Wow è : [messaggio magico]"
-dove [messaggio magico] è il risultato dell'applicazione di `DateUtilCustom.getMessaggioMagico(date)`.
-\end{quote}
-
-\subsubsection{Output con LLM CodeQwen}
-Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
-``
-\begin{quote}
-    Se si chiama il metodo `segnaleWow` con un'istanza di `LocalDate` che rappresenta la data "14 febbraio 2025", il valore restituito sarà una stringa che indica il segnale Wow associato a tale data.
-    ```java
-    String result = GiorniMagici.segnaleWow(LocalDate.of(2025, 2, 14));
-    System.out.println(result);
-    ```
-    Il metodo `getMessaggioMagico` viene richiamato su un'istanza di `DateUtilCustom`, passando la data "14 febbraio 2025" come parametro. Questo metodo presumibilmente restituisce un messaggio magico associato a tale data, ad esempio "La data del New Year è unadata speciale".
-    Il risultato finale sarà:
-    ```
-    il tuo segnale Wow è : La data del New Year è una data speciale
-    ```
+dove [messaggio magico] è il risultato dell'applicazione di `DateUtilCustom.getMessaggioMagico(date).''
 \end{quote}
 
 \subsubsection{Modifica Temperature}
 CodeQwen provava a dare risposta anche senza avere tutte le informazioni necessarie, ho deciso di abbassare la temperatura da 0.3 a 0.2 per vedere se il modello CodeQwen avrebbe risposto in maniera più precisa.
-Cosa che è avvenuta.
+Cosa che è avvenuta:
 
-\subsubsection{Query Completa con tutte le informazioni richieste}
+\subsubsection{Output con LLM CodeQwen}
+Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
+\begin{quote}
+    ``Se si chiama il metodo `segnaleWow` con un'istanza di `LocalDate` che rappresenta la data "14 febbraio 2025", il valore restituito sarà una stringa che indica il segnale Wow associato a tale data.
+    ```java
+    String result = GiorniMagici.segnaleWow(LocalDate.of(2025, 2, 14));
+    System.out.println(result);
+    ```
+    Il metodo `getMessaggioMagico` viene richiamato su un'istanza di `DateUtilCustom`, passando la data "14 febbraio 2025" come parametro. Questo metodo presumibilmente restituisce un messaggio magico associato a tale data, ad esempio "La data del New Year è una data speciale".
+    Il risultato finale sarà:
+    ```
+    il tuo segnale Wow è : La data del New Year è una data speciale``
+\end{quote}
+
+\subsection{Query Completa con riferimenti al metodo utilizzato all'interno di segnaleWow}
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
 \end{quote}
-\subsubsection{Fonti aggiunte al prompt}
-In questo caso il RAG aggiunge 5 chunk ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
-Ne consegue che \textbf{le risposte date dai due modelli sono coerenti a quanto aspettato}.
+\subsubsection{Fonti aggiunte dal RAG al prompt}
+In questo caso il RAG aggiunge 5 chunk, ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
+Ne consegue che \textbf{le risposte date dai due modelli sono coerenti con quanto atteso}.
 \subsubsection{Output con LLM Llama3.2}
-Il metodo `segnaleWow` restituisce una stringa che contiene il messaggio magico per la data specificata. 
+``Il metodo `segnaleWow` restituisce una stringa che contiene il messaggio magico per la data specificata. 
 Per determinare il messaggio esatto, dobbiamo analizzare la data fornita: `LocalDate.of(2025, 2, 14)`.
 La data è il 14 febbraio 2025. Il giorno della settimana corrisponde a `FRIDAY`.
 Quindi, il messaggio magico restituito dal metodo `getMessaggioMagico` sarà:
-\textbf{"Attenzione agli incantesimi del crepuscolo."}
+\textbf{"Attenzione agli incantesimi del crepuscolo."}''
 \subsubsection{Output con LLM CodeQwen}
-Se si chiama il metodo `segnaleWow` con una data di `LocalDate.of(2025, 2, 14)`, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:
+``Se si chiama il metodo `segnaleWow` con una data di `LocalDate.of(2025, 2, 14)`, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:
 ```
 Il tuo segnale Wow è : \textbf{Il giorno perfetto per scoprire segreti nascosti.}
 ```
-Questo è dato che la data 2025-02-14 cade mercoledì, quindi il metodo `getMessaggioMagico()` restituisce il messaggio "Il giorno perfetto per scoprire segreti nascosti."
+Questo è dato che la data 2025-02-14 cade mercoledì, quindi il metodo `getMessaggioMagico()` restituisce il messaggio "Il giorno perfetto per scoprire segreti nascosti.''
 \subsection{Commento risultati ottenuti}
 I risultati ottenuti mostrano come il sistema RAG sia in grado di rispondere in maniera coerente alla query proposta.
-L'embeddings arricchisce il propt con le fonti corrette soprattutto se si scrive la richiesta in maniera più dettagliata possibile.
+La ricerca dei chunk più simili funziona corrette soprattutto se si scrive la richiesta in maniera più dettagliata possibile.
+CodeQwen ha sbagliato a calcolare il giorno della settimana ma la risposta utilizza correttamente il metodo getMessaggioMagico().
 
 \section{Valutazione del RAG con llm as a judge}
-Sfruttando l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG
-operando una valutazione automatizzata delle risposte prodotte.
+Utilizzando l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG
+generiamo una serie di domande al sistema RAG operando una valutazione automatizzata delle risposte prodotte da parte di più LLM.
 Il dataset è stato arricchito di altre classi java generate sinteticamente dal LLM Deepssek.
 \subsection{Domande}
 Passando il file contenente tutte le librerie a Deepseek, sono state generate 30 domande per valutare il sistema RAG.
@@ -1050,8 +1050,8 @@ Q28,"Quale percussocritico per attivita' [5,8,3]?","GestoreProgetti.java"
 Q29,"Cosa restituisce giorniAlmiocompleannoSpecial(1/1/2000, 'Mario')?","DateUtilCustom.java"
 Q30,"Come calcolare radice 5a di 3125?","CalcolatriceScientifica.java"
 \end{lstlisting}
-\subsection{Valutazione delle domande}
-Per valutare le domande generate da Deepssek, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
+\subsection{Punteggio delle domande}
+Per valutare le domande generate da \textbf{Deepssek}, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
 fornire un "punteggio totale" che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
 Date la vostra risposta su una scala da 1 a 5, dove 1 significa che la domanda non è affatto risolvibile in base al contesto e 5 significa che la domanda è chiaramente e inequivocabilmente risolvibile in base al contesto.
 \subsubsection{Risultati}
@@ -1061,10 +1061,11 @@ Entrambi i modelli hanno valutato le domande generate da Deepssek con un puntegg
     \item \textbf{Mistral}: 139 su 150
 \end{itemize}
 \subsection{Risposta alle domande da parte dei LLM con RAG}
-Essendo poco performanti le versioni dei LLM installati in locale ho deciso di utilizzare Deepseek, o1 in Copilot e Mistral 
-presenti in remoto per rispondere alle domande fornendo lo stesso prompt che avrei inserito nel mio sistema RAG, arricchendolo con i chunck estratti dalla funzione vector_store.similarity_search_with_score() precedentemente creata.
-
-\subsubsection{Risultati}
+Essendo poco performanti le versioni dei LLM installati in locale, per questo test ho valutato di utilizzare le versioni commerciali di Deepseek, o1 in Copilot e Mistral 
+presenti in rete per rispondere alle domande.
+Fornendo per ogni domanda lo stesso prompt creato dal mio sistema RAG, arricchito con i chunk estratti dalla funzione vector\_store.similarity\_search\_with\_score precedentemente creata.
+\subsection{Risultati}
+miao
 \chapter{Conclusioni}
 
 da completare
