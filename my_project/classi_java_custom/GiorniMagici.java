@@ -1,3 +1,4 @@
+package classi_java_custom;
 import java.time.LocalDate;
 
 public class GiorniMagici {

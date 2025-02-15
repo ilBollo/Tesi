@@ -1,5 +1,6 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import json
+import glob
 
 # Funzione per caricare e suddividere un file Java
 def process_file(file_path):
@@ -51,7 +52,8 @@ def process_file(file_path):
     return chunk_metadata
 
 # Carica e suddividi i file Java
-files = ["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java", "my_project/Ventunoclassi.java"]
+files = glob.glob("my_project/classi_java_custom/*.java") #["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java", "my_project/Ventunoclassi.java"]
+print(files)
 all_chunks = []
 
 for file_path in files:

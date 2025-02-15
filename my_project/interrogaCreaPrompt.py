@@ -158,7 +158,7 @@ for q in questions:
             "score": float(score)  # Conversione per serializzazione JSON
         } 
         for doc, score in docs_and_scores 
-        if score >= 0.80
+        if score <= 1
     ]
     
     # Aggiungi al risultato finale

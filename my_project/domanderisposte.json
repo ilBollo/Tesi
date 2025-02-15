@@ -1,0 +1,182 @@
+[
+    {
+        "id": 1,
+        "question": "Cosa ritorna il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` che utilizza la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`?",
+        "answer": "Ritorna la stringa \"il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.\"",
+        "punteggio": 5
+    },
+    {
+        "id": 2,
+        "question": "La classe `AnalizzatoreRilascio` contiene un metodo chiamato `stimaDataRilascio`. Quali sono i due parametri di input richiesti da questo metodo?",
+        "answer": "Il metodo `stimaDataRilascio` richiede un array di interi (`int[] taskCompletati`) e un valore double (`double velocitaSviluppo`) come input.",
+        "punteggio": 5
+    },
+    {
+        "id": 3,
+        "question": "Nella classe `AnalizzatoreRilascio`, come viene calcolato il numero di task rimanenti nel metodo `stimaDataRilascio`?",
+        "answer": "Il numero di task rimanenti viene calcolato sottraendo la somma dei task completati (assumendo un totale di 100 task).",
+        "punteggio": 5
+    },
+    {
+        "id": 4,
+        "question": "Qual è il valore di soglia critica per l'indice di rischio rilascio (IRR) nella classe `AnalizzatoreRilascio`?",
+        "answer": "La soglia critica per l'IRR è **8.5**.",
+        "punteggio": 5
+    },
+    {
+        "id": 5,
+        "question": "Quali sono i parametri di input del metodo `calcolaProbabilitaSuccesso` nella classe `AnalizzatoreRilascio` e come viene calcolata la probabilità di successo?",
+        "answer": "I parametri sono `numeroBugRisolti` e `numeroTestPassati`. La probabilità di successo è calcolata come `(numeroBugRisolti * 0.4) + (numeroTestPassati * 0.6)`.",
+        "punteggio": 5
+    },
+    {
+        "id": 6,
+        "question": "Qual è lo scopo del metodo `stimaTempoRimanente` nella classe `AnalizzatoreRilascio` e quali parametri accetta?",
+        "answer": "Stima il tempo rimanente per il rilascio. Accetta `taskRimanenti` (numero di task rimanenti) e `velocitaSviluppo` come parametri.",
+        "punteggio": 5
+    },
+    {
+        "id": 7,
+        "question": "Nella classe `BasketballStats`, qual è la formula utilizzata per calcolare l'efficienza di un giocatore nel metodo `calcolaEfficienzaGiocatore`?",
+        "answer": "La formula è `(punti + rimbalzi + assist) - (pallePerse + tiriSbagliati)`.",
+        "punteggio": 4
+    },
+    {
+        "id": 8,
+        "question": "Quali sono i criteri utilizzati nel metodo `valutaTiro` della classe `BasketballStats` per valutare la qualità di un tiro?",
+        "answer": "La **distanza dal canestro** (`distanzaCanestro`) e la **pressione difensiva** (`pressioneDifensiva`).",
+        "punteggio": 4
+    },
+    {
+        "id": 9,
+        "question": "Cosa restituisce il metodo `analisiStatisticheSquadra` della classe `BasketballStats`?",
+        "answer": "Restituisce un report dettagliato delle prestazioni della squadra.",
+        "punteggio": 4
+    },
+    {
+        "id": 10,
+        "question": "Quali sono gli input del metodo `previsioneVincitore` nella classe `BasketballStats` e cosa rappresentano?",
+        "answer": "Gli input sono due array di double (`squadraCasa` e `squadraOspite`) che contengono `[puntiMedi, rimbalziMedi, assistMedi]`, e una `LocalDate dataPartita`.",
+        "punteggio": 4
+    },
+    {
+        "id": 11,
+        "question": "Come viene calcolato il margine nel metodo `previsioneVincitore` della classe `BasketballStats`?",
+        "answer": "Il margine è calcolato come il valore assoluto della differenza tra la valutazione della squadra di casa e la valutazione della squadra ospite.",
+        "punteggio": 5
+    },
+    {
+        "id": 12,
+        "question": "Cosa rappresenta l'input del metodo `calcolaMomentum` nella classe `BasketballStats`?",
+        "answer": "Rappresenta gli ultimi punti segnati dalla squadra di casa (`ultimiPuntiCasa`) e dalla squadra ospite (`ultimiPuntiOspite`).",
+        "punteggio": 4
+    },
+    {
+        "id": 13,
+        "question": "Qual è il requisito per la lunghezza della chiave segreta nel metodo `cifraturaVortex` della classe `CifratoreAziendale`?",
+        "answer": "La chiave segreta deve essere di 12 caratteri.",
+        "punteggio": 5
+    },
+    {
+        "id": 14,
+        "question": "Cosa fa il metodo `mascheraDatiSensibili` nella classe `TrasformatoreDati`?",
+        "answer": "Il metodo maschera i dati sensibili sostituendo i caratteri originali con caratteri casuali.",
+        "punteggio": 3
+    },
+    {
+        "id": 15,
+        "question": "Nella classe `DateUtilCustom`, descrivi cosa fa il metodo `formatDate(Date date)` e fornisci un esempio del formato di output.",
+        "answer": "Formatta una data nel formato \"dd/MM/yyyy\". Ad esempio, se la data è il 25 dicembre 2023, l'output sarà \"25/12/2023\".",
+        "punteggio": 2
+    },
+    {
+        "id": 16,
+        "question": "Qual è la differenza tra i metodi `formatDate(Date date)` e `formatDate(Date date, String format)` nella classe `DateUtilCustom`?",
+        "answer": "Il primo utilizza il formato predefinito \"dd/MM/yyyy\", mentre il secondo permette di specificare un formato personalizzato.",
+        "punteggio": 2
+    },
+    {
+        "id": 17,
+        "question": "Cosa può accadere se si utilizza il metodo `parseDate` della classe `DateUtilCustom` con una stringa che non corrisponde al formato specificato?",
+        "answer": "Verrà lanciata una `ParseException`.",
+        "punteggio": 3
+    },
+    {
+        "id": 18,
+        "question": "Nella classe `DateUtilCustom`, cosa calcola il metodo `getDifferenceInDays(Date startDate, Date endDate)`?",
+        "answer": "Calcola la differenza in giorni tra due date.",
+        "punteggio": 2
+    },
+    {
+        "id": 19,
+        "question": "Cosa fa il metodo `addDays(Date date, int days)` nella classe `DateUtilCustom`?",
+        "answer": "Aggiunge un numero specificato di giorni a una data.",
+        "punteggio": 2
+    },
+    {
+        "id": 20,
+        "question": "Come si verifica se una data è nel passato usando la classe `DateUtilCustom`?",
+        "answer": "Utilizzando il metodo `isPastDate(Date date)`.",
+        "punteggio": 2
+    },
+    {
+        "id": 21,
+        "question": "Cosa fa il metodo `giorniAlmiocompleannoSpecial(Date dataNascita, String nome)` nella classe `DateUtilCustom`?",
+        "answer": "Calcola i giorni che mancano al compleanno di una persona e restituisce un messaggio personalizzato.",
+        "punteggio": 5
+    },
+    {
+        "id": 22,
+        "question": "In `ElaboratoreLinguaggio`, come viene calcolato il punteggio di sentimento di un testo?",
+        "answer": "Il punteggio di sentimento è calcolato come `(punteggioPositivo - punteggioNegativo) / (double) (punteggioPositivo + punteggioNegativo + 1)`.",
+        "punteggio": 4
+    },
+    {
+        "id": 23,
+        "question": "Qual è lo scopo del metodo `estraiEntitaNominate` nella classe `ElaboratoreLinguaggio`?",
+        "answer": "Estrae entità nominate dal testo.",
+        "punteggio": 3
+    },
+    {
+        "id": 24,
+        "question": "Cosa fa il metodo `applicaTemplate` nella classe `GestoreConfigurazioni`?",
+        "answer": "Sostituisce i placeholder in un template con i valori corrispondenti forniti in una mappa di configurazioni.",
+        "punteggio": 5
+    },
+    {
+        "id": 25,
+        "question": "In `GestoreConoscenza`, cosa fa il metodo `estraiMetadati`?",
+        "answer": "Estrae metadati da un documento, inclusi autore, data e parole chiave.",
+        "punteggio": 4
+    },
+    {
+        "id": 26,
+        "question": "Qual è lo scopo del metodo `generaIdentitaDigitale` nella classe `GestoreIdentita` e cosa prende come input?",
+        "answer": "Genera un'identità digitale sotto forma di token JWT firmato digitalmente. Prende come input dati biometrici codificati (`byte[] parametriBiometrici`).",
+        "punteggio": 5
+    },
+    {
+        "id": 27,
+        "question": "Cosa verifica il metodo `verificaIdentita` nella classe `GestoreIdentita`?",
+        "answer": "Verifica l'identità confrontando un token JWT con un'impronta hash attesa.",
+        "punteggio": 4
+    },
+    {
+        "id": 28,
+        "question": "Quali controlli vengono eseguiti all'interno del metodo `generaChiaveAttivazione` della classe `GestoreLicenze`?",
+        "answer": "Verifica che il codice cliente sia di 8 cifre e che la data di scadenza sia nel formato corretto (AAAAMMGG).",
+        "punteggio": 5
+    },
+    {
+        "id": 29,
+        "question": "Cosa calcola il metodo `calcolaIndiceManutenibilita` della classe `IspezionatoreCodice`?",
+        "answer": "Calcola un valore MI (Maintainability Index) basato su metriche interne come la lunghezza delle righe, il numero di commenti e la complessità ciclomatica.",
+        "punteggio": 5
+    },
+    {
+        "id": 30,
+        "question": "In `MetricheAgili`, cosa rappresenta il `fattoreComplessità` nel metodo `calcolaVelocityScore` e qual è il suo range?",
+        "answer": "Rappresenta un fattore di complessità e il suo range è da 1 a 5.",
+        "punteggio": 5
+    }
+]

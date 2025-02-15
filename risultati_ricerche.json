@@ -4,6 +4,14 @@
     "question": "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico()?",
     "contexts": [
       {
+        "chunk": "// File: my_project/GiorniMagici.java\n* @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}",
+        "score": 0.5504171848297119
+      },
+      {
+        "chunk": "// File: my_project/DateUtilCustom.java\n* @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {",
+        "score": 0.7114650011062622
+      },
+      {
         "chunk": "// File: my_project/DateUtilCustom.java\nDayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";",
         "score": 0.8232247829437256
       },
@@ -22,20 +30,16 @@
     "question": "Come calcolare la media battuta con 25 valide su 80 turni?",
     "contexts": [
       {
+        "chunk": "// File: my_project/Ventunoclassi.java\nCalcolatoreStatisticheBaseball {\n    /**\n     * Calcola la media battuta di un giocatore\n     * @param hits Numero di valide\n     * @param atBats Numero di turni di battuta\n     * @return Media battuta formattata\n     */",
+        "score": 0.7450807094573975
+      },
+      {
         "chunk": "// File: my_project/Ventunoclassi.java\n* @return Media battuta formattata\n     */\n    public static String calcolaMediaBattuta(int hits, int atBats) {\n        return String.format(\"%.3f\", (double)hits / atBats);\n    }\n    /**\n     * Determina il valore ERA di un lanciatore",
         "score": 0.9151894450187683
       },
       {
         "chunk": "// File: my_project/Ventunoclassi.java\nreturn String.format(\"%.2f\", (earnedRuns * 9) / innings);\n    }",
         "score": 0.9925885796546936
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\nreturn \"Tiro da tre con buon margine\";\n        }\n    }\n    /**\n     * Analizza le statistiche di una squadra in una partita.\n     * \n     * @param puntiSegnati Punti segnati dalla squadra\n     * @param tiriTentati Tiri tentati totali",
-        "score": 1.0032737255096436
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\ndouble percentualeRealizzazione = (double) puntiSegnati / (tiriTentati * 2) * 100;\n        int rimbalziTotali = rimbalziOffensivi + rimbalziDifensivi;\n        \n        StringBuilder report = new StringBuilder();",
-        "score": 1.0236644744873047
       }
     ]
   },
@@ -46,22 +50,6 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Determina il valore ERA di un lanciatore\n     * @param earnedRuns Punti subiti\n     * @param innings Inning lanciati\n     * @return ERA formattato\n     */\n    public static String calcolaERA(int earnedRuns, double innings) {",
         "score": 0.977262556552887
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn String.format(\"%.2f\", (earnedRuns * 9) / innings);\n    }",
-        "score": 1.0760449171066284
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n* @param pallePerse Palle perse\n     * @param tiriSbagliati Tiri sbagliati\n     * @return Il rating di efficienza del giocatore\n     */\n    public static double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist,",
-        "score": 1.1070106029510498
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n} else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";",
-        "score": 1.1087768077850342
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Media battuta formattata\n     */\n    public static String calcolaMediaBattuta(int hits, int atBats) {\n        return String.format(\"%.3f\", (double)hits / atBats);\n    }\n    /**\n     * Determina il valore ERA di un lanciatore",
-        "score": 1.1502517461776733
       }
     ]
   },
@@ -69,6 +57,14 @@
     "id": "Q4",
     "question": "Come validare una password 'Secret123!'?",
     "contexts": [
+      {
+        "chunk": "// File: my_project/Ventunoclassi.java\n* @return true se la password è valida\n     */\n    public static boolean validaPassword(String password) {\n        return password.matches(\"^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[@$!%*?&])[A-Za-z\\\\d@$!%*?&]{8,}$\");\n    }",
+        "score": 0.7709749937057495
+      },
+      {
+        "chunk": "// File: my_project/Ventunoclassi.java\nGestionePassword {\n    private static final String CARATTERI = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*\";\n    /**\n     * Genera una password casuale sicura\n     * @param lunghezza Lunghezza della password",
+        "score": 0.797258734703064
+      },
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n}\n        return sb.toString();\n    }\n    /**\n     * Verifica la complessità della password\n     * @param password Password da verificare\n     * @return true se la password è valida\n     */",
         "score": 0.8065935373306274
@@ -88,20 +84,12 @@
     "question": "Cosa restituisce invertiStringaMantenendoMaiuscole('AbCde')?",
     "contexts": [
       {
+        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Stringa invertita\n     */\n    public static String invertiStringaMantenendoMaiuscole(String input) {\n        char[] chars = input.toCharArray();\n        int i = 0;\n        int j = chars.length - 1;\n        \n        while (i < j) {",
+        "score": 0.7861793637275696
+      },
+      {
         "chunk": "// File: my_project/Ventunoclassi.java\nreturn testo.split(\"\\\\s+\").length;\n    }\n    /**\n     * Inverte una stringa mantenendo la posizione delle maiuscole\n     * @param input Stringa originale\n     * @return Stringa invertita\n     */",
         "score": 0.8941487073898315
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nif(Character.isLetter(c)) {\n                char base = Character.isLowerCase(c) ? 'a' : 'A';\n                c = (char)(((c - base + shift) % 26) + base);\n            }\n            risultato.append(c);\n        }",
-        "score": 1.0672651529312134
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn String.format(\"%.2f\", (earnedRuns * 9) / innings);\n    }",
-        "score": 1.0763933658599854
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @param livelloMin Livello minimo\n     * @return Array di indici degli articoli da riordinare\n     */\n    public static int[] trovaDaRiordinare(int[] quantita, int livelloMin) {\n        return java.util.stream.IntStream.range(0, quantita.length)",
-        "score": 1.078825831413269
       }
     ]
   },
@@ -109,6 +97,10 @@
     "id": "Q6",
     "question": "Come convertire 10km in miglia?",
     "contexts": [
+      {
+        "chunk": "// File: my_project/Ventunoclassi.java\nConvertitoreUnita {\n    /**\n     * Converti chilometri in miglia\n     * @param km Valore in chilometri\n     * @return Valore in miglia\n     */\n    public static double kmToMiglia(double km) {\n        return km * 0.621371;\n    }\n    /**",
+        "score": 0.6792304515838623
+      },
       {
         "chunk": "// File: my_project/DateUtilCustom.java\nreturn TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.",
         "score": 0.9705565571784973
@@ -120,38 +112,13 @@
       {
         "chunk": "// File: my_project/DateUtilCustom.java\nreturn TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n    /**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.",
         "score": 0.9945480227470398
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn km * 0.621371;\n    }\n    /**\n     * Converti Celsius in Fahrenheit\n     * @param celsius Temperatura in Celsius\n     * @return Temperatura in Fahrenheit\n     */\n    public static double celsiusToFahrenheit(double celsius) {",
-        "score": 1.0230200290679932
       }
     ]
   },
   {
     "id": "Q7",
     "question": "Quale BMI risulta da 70kg e 1.75m?",
-    "contexts": [
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nCalcolatoreBMI {\n    /**\n     * Calcola l'indice di massa corporea\n     * @param peso Peso in kg\n     * @param altezza Altezza in metri\n     * @return Valore BMI\n     */\n    public static double calcolaBMI(double peso, double altezza) {",
-        "score": 1.0010044574737549
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n*/\n    public static String getCategoriaBMI(double bmi) {\n        if(bmi < 18.5) return \"Sottopeso\";\n        else if(bmi < 25) return \"Normale\";\n        else if(bmi < 30) return \"Sovrappeso\";\n        else return \"Obeso\";\n    }",
-        "score": 1.1248180866241455
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn peso / (altezza * altezza);\n    }\n    /**\n     * Restituisce la categoria del BMI\n     * @param bmi Valore BMI calcolato\n     * @return Categoria di peso\n     */\n    public static String getCategoriaBMI(double bmi) {",
-        "score": 1.1299152374267578
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\ndouble valutazioneCasa = squadraCasa[0] * 0.4 + squadraCasa[1] * 0.3 + squadraCasa[2] * 0.3;\n        double valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;",
-        "score": 1.2978410720825195
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n} else if (valutazioneOspite > valutazioneCasa) {\n            return String.format(\"Vittoria ospite prevista con margine di %.1f punti\", margine);\n        } else {\n            return \"Partita equilibrata, impossibile fare previsioni\";\n        }",
-        "score": 1.3062636852264404
-      }
-    ]
+    "contexts": []
   },
   {
     "id": "Q8",
@@ -160,22 +127,6 @@
       {
         "chunk": "// File: my_project/BasketballStats.java\n} else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";",
         "score": 0.985231339931488
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\nreturn \"Partita in equilibrio, momentum neutro\";\n        } else {\n            return \"Leggero momentum a favore della squadra \" + \n                   (sommaCasa > sommaOspite ? \"di casa\" : \"ospite\");\n        }\n    }\n}",
-        "score": 1.0543544292449951
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n* @return Descrizione del momentum della partita\n     */\n    public static String calcolaMomentum(int[] ultimiPuntiCasa, int[] ultimiPuntiOspite) {\n        int sommaCasa = Arrays.stream(ultimiPuntiCasa).sum();",
-        "score": 1.0985499620437622
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\ncase WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";",
-        "score": 1.1716591119766235
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n}\n    }\n    /**\n     * Calcola il \"momentum\" della partita basato sugli ultimi eventi.\n     * \n     * @param ultimiPuntiCasa Ultimi punti segnati dalla squadra di casa\n     * @param ultimiPuntiOspite Ultimi punti segnati dalla squadra ospite",
-        "score": 1.1817970275878906
       }
     ]
   },
@@ -183,6 +134,10 @@
     "id": "Q9",
     "question": "Come cifrare 'HELLO' con Caesar shift 3?",
     "contexts": [
+      {
+        "chunk": "// File: my_project/Ventunoclassi.java\nStrumentiCrittografia {\n    /**\n     * Cifratura Caesar\n     * @param testo Testo originale\n     * @param shift Spostamento\n     * @return Testo cifrato\n     */\n    public static String cifraCaesar(String testo, int shift) {",
+        "score": 0.7583500742912292
+      },
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n}\n            risultato.append(c);\n        }\n        return risultato.toString();\n    }\n    /**\n     * Decifratura Caesar\n     * @param testo Testo cifrato\n     * @param shift Spostamento originale\n     * @return Testo decifrato\n     */",
         "score": 0.819156289100647
@@ -194,38 +149,13 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n* @return Testo decifrato\n     */\n    public static String decifraCaesar(String testo, int shift) {\n        return cifraCaesar(testo, 26 - (shift % 26));\n    }",
         "score": 0.8819065093994141
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nif(Character.isLetter(c)) {\n                char base = Character.isLowerCase(c) ? 'a' : 'A';\n                c = (char)(((c - base + shift) % 26) + base);\n            }\n            risultato.append(c);\n        }",
-        "score": 1.0299816131591797
       }
     ]
   },
   {
     "id": "Q10",
     "question": "Quale temperatura a Roma (41.9°) a luglio?",
-    "contexts": [
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn km * 0.621371;\n    }\n    /**\n     * Converti Celsius in Fahrenheit\n     * @param celsius Temperatura in Celsius\n     * @return Temperatura in Fahrenheit\n     */\n    public static double celsiusToFahrenheit(double celsius) {",
-        "score": 1.1438101530075073
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\npublic static double celsiusToFahrenheit(double celsius) {\n        return (celsius * 9/5) + 32;\n    }",
-        "score": 1.1639549732208252
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @param latitudine Coordinata latitudine\n     * @param mese Mese dell'anno (1-12)\n     * @return Temperatura simulata\n     */\n    public static double simulaTemperatura(double latitudine, int mese) {",
-        "score": 1.2151384353637695
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Condizione meteo\n     */\n    public static String generaPrevisione() {\n        return CONDIZIONI[rand.nextInt(CONDIZIONI.length)];\n    }\n    /**\n     * Simula la temperatura per una regione\n     * @param latitudine Coordinata latitudine",
-        "score": 1.2928898334503174
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nConvertitoreUnita {\n    /**\n     * Converti chilometri in miglia\n     * @param km Valore in chilometri\n     * @return Valore in miglia\n     */\n    public static double kmToMiglia(double km) {\n        return km * 0.621371;\n    }\n    /**",
-        "score": 1.3088504076004028
-      }
-    ]
+    "contexts": []
   },
   {
     "id": "Q11",
@@ -238,18 +168,6 @@
       {
         "chunk": "// File: my_project/GiorniMagici.java\nfor (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.",
         "score": 0.9603930711746216
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\n* @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {",
-        "score": 1.018136978149414
-      },
-      {
-        "chunk": "// File: my_project/GiorniMagici.java\n*/\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {",
-        "score": 1.0202624797821045
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\nDayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";",
-        "score": 1.0313440561294556
       }
     ]
   },
@@ -284,6 +202,14 @@
     "question": "Cosa restituisce getMessaggioMagico(LocalDate.of(2024,12,25))?",
     "contexts": [
       {
+        "chunk": "// File: my_project/DateUtilCustom.java\n* @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {",
+        "score": 0.629297137260437
+      },
+      {
+        "chunk": "// File: my_project/GiorniMagici.java\n* @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}",
+        "score": 0.7766247391700745
+      },
+      {
         "chunk": "// File: my_project/DateUtilCustom.java\n*\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica",
         "score": 0.8236795663833618
       },
@@ -301,6 +227,10 @@
     "id": "Q14",
     "question": "Come calcolare VAN al 5% per flussi [100,200,300]?",
     "contexts": [
+      {
+        "chunk": "// File: my_project/Ventunoclassi.java\n* @param tasso Tasso di sconto\n     * @param flussi Flussi di cassa\n     * @return Valore VAN\n     */\n    public static double calcolaVAN(double tasso, double[] flussi) {\n        double van = 0;\n        for(int i = 0; i < flussi.length; i++) {",
+        "score": 0.6646521687507629
+      },
       {
         "chunk": "// File: my_project/Ventunoclassi.java\nfor(int i = 0; i < flussi.length; i++) {\n            van += flussi[i] / Math.pow(1 + tasso, i);\n        }\n        return van;\n    }",
         "score": 0.8031836152076721
@@ -324,20 +254,12 @@
     "question": "Quale complessità ciclomatica per codice con 3 if e 2 while?",
     "contexts": [
       {
+        "chunk": "// File: my_project/Ventunoclassi.java\nreturn codice.split(\"\\n\").length;\n    }\n    /**\n     * Calcola la complessità ciclomatica approssimativa\n     * @param codice Codice sorgente\n     * @return Numero di decisioni + 1\n     */",
+        "score": 0.7877719402313232
+      },
+      {
         "chunk": "// File: my_project/Ventunoclassi.java\n* @return Numero di decisioni + 1\n     */\n    public static int calcolaComplessitaCiclomatica(String codice) {\n        int count = 1;\n        String[] keywords = {\"if\", \"while\", \"for\", \"case\", \"catch\", \"&&\", \"||\"};",
         "score": 0.8978992700576782
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Durata stimata\n     */\n    public static double stimaDurataPERT(double ottimistica, double probabile, double pessimistica) {\n        return (ottimistica + 4 * probabile + pessimistica) / 6;\n    }\n    /**\n     * Calcola il percorso critico",
-        "score": 1.1095026731491089
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nfor(int i = 0; i < flussi.length; i++) {\n            van += flussi[i] / Math.pow(1 + tasso, i);\n        }\n        return van;\n    }",
-        "score": 1.1100822687149048
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\ncase WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";",
-        "score": 1.1164002418518066
       }
     ]
   },
@@ -346,20 +268,12 @@
     "question": "Cosa restituisce modelloPredaPredatore(100,50,0.1,0.05)?",
     "contexts": [
       {
+        "chunk": "// File: my_project/Ventunoclassi.java\n* @param beta Parametro beta\n     * @return Array con nuove popolazioni [nuovePrede, nuoviPredatori]\n     */\n    public static double[] modelloPredaPredatore(double x, double y, double alpha, double beta) {",
+        "score": 0.7822079658508301
+      },
+      {
         "chunk": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Modello preda-predatore (equazioni Lotka-Volterra)\n     * @param x Popolazione prede\n     * @param y Popolazione predatori\n     * @param alpha Parametro alpha\n     * @param beta Parametro beta",
         "score": 0.9426248073577881
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nint mesi = anni * 12;\n        return (importoPrestito * tassoMensile) / (1 - Math.pow(1 + tassoMensile, -mesi));\n    }",
-        "score": 1.0427310466766357
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\ntotale += quantita[i] * prezzi[i];\n        }\n        return totale;\n    }\n    /**\n     * Trova gli articoli sotto il livello minimo\n     * @param quantita Quantità corrente\n     * @param livelloMin Livello minimo",
-        "score": 1.070162296295166
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n} else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";",
-        "score": 1.0864636898040771
       }
     ]
   },
@@ -382,10 +296,6 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n}\n        return sb.toString();\n    }\n    /**\n     * Verifica la complessità della password\n     * @param password Password da verificare\n     * @return true se la password è valida\n     */",
         "score": 0.956161379814148
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nfor(String keyword : keywords) {\n            count += codice.split(keyword).length - 1;\n        }\n        return count;\n    }",
-        "score": 1.0955685377120972
       }
     ]
   },
@@ -396,22 +306,6 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\nStrumentiGrafica {\n    /**\n     * Converte un'immagine in scala di grigi\n     * @param rgb Valore RGB originale\n     * @return Valore RGB in scala di grigi\n     */\n    public static int convertiGrigio(int rgb) {\n        int r = (rgb >> 16) & 0xFF;",
         "score": 0.8458181619644165
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Stringa invertita\n     */\n    public static String invertiStringaMantenendoMaiuscole(String input) {\n        char[] chars = input.toCharArray();\n        int i = 0;\n        int j = chars.length - 1;\n        \n        while (i < j) {",
-        "score": 1.1188938617706299
-      },
-      {
-        "chunk": "// File: my_project/GiorniMagici.java\nfor (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.",
-        "score": 1.1434019804000854
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nint r = (rgb >> 16) & 0xFF;\n        int g = (rgb >> 8) & 0xFF;\n        int b = rgb & 0xFF;\n        int media = (r + g + b) / 3;\n        return (media << 16) | (media << 8) | media;\n    }\n    /**\n     * Regola la luminosità di un colore",
-        "score": 1.1500704288482666
-      },
-      {
-        "chunk": "// File: my_project/GiorniMagici.java\n*/\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {",
-        "score": 1.1536705493927002
       }
     ]
   },
@@ -426,18 +320,6 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\nCalcolatriceScientifica {\n    /**\n     * Calcola il logaritmo in base personalizzata\n     * @param numero Valore positivo\n     * @param base Base del logaritmo\n     * @return Risultato del logaritmo\n     */",
         "score": 0.9867613315582275
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\ndouble valutazioneCasa = squadraCasa[0] * 0.4 + squadraCasa[1] * 0.3 + squadraCasa[2] * 0.3;\n        double valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;",
-        "score": 1.0663425922393799
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\nreturn \"Tiro da tre con buon margine\";\n        }\n    }\n    /**\n     * Analizza le statistiche di una squadra in una partita.\n     * \n     * @param puntiSegnati Punti segnati dalla squadra\n     * @param tiriTentati Tiri tentati totali",
-        "score": 1.0827488899230957
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\nreport.append(\"- Ratio Rimbalzi Off/Dif: \").append(String.format(\"%.2f\", (double)rimbalziOffensivi/rimbalziDifensivi));\n        \n        return report.toString();\n    }\n    /**",
-        "score": 1.1049106121063232
       }
     ]
   },
@@ -448,22 +330,6 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n*/\n    public static String getCategoriaBMI(double bmi) {\n        if(bmi < 18.5) return \"Sottopeso\";\n        else if(bmi < 25) return \"Normale\";\n        else if(bmi < 30) return \"Sovrappeso\";\n        else return \"Obeso\";\n    }",
         "score": 0.8987934589385986
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn peso / (altezza * altezza);\n    }\n    /**\n     * Restituisce la categoria del BMI\n     * @param bmi Valore BMI calcolato\n     * @return Categoria di peso\n     */\n    public static String getCategoriaBMI(double bmi) {",
-        "score": 1.0315369367599487
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nCalcolatoreBMI {\n    /**\n     * Calcola l'indice di massa corporea\n     * @param peso Peso in kg\n     * @param altezza Altezza in metri\n     * @return Valore BMI\n     */\n    public static double calcolaBMI(double peso, double altezza) {",
-        "score": 1.1424535512924194
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n*/\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5) {\n            return \"Tiro facile sotto canestro\";\n        } else if (distanzaCanestro < 6.75 && pressioneDifensiva < 7) {",
-        "score": 1.287536859512329
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\nreturn \"Buon tiro da due punti\";\n        } else if (distanzaCanestro >= 6.75 && pressioneDifensiva > 8) {\n            return \"Tiro da tre difficile sotto pressione\";\n        } else {\n            return \"Tiro da tre con buon margine\";\n        }",
-        "score": 1.3105525970458984
       }
     ]
   },
@@ -486,10 +352,6 @@
       {
         "chunk": "// File: my_project/DateUtilCustom.java\n}\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {",
         "score": 0.9959095120429993
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\nreturn date.before(currentDate);\n    }\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.\n     * @param dataNascita\n     * @param nome\n     * @return messaggio giorni che mancano al tuo compleanno\n     */",
-        "score": 1.0312504768371582
       }
     ]
   },
@@ -512,10 +374,6 @@
       {
         "chunk": "// File: my_project/DateUtilCustom.java\nreturn sdf.parse(dateString);\n    }\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */",
         "score": 0.9807512164115906
-      },
-      {
-        "chunk": "// File: my_project/GiorniMagici.java\nint ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno",
-        "score": 1.0020769834518433
       }
     ]
   },
@@ -530,18 +388,6 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n* @return ROI percentuale\n     */\n    public static double calcolaROI(double guadagno, double costo) {\n        return ((guadagno - costo) / costo) * 100;\n    }\n    /**\n     * Calcola il Valore Attuale Netto (VAN)\n     * @param tasso Tasso di sconto",
         "score": 0.8514874577522278
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n*/\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5) {\n            return \"Tiro facile sotto canestro\";\n        } else if (distanzaCanestro < 6.75 && pressioneDifensiva < 7) {",
-        "score": 1.2151645421981812
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nGestioneInventario {\n    /**\n     * Calcola il valore totale dell'inventario\n     * @param quantita Array delle quantità\n     * @param prezzi Array dei prezzi\n     * @return Valore totale\n     */",
-        "score": 1.2244130373001099
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nGestioneFinanzePersonali {\n    /**\n     * Calcola il risparmio mensile in base agli obiettivi\n     * @param reddito Reddito mensile\n     * @param spese Spese fisse\n     * @param obiettivo Obiettivo annuale\n     * @return Risparmio necessario mensilmente",
-        "score": 1.2285618782043457
       }
     ]
   },
@@ -582,18 +428,6 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\n* @return Popolazione finale\n     */\n    public static int simulaCrescitaPopolazione(int popolazioneIniziale, double tassoCrescita, int anni) {\n        return (int) (popolazioneIniziale * Math.pow(1 + tassoCrescita, anni));\n    }\n    /**",
         "score": 0.8612122535705566
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\ndouble percentualeRealizzazione = (double) puntiSegnati / (tiriTentati * 2) * 100;\n        int rimbalziTotali = rimbalziOffensivi + rimbalziDifensivi;\n        \n        StringBuilder report = new StringBuilder();",
-        "score": 1.1464436054229736
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Durata stimata\n     */\n    public static double stimaDurataPERT(double ottimistica, double probabile, double pessimistica) {\n        return (ottimistica + 4 * probabile + pessimistica) / 6;\n    }\n    /**\n     * Calcola il percorso critico",
-        "score": 1.1619503498077393
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nint r = (int)(((rgb >> 16) & 0xFF) * percentuale);\n        int g = (int)(((rgb >> 8) & 0xFF) * percentuale);\n        int b = (int)((rgb & 0xFF) * percentuale);\n        return (Math.min(r, 255) << 16) | (Math.min(g, 255) << 8) | Math.min(b, 255);",
-        "score": 1.1946611404418945
       }
     ]
   },
@@ -601,6 +435,10 @@
     "id": "Q26",
     "question": "Cosa restituisce analisiStatisticheSquadra(85, 70, 12, 28)?",
     "contexts": [
+      {
+        "chunk": "// File: my_project/BasketballStats.java\n* @return Un report dettagliato delle prestazioni\n     */\n    public static String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, \n                                                  int rimbalziOffensivi, int rimbalziDifensivi) {",
+        "score": 0.7853186130523682
+      },
       {
         "chunk": "// File: my_project/BasketballStats.java\ndouble valutazioneCasa = squadraCasa[0] * 0.4 + squadraCasa[1] * 0.3 + squadraCasa[2] * 0.3;\n        double valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;",
         "score": 0.8847116231918335
@@ -626,50 +464,13 @@
       {
         "chunk": "// File: my_project/Ventunoclassi.java\nStrumentiCrittografia {\n    /**\n     * Cifratura Caesar\n     * @param testo Testo originale\n     * @param shift Spostamento\n     * @return Testo cifrato\n     */\n    public static String cifraCaesar(String testo, int shift) {",
         "score": 0.9903382658958435
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Testo decifrato\n     */\n    public static String decifraCaesar(String testo, int shift) {\n        return cifraCaesar(testo, 26 - (shift % 26));\n    }",
-        "score": 1.0260930061340332
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n}\n            risultato.append(c);\n        }\n        return risultato.toString();\n    }\n    /**\n     * Decifratura Caesar\n     * @param testo Testo cifrato\n     * @param shift Spostamento originale\n     * @return Testo decifrato\n     */",
-        "score": 1.0292088985443115
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\npublic static String cifraCaesar(String testo, int shift) {\n        StringBuilder risultato = new StringBuilder();\n        for(char c : testo.toCharArray()) {\n            if(Character.isLetter(c)) {",
-        "score": 1.0773067474365234
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nfor(String keyword : keywords) {\n            count += codice.split(keyword).length - 1;\n        }\n        return count;\n    }",
-        "score": 1.2210540771484375
       }
     ]
   },
   {
     "id": "Q28",
     "question": "Quale percussocritico per attività [5,8,3]?",
-    "contexts": [
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Calcola il percorso critico\n     * @param attivita Lista di attività con durate\n     * @return Durata totale del percorso critico\n     */\n    public static double calcolaPercorsoCritico(double[] attivita) {",
-        "score": 1.0821006298065186
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Durata stimata\n     */\n    public static double stimaDurataPERT(double ottimistica, double probabile, double pessimistica) {\n        return (ottimistica + 4 * probabile + pessimistica) / 6;\n    }\n    /**\n     * Calcola il percorso critico",
-        "score": 1.1785579919815063
-      },
-      {
-        "chunk": "// File: my_project/BasketballStats.java\n*/\n    public static String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5) {\n            return \"Tiro facile sotto canestro\";\n        } else if (distanzaCanestro < 6.75 && pressioneDifensiva < 7) {",
-        "score": 1.2412784099578857
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nGestoreProgetti {\n    /**\n     * Calcola la durata del progetto usando il metodo PERT\n     * @param ottimistica Tempo ottimistico\n     * @param probabile Tempo probabile\n     * @param pessimistica Tempo pessimistico\n     * @return Durata stimata\n     */",
-        "score": 1.274054765701294
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nGestoreReteNeurale {\n    /**\n     * Funzione di attivazione ReLU\n     * @param x Valore di input\n     * @return Valore di output\n     */\n    public static double relu(double x) {\n        return Math.max(0, x);\n    }\n    /**",
-        "score": 1.279682993888855
-      }
-    ]
+    "contexts": []
   },
   {
     "id": "Q29",
@@ -678,49 +479,12 @@
       {
         "chunk": "// File: my_project/DateUtilCustom.java\n*/\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n    /**",
         "score": 0.8693401217460632
-      },
-      {
-        "chunk": "// File: my_project/GiorniMagici.java\nint ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno",
-        "score": 1.0849220752716064
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\nreturn date.before(currentDate);\n    }\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.\n     * @param dataNascita\n     * @param nome\n     * @return messaggio giorni che mancano al tuo compleanno\n     */",
-        "score": 1.0877074003219604
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\ncase SATURDAY: return \"Il giorno perfetto per scoprire segreti nascosti.\";\n            case SUNDAY: return \"Riposa e rigenera il tuo potere magico.\";\n            default: return \"Il giorno è avvolto nel mistero...\";\n        }\n    }\n}",
-        "score": 1.1348048448562622
-      },
-      {
-        "chunk": "// File: my_project/DateUtilCustom.java\ncase WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";",
-        "score": 1.143059253692627
       }
     ]
   },
   {
     "id": "Q30",
     "question": "Come calcolare radice 5a di 3125?",
-    "contexts": [
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* Calcola la radice n-esima\n     * @param numero Radicando\n     * @param indice Indice della radice\n     * @return Risultato\n     */\n    public static double radiceN(double numero, int indice) {\n        return Math.pow(numero, 1.0 / indice);\n    }",
-        "score": 1.0433261394500732
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn 20 + 10 * Math.sin(Math.toRadians(mese * 30)) + latitudine * 0.1;\n    }",
-        "score": 1.0592734813690186
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\n* @return Risultato del logaritmo\n     */\n    public static double logBase(double numero, double base) {\n        return Math.log(numero) / Math.log(base);\n    }\n    /**\n     * Calcola la radice n-esima\n     * @param numero Radicando",
-        "score": 1.0760043859481812
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nCalcolatriceScientifica {\n    /**\n     * Calcola il logaritmo in base personalizzata\n     * @param numero Valore positivo\n     * @param base Base del logaritmo\n     * @return Risultato del logaritmo\n     */",
-        "score": 1.0999168157577515
-      },
-      {
-        "chunk": "// File: my_project/Ventunoclassi.java\nreturn codice.split(\"\\n\").length;\n    }\n    /**\n     * Calcola la complessità ciclomatica approssimativa\n     * @param codice Codice sorgente\n     * @return Numero di decisioni + 1\n     */",
-        "score": 1.1422195434570312
-      }
-    ]
+    "contexts": []
   }
 ]

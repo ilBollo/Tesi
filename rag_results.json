@@ -1,0 +1,442 @@
+[
+  {
+    "id": "Q1",
+    "question": "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico()?",
+    "answer": "```java\npublic static String segnaleWow (LocalDate date){\n    String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n    return wow;\n}\n\n// File: My_project/DateUtilCustom.java\npublic static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n    DayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n    switch(giornoSettimana) {\n        case MONDAY: return \"La magia inizia nel silenzio...\";\n        case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";\n        case WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n        case THURSDAY: return \"L'energia magica è potente e chiara.\";\n        case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";\n        default: throw new IllegalArgumentException(\"Giorno della settimana non valido\");\n    }\n}\n\n// File: My_project/GiorniMagici.java\npublic static boolean IsDataMagica(int giorno, int mese, int anno) {\n    LocalDate data = LocalDate.of(anno, mese, giorno);\n    DayOfWeek giornoSettimana = data.getDayOfWeek();\n    switch(giornoSettimana) {\n        case MONDAY:\n        case TUESDAY:\n        case WEDNESDAY:\n        case THURSDAY:\n        case FRIDAY:\n            return true;\n        default:\n            return false;\n    }\n}\n\n// Chiamata al metodo segnaleWow con una data di 10 gennaio 2025\nSystem.out.println(GiorniMagici.segnaleWow(LocalDate.of(2025, 1, 10)));\n```\n\nIl metodo `segnaleWow(LocalDate.of(2025, 1, 10))` utilizza la funzione `getMessaggioMagico()` del file `DateUtilCustom.java`. Questa funzione restituisce il messaggio magico associato al giorno della settimana di una data specificata (in questo caso, lunedì).\n\nDunque, se si chiama `GiorniMagici.segnaleWow(LocalDate.of(2025, 1, 10))`, il metodo restituirà:\n```\nil tuo segnale Wow è :Il velo tra i mondi è sottile oggi.\n```",
+    "sources": [
+      {
+        "content": "// File: my_project/GiorniMagici.java\n* @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n* @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\nDayOfWeek giornoSettimana = datamagica.getDayOfWeek();\n        switch(giornoSettimana) {\n            case MONDAY: return \"La magia inizia nel silenzio...\";\n            case TUESDAY: return \"I sussurri degli antichi si fanno sentire.\";"
+      },
+      {
+        "content": "// File: my_project/GiorniMagici.java\n* @param mese Il mese della data.\n     * @param anno L'anno della data.\n     * @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\ncase WEDNESDAY: return \"Il velo tra i mondi è sottile oggi.\";\n            case THURSDAY: return \"L'energia magica è potente e chiara.\";\n            case FRIDAY: return \"Attenzione agli incantesimi del crepuscolo.\";"
+      }
+    ]
+  },
+  {
+    "id": "Q2",
+    "question": "Come calcolare la media battuta con 25 valide su 80 turni?",
+    "answer": "Per calcolare la media battuta con 25 valide su 80 turni, puoi utilizzare il metodo `calcolaMediaBattuta` della classe `CalcolatoreStatisticheBaseball`. Ecco come lo faresti:\n\n```java\nint hits = 25; // Numero di valide\nint atBats = 80; // Numero di turni di battuta\n\nString mediaBattuta = CalcolatoreStatisticheBaseball.calcolaMediaBattuta(hits, atBats);\nSystem.out.println(\"La media battuta è: \" + mediaBattuta);\n```\n\nQuesto codice crea un'istanza di `CalcolatoreStatisticheBaseball` e utilizza il metodo statico `calcolaMediaBattuta` per calcolare la media battuta con 25 valide su 80 turni. Il risultato viene formattato come una stringa con tre decimali e viene stampato a video.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nCalcolatoreStatisticheBaseball {\n    /**\n     * Calcola la media battuta di un giocatore\n     * @param hits Numero di valide\n     * @param atBats Numero di turni di battuta\n     * @return Media battuta formattata\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return Media battuta formattata\n     */\n    public static String calcolaMediaBattuta(int hits, int atBats) {\n        return String.format(\"%.3f\", (double)hits / atBats);\n    }\n    /**\n     * Determina il valore ERA di un lanciatore"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nreturn String.format(\"%.2f\", (earnedRuns * 9) / innings);\n    }"
+      }
+    ]
+  },
+  {
+    "id": "Q3",
+    "question": "Quale ERA risulta da 5 punti subiti in 7 inning?",
+    "answer": "Per calcolare l'ERA (Earned Run Average), doBatting_Avg = (R / IP) * 9.0, dove R è il numero di run subiti e IP è il numero di pitch inflitti.\n\nIn questo caso, se un lanciatore ha subito 5 run in 7 inning, l'ERA would be:\nERA = (5 runs / 7 innings) * 9.0\nERA = 3.57\n\nQuindi, il risultato è 3.57 ERAs.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Determina il valore ERA di un lanciatore\n     * @param earnedRuns Punti subiti\n     * @param innings Inning lanciati\n     * @return ERA formattato\n     */\n    public static String calcolaERA(int earnedRuns, double innings) {"
+      }
+    ]
+  },
+  {
+    "id": "Q4",
+    "question": "Come validare una password 'Secret123!'?",
+    "answer": "Per verificare se la password \"Secret123!\" è valida, puoi utilizzare il metodo `validaPassword` della classe `Ventunoclassi`. Ecco come fare:\n\n```java\npublic static void main(String[] args) {\n    String password = \"Secret123!\";\n    boolean isValid = Ventunoclassi.validaPassword(password);\n    System.out.println(\"La password è valida: \" + IsValid);\n}\n```\n\nQuesto codice crea una variabile `password` con il valore \"Secret123!\", poi utilizza il metodo `validaPassword` della classe `Ventunoclassi` per controllare se la password è valida. Infine, stampa il risultato del controllo.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return true se la password è valida\n     */\n    public static boolean validaPassword(String password) {\n        return password.matches(\"^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[@$!%*?&])[A-Za-z\\\\d@$!%*?&]{8,}$\");\n    }"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nGestionePassword {\n    private static final String CARATTERI = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*\";\n    /**\n     * Genera una password casuale sicura\n     * @param lunghezza Lunghezza della password"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n}\n        return sb.toString();\n    }\n    /**\n     * Verifica la complessità della password\n     * @param password Password da verificare\n     * @return true se la password è valida\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @param lunghezza Lunghezza della password\n     * @return Password generata\n     */\n    public static String generaPassword(int lunghezza) {\n        Random random = new Random();\n        StringBuilder sb = new StringBuilder();"
+      },
+      {
+        "content": "// File: my_project/GiorniMagici.java\n* @param numero Il numero da verificare.\n     * @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n    /**"
+      }
+    ]
+  },
+  {
+    "id": "Q5",
+    "question": "Cosa restituisce invertiStringaMantenendoMaiuscole('AbCde')?",
+    "answer": "Cosa restituisce l'esecuzione del metodo `invertiStringaMantenendoMaiuscole` con l'input 'AbCde'?\n\n```java\npublic static String invertiStringaMantenendoMaiuscole(String input) {\n    char[] chars = input.toCharArray();\n    int i = 0;\n    int j = chars.length - 1;\n    \n    while (i < j) {\n        // Swap characters while keeping the case of letters intact\n        if (Character.isUpperCase(chars[i])) {\n            char temp = Character.toLowerCase(chars[j]);\n            chars[j] = Character.toUpperCase(chars[i]);\n            chars[i] = temp;\n        } else if (Character.isLowerCase(chars[i])) {\n            char temp = Character.toUpperCase(chars[j]);\n            chars[j] = Character.toLowerCase(chars[i]);\n            chars[i] = temp;\n        } else {\n            // Non-alphabetic characters are not swapped, but moved to the other end of the string\n            if (Character.isUpperCase(chars[j])) {\n                chars[i] = Character.toLowerCase(chars[j]);\n            } else if (Character.isLowerCase(chars[j])) {\n                chars[i] = Character.toUpperCase(chars[j]);\n            }\n            j--;\n        }\n        i++;\n        j--;\n    }\n\n    return new String(chars);\n}\n\n// Test the method with 'AbCde'\nString result = invertiStringaMantenendoMaiuscole('AbCde');\nSystem.out.println(result); // Output: \"eDCbA\"\n```\n\nQuando si chiama `invertiStringaMantenendoMaiuscole('AbCde')`, il metodo restituisce la stringa invertita, 'eDCbA', mantenendo la posizione delle maiuscole.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return Stringa invertita\n     */\n    public static String invertiStringaMantenendoMaiuscole(String input) {\n        char[] chars = input.toCharArray();\n        int i = 0;\n        int j = chars.length - 1;\n        \n        while (i < j) {"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nreturn testo.split(\"\\\\s+\").length;\n    }\n    /**\n     * Inverte una stringa mantenendo la posizione delle maiuscole\n     * @param input Stringa originale\n     * @return Stringa invertita\n     */"
+      }
+    ]
+  },
+  {
+    "id": "Q6",
+    "question": "Come convertire 10km in miglia?",
+    "answer": "Per convertire 10 km in miglia, puoi utilizzare la seguente funzione nel file `ConvertitoreUnita.java`:\n\n```java\npublic static double kmToMiglia(double km) {\n    return km * 0.621371;\n}\n```\n\nPer convertire 10 km in miglia, richiama la funzione `kmToMiglia()` con il valore 10 come parametro:\n\n```java\ndouble miglia = ConvertitoreUnita.kmToMiglia(10);\nSystem.out.println(\"10 km equivalgono a \" + miglia + \" miglia.\");\n```\n\nQuesto codice stampa \"10 km equivalgono a 6.21371 miglia.\"",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nConvertitoreUnita {\n    /**\n     * Converti chilometri in miglia\n     * @param km Valore in chilometri\n     * @return Valore in miglia\n     */\n    public static double kmToMiglia(double km) {\n        return km * 0.621371;\n    }\n    /**"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\nreturn TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere."
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nreturn 20 + 10 * Math.sin(Math.toRadians(mese * 30)) + latitudine * 0.1;\n    }"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\nreturn TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n    /**\n     * Calcola la differenza in ore tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine."
+      }
+    ]
+  },
+  {
+    "id": "Q7",
+    "question": "Quale BMI risulta da 70kg e 1.75m?",
+    "answer": "Per calcolare il BMI (Indice di Massa Corporea) basato su un peso di 70 kg e una altezza di 1,75 m, seguire questi passaggi:\n\n1. Calcola l'indice di massa corporea:\n   - Peso in chilo = 70 kg\n   - Altezza in metri = 1.75 m\n   - BMI = Peso (kg) / (Altezza (m))^2\n   - BMI = 70 kg / (1.75 m)^2\n\n2. Esegui la divisione:\n   - BMI = 70 kg / (2,375 m^2)\n\n3. Arrotonda il risultato a due decimali:\n   - BMI = 24,69\n\nIl BMI di una persona con un peso di 70 kg e un'altezza di 1,75 m è approximately 24,69.",
+    "sources": []
+  },
+  {
+    "id": "Q8",
+    "question": "Cosa significa un momentum [12,15] vs [8,10]?",
+    "answer": "Un momentum indica la tendenza di una squadra a fare un punto o a gol. In questo caso, il momentum è fortemente a favore della squadra ospite se la somma dei punti o gol della squadra ospite supera la somma dei punti o gol della squadra casa di 10 o più.\n\nSe la differenza tra le somme dei punti o gol delle due squadre è compresa tra 5 e 10 (incluso), quindi la somma dei punti o gol della squadra casa è uguale a quella della squadra ospite, si ha un momentum neutro.\n\nIn questo caso, se la somma dei punti o gol della squadra ospite supera la somma dei punti o gol della squadra casa di 10 o più, viene restituita la stringa \"Momentum fortemente a favore della squadra ospite!\". Se la differenza tra le somma dei punti o gol delle due squadre è compresa tra 5 e 10 (incluso), quindi la somma dei punti o gol della squadra casa è uguale a quella della squadra ospite, viene restituita la stringa \"Partita in equilibrio, momentum neutro\".",
+    "sources": [
+      {
+        "content": "// File: my_project/BasketballStats.java\n} else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";"
+      }
+    ]
+  },
+  {
+    "id": "Q9",
+    "question": "Come cifrare 'HELLO' con Caesar shift 3?",
+    "answer": "Per cifrare la stringa \"HELLO\" utilizzando il metodo di cifratura Caesar con un shift di 3, segui questi passaggi:\n\n1. Converti 'H' in ASCII: 72 -> 72 + 3 = 75 ('K')\n2. Converti 'E' in ASCII: 69 -> 69 + 3 = 72 ('H')\n3. Converti 'L' in ASCII: 76 -> 76 + 3 = 79 ('O')\n4. Converti 'L' in ASCII: 76 -> 76 + 3 = 79 ('O')\n5. Converti 'O' in ASCII: 79 -> 79 + 3 = 82 ('R')\n\nIl risultato finale sarà la stringa \"KHOOR\".",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nStrumentiCrittografia {\n    /**\n     * Cifratura Caesar\n     * @param testo Testo originale\n     * @param shift Spostamento\n     * @return Testo cifrato\n     */\n    public static String cifraCaesar(String testo, int shift) {"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n}\n            risultato.append(c);\n        }\n        return risultato.toString();\n    }\n    /**\n     * Decifratura Caesar\n     * @param testo Testo cifrato\n     * @param shift Spostamento originale\n     * @return Testo decifrato\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\npublic static String cifraCaesar(String testo, int shift) {\n        StringBuilder risultato = new StringBuilder();\n        for(char c : testo.toCharArray()) {\n            if(Character.isLetter(c)) {"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return Testo decifrato\n     */\n    public static String decifraCaesar(String testo, int shift) {\n        return cifraCaesar(testo, 26 - (shift % 26));\n    }"
+      }
+    ]
+  },
+  {
+    "id": "Q10",
+    "question": "Quale temperatura a Roma (41.9°) a luglio?",
+    "answer": "La temperatura a Roma nel mese di luglio è circa 41.9°C.",
+    "sources": []
+  },
+  {
+    "id": "Q11",
+    "question": "Cosa restituisce isDataMagica(6, 5, 2030)?",
+    "answer": "La funzione `isDataMagica` controlla se una data (giorno, mese, anno) è \"magica\" in base a determinate condizioni. Per prima cosa, verifica se il numero di giorni nel mese specificato è uguale a 30. Se non lo è, la funzione restituisce false.\n\nDopo aver controllato il numero di giorni, la funzione verifica se l'anno è bisestile. Un anno è bisestile se è divisibile per 4, ma non per 100, o se è divisibile per 400. Se l'anno non è bisestile e il mese è Febbraio (mese 2), la funzione restituisce false.\n\nSe il numero di giorni è 30, l'anno è bisestile o il mese non è Febbraio, la funzione continua a verificare se il giorno è un numero di Fibonacci. La funzione `isFibonacci` controlla se un numero è un numero di Fibonacci utilizzando un algoritmo efficiente.\n\nSe il giorno è un numero di Fibonacci, la funzione restituisce true; altrimenti, restituisce false.\n\nIn questo caso, `isDataMagica(6, 5, 2030)` verifica se la data 6 maggio 2030 è magica. Poiché il mese non è Febbraio e il giorno non è un numero di Fibonacci, la funzione restituisce false.",
+    "sources": [
+      {
+        "content": "// File: my_project/GiorniMagici.java\n* @param mese Il mese della data.\n     * @param anno L'anno della data.\n     * @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {"
+      },
+      {
+        "content": "// File: my_project/GiorniMagici.java\nfor (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci."
+      }
+    ]
+  },
+  {
+    "id": "Q12",
+    "question": "Come calcolare rata mutuo 100k€ al 4% in 20 anni?",
+    "answer": "Per calcolare la rata mensile di un mutuo a 100.000 €, con un tasso d'interesse annuo del 4%, per 20 anni, si utilizza il metodo `calcolaRataMutuo` della classe `Ventunoclassi`.\n\n```java\npublic static double calcolaRataMutuo(double importoPrestito, double tassoInteresse, intanni) {\n    double tassoMensile = tassoInteresse / 1200; // Convertire il tasso annuo in mensile\n    int mesi = anni * 12;\n\n    return (importoPrestito * tassoMensile) / (1 - Math.pow(1 + tassoMensile, -mesi));\n}\n```\n\nPer calcolare la rata mensile, si passano i seguenti valori:\n- `importoPrestito = 100000` (100.000 €)\n- `tassoInteresse = 4` (4% annuo)\n- `anni = 20`\n\nUtilizzando questi valori nel metodo, si ottiene la rata mensile del mutuo:\n\n```java\ndouble rataMensile = Ventunoclassi.calcolaRataMutuo(100000, 4, 20);\nSystem.out.println(\"La rata mensile è: \" + rataMensile);\n```\n\nIl risultato sarà la rata mensile del mutuo a 100.000 € con un tasso d'interesse annuo del 4% per 20 anni.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @param anni Durata\n     * @return Rata mensile\n     */\n    public static double calcolaRataMutuo(double importoPrestito, double tassoInteresse, int anni) {\n        double tassoMensile = tassoInteresse / 1200;\n        int mesi = anni * 12;"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nreturn 20 + 10 * Math.sin(Math.toRadians(mese * 30)) + latitudine * 0.1;\n    }"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nint r = (int)(((rgb >> 16) & 0xFF) * percentuale);\n        int g = (int)(((rgb >> 8) & 0xFF) * percentuale);\n        int b = (int)((rgb & 0xFF) * percentuale);\n        return (Math.min(r, 255) << 16) | (Math.min(g, 255) << 8) | Math.min(b, 255);"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nint mesi = anni * 12;\n        return (importoPrestito * tassoMensile) / (1 - Math.pow(1 + tassoMensile, -mesi));\n    }"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Genera un piano di ammortamento\n     * @param importoPrestito Importo totale\n     * @param tassoInteresse Tasso annuo\n     * @param anni Durata\n     * @return Rata mensile\n     */"
+      }
+    ]
+  },
+  {
+    "id": "Q13",
+    "question": "Cosa restituisce getMessaggioMagico(LocalDate.of(2024,12,25))?",
+    "answer": "La funzione `getMessaggioMagico` restituisce un messaggio magico associato alla data specificata, in questo caso, la data natale del 2024.\n\n```java\npublic static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {\n    // File: My_project/DateUtilCustom.java\n    String messaggio = \"\"; // Inizializza il messaggio vuoto\n\n    if (datamagica.getDayOfMonth() == 25 && datamagica.getMonthValue() == 12) {\n        messaggio = \"Felice Natale!\";\n    } else if (DateUtilCustom.isDataMagica(datamagica)) {\n        messaggio = DateUtilCustom.generaNumeroMagico(datamagica.getDayOfMonth(), datamagica.getMonthValue(), datamagica.getYear());\n    }\n\n    return messaggio;\n}\n```\n\nNel caso del 25 dicembre 2024, la funzione verifica che sia una data natale (12 dicembre) e restituisce \"Felice Natale!\". Se non è una data natale ma è una data magica (come quella del 25 dicembre 2024), la funzione restituisce il numero magico generato da `generaNumeroMagico` basato sul giorno, mese e anno della data.\n\nAssumendo che `isDataMagica` restituisca true per la data natale del 2024 (come nel codice fornito), quindi `generaNumeroMagico` viene chiamata con i parametri 25, 12 e 2024. Il numero magico generato sarà quello associato a tale data.\n\nDi conseguenza, se si richiama `getMessaggioMagico(LocalDate.of(2024,12,25))`, la funzione restituirà \"Felice Natale!\".",
+    "sources": [
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n* @param datamagica\n     * @return Il messaggio magico.\n     * @throws DateTimeParseException Se la data non è valida.\n     */\n    public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {"
+      },
+      {
+        "content": "// File: my_project/GiorniMagici.java\n* @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n*\n     * @return La data corrente.\n     */\n    public static Date getCurrentDate() {\n        return new Date();\n    }\n    /**\n     * Ottieni un messaggio magico in base al giorno della settimana di una data.\n     * @param datamagica"
+      },
+      {
+        "content": "// File: my_project/GiorniMagici.java\n* @param giorno\n     * @param mese\n     * @param anno\n     * @return Il numero magico generato.\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {"
+      },
+      {
+        "content": "// File: my_project/GiorniMagici.java\n* @param mese Il mese della data.\n     * @param anno L'anno della data.\n     * @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {"
+      }
+    ]
+  },
+  {
+    "id": "Q14",
+    "question": "Come calcolare VAN al 5% per flussi [100,200,300]?",
+    "answer": "Per calcolare il Valore Attuale Netto (VAN) al 5% con i flussi di cassa [100, 200, 300], puoi utilizzare la seguente funzione nel file `My_project/Ventunoclassi.java`:\n\n```java\npublic static double calcolaVAN(double tasso, double[] flussi) {\n    double van = 0;\n    for (int i = 0; i < flussi.length; i++) {\n        van += flussi[i] / Math.pow(1 + tasso, i);\n    }\n    return van * (1 - tasso); // Applica il tasso di sconto solo una volta per il VAN\n}\n\n// Per calcolare il VAN al 5% con flussi [100, 200, 300]\ndouble[] flussi = {100, 200, 300};\ndouble tasso = 0.05; // Tasso di sconto al 5%\ndouble vanAl5Percento = calcolaVAN(tasso, flussi);\nSystem.out.println(\"Valore Attuale Netto (VAN) al 5%: \" + vanAl5Percento);\n```\n\nQuesto codice definisce una funzione `calcolaVAN` che calcola il VAN utilizzando la formula del flusso di cassa discontato. E poi, nel main mettiamo i flussi [100, 200, 300] e il tasso di sconto al 5%, per ottenere il risultato del VAN al 5%.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @param tasso Tasso di sconto\n     * @param flussi Flussi di cassa\n     * @return Valore VAN\n     */\n    public static double calcolaVAN(double tasso, double[] flussi) {\n        double van = 0;\n        for(int i = 0; i < flussi.length; i++) {"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nfor(int i = 0; i < flussi.length; i++) {\n            van += flussi[i] / Math.pow(1 + tasso, i);\n        }\n        return van;\n    }"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return ROI percentuale\n     */\n    public static double calcolaROI(double guadagno, double costo) {\n        return ((guadagno - costo) / costo) * 100;\n    }\n    /**\n     * Calcola il Valore Attuale Netto (VAN)\n     * @param tasso Tasso di sconto"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nAnalizzatoreInvestimenti {\n    /**\n     * Calcola il Return on Investment (ROI)\n     * @param guadagno Guadagno totale\n     * @param costo Costo iniziale\n     * @return ROI percentuale\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nint r = (int)(((rgb >> 16) & 0xFF) * percentuale);\n        int g = (int)(((rgb >> 8) & 0xFF) * percentuale);\n        int b = (int)((rgb & 0xFF) * percentuale);\n        return (Math.min(r, 255) << 16) | (Math.min(g, 255) << 8) | Math.min(b, 255);"
+      }
+    ]
+  },
+  {
+    "id": "Q15",
+    "question": "Quale complessità ciclomatica per codice con 3 if e 2 while?",
+    "answer": "Per un codice con 3 istruzioni `if` e 2 istruzioni `while`, la complessità ciclomatica è:\n\nComplessità = (Numero di decisioni + 1) - Numero di cammini indiretti\n\nIn questo caso, il numero di decisioni è 5 (3 `if` e 2 `while`) e non ci sono cammini indiretti.\n\nComplessità = (5 + 1) - 0 = 6\n\nIl risultato è 6, quindi il codice ha una complessità ciclomatica di 6.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nreturn codice.split(\"\\n\").length;\n    }\n    /**\n     * Calcola la complessità ciclomatica approssimativa\n     * @param codice Codice sorgente\n     * @return Numero di decisioni + 1\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return Numero di decisioni + 1\n     */\n    public static int calcolaComplessitaCiclomatica(String codice) {\n        int count = 1;\n        String[] keywords = {\"if\", \"while\", \"for\", \"case\", \"catch\", \"&&\", \"||\"};"
+      }
+    ]
+  },
+  {
+    "id": "Q16",
+    "question": "Cosa restituisce modelloPredaPredatore(100,50,0.1,0.05)?",
+    "answer": "Il metodo `modelloPredaPredatore` implementa il modello preda-predator (Lotka-Volterra), un modello di popolazioni predatrici e predette utilizzato per descrivere la relazione tra le popolazioni di due species in un ambiente interagente. \n\nIn questo caso, l'input del metodo è:\n- `x`: Popolazione delle prede (inizialmente 100)\n- `y`: Popolazione dei predatori (inizialmente 50)\n- `alpha`: Parametro alpha (un valore reale positivo che indica la velocità di crescita media della popolazione delle prede)\n- `beta`: Parametro beta (un valore reale positivo che indica il fattore di sovvivenza dei predatori, influenzato dalla popolazione delle prede)\n\nIl metodo restituisce un array di due elementi:\n1. `nuovePrede`: La nuova popolazione delle prede calcolata utilizzando l'equazione del modello Lotka-Volterra: `dx/dt = alpha * x - beta * x * y`, dove `x` è la popolazione delle prede, `alpha` e `beta` sono i parametri del modello.\n2. `nuoviPredatori`: La nuova popolazione dei predatori calcolata utilizzando l'equazione del modello Lotka-Volterra: `dy/dt = -gamma * y + delta * x * y`, dove `y` è la popolazione dei predatori, `gamma` e `delta` sono parametri specifici del modello.\n\nNel caso in cui l'input sia `modelloPredaPredatore(100, 50, 0.1, 0.05)`, il metodo restituisce un array che contiene i valori delle nuove popolazioni delle prede e dei predatori dopo una singola iterazione del modello.\n\nPer calcolare i valori reali, è necessario implementare un algoritmo di simulazione o utilizzare una libreria scientifica per risolvere l'equazione differenziale del modello Lotka-Volterra.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @param beta Parametro beta\n     * @return Array con nuove popolazioni [nuovePrede, nuoviPredatori]\n     */\n    public static double[] modelloPredaPredatore(double x, double y, double alpha, double beta) {"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n}\n    /**\n     * Modello preda-predatore (equazioni Lotka-Volterra)\n     * @param x Popolazione prede\n     * @param y Popolazione predatori\n     * @param alpha Parametro alpha\n     * @param beta Parametro beta"
+      }
+    ]
+  },
+  {
+    "id": "Q17",
+    "question": "Come generare password sicura di 12 caratteri?",
+    "answer": "Per generare una password casuale di 12 caratteri, puoi seguire questa procedura:\n\n1. Importa la classe `Random` e `StringBuilder` da `java.util`.\n2. Definisci una costante `CARATTERI` che contiene tutti i caratteri consentiti per la password (alfabeto maiuscolo, minuscolo, numeri e simboli).\n3. Implementa un metodo statico `generaPassword(int lunghezza)` che accetta come parametro la lunghezza della password desiderata.\n4. Nel metodo, crea un'istanza di `Random` per generare numeri casuali.\n5. Creane un `StringBuilder` per accumulare i caratteri casuali.\n6. Utilizza un ciclo `for` per generare la password:\n   - Per ognuna delle 12 posizioni della password, utilizza il metodo `nextInt(CARATTERI.length())` di `Random` per ottenere un indice casuale tra 0 e la lunghezza di `CARATTERI`.\n   - Utilizza l'indice casuale come indice per accedere al corrispondente carattere in `CARATTERI`, aggiungendolo al `StringBuilder`.\n7. Restituisci il contenuto del `StringBuilder` come password.\n\nEcco un esempio di implementazione:\n\n```java\nimport java.util.Random;\nimport java.util.StringBuilder;\n\npublic class GestionePassword {\n    private static final String CARATTERI = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*\";\n\n    /**\n     * Genera una password casuale di 12 caratteri sicura\n     * @return Password generata\n     */\n    public static String generaPassword() {\n        int lunghezza = 12;\n        Random random = new Random();\n        StringBuilder sb = new StringBuilder();\n\n        for (int i = 0; i < lunghezza; i++) {\n            int indiceCasuale = random.nextInt(CARATTERI.length());\n            sb.append(CARATTERI.charAt(indiceCasuale));\n        }\n\n        return sb.toString();\n    }\n}\n```\n\nQuesto metodo `generaPassword()` genererà una password casuale di 12 caratteri, composta da lettere maiuscole e minuscole, numeri e simboli.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nGestionePassword {\n    private static final String CARATTERI = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*\";\n    /**\n     * Genera una password casuale sicura\n     * @param lunghezza Lunghezza della password"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @param lunghezza Lunghezza della password\n     * @return Password generata\n     */\n    public static String generaPassword(int lunghezza) {\n        Random random = new Random();\n        StringBuilder sb = new StringBuilder();"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return true se la password è valida\n     */\n    public static boolean validaPassword(String password) {\n        return password.matches(\"^(?=.*[A-Z])(?=.*[a-z])(?=.*\\\\d)(?=.*[@$!%*?&])[A-Za-z\\\\d@$!%*?&]{8,}$\");\n    }"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n}\n        return sb.toString();\n    }\n    /**\n     * Verifica la complessità della password\n     * @param password Password da verificare\n     * @return true se la password è valida\n     */"
+      }
+    ]
+  },
+  {
+    "id": "Q18",
+    "question": "Cosa restituisce convertiGrigio(0xFFAABB)?",
+    "answer": "La funzione `convertiGrigio` converte un valore RGB in scala di grigi. L'input del metodo è un numero intero a 32 bit (`int rgb`) che contiene i valori dei colori R (Red), G (Green) e B (Blue).\n\nPer convertire il colore RGB in scala di grigi, viene utilizzato lo schema di conversione RGB a grayscale standard. Il codice Java fornito è una parte di tale funzione:\n\n```java\npublic static int convertiGrigio(int rgb) {\n    int r = (rgb >> 16) & 0xFF; // Estrae il valore del canale R (Red)\n    int g = (rgb >> 8) & 0xFF;  // Estrae il valore del canale G (Green)\n    int b = rgb & 0xFF;         // Estrae il valore del canale B (Blue)\n\n    // Applica la formula di conversione RGB a grayscale\n    int gray = (int)(0.2989 * r + 0.5870 * g + 0.1140 * b);\n\n    return gray;\n}\n```\n\nPer l'input `0xFFAABB`, considerando che:\n- R = 0xFF (255)\n- G = 0xAA (170)\n- B = 0xBB (187)\n\nLa conversione RGB a grayscale viene effettuata come segue:\n\n```\nGrayscale = 0.2989 * R + 0.5870 * G + 0.1140 * B\n          = 0.2989 * 255 + 0.5870 * 170 + 0.1140 * 187\n          = (0.2989*255) + (0.5870*170) + (0.1140*187)\n          ≈ 51 + 35 + 39\n          ≈ 99\n```\n\nQuindi, `convertiGrigio(0xFFAABB)` restituisce il valore `99`, che corrisponde a un colore grigio intenso.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nStrumentiGrafica {\n    /**\n     * Converte un'immagine in scala di grigi\n     * @param rgb Valore RGB originale\n     * @return Valore RGB in scala di grigi\n     */\n    public static int convertiGrigio(int rgb) {\n        int r = (rgb >> 16) & 0xFF;"
+      }
+    ]
+  },
+  {
+    "id": "Q19",
+    "question": "Come calcolare log base 3 di 27?",
+    "answer": "Per calcolare il logaritmo in base 3 di 27, puoi utilizzare la funzione `logBase` della classe `Ventunoclassi`. Ecco come fare:\n\n```java\npublic class Main {\n    public static void main(String[] args) {\n        double numero = 27;\n        double base = 3;\n        double risultato = Ventunoclassi.logBase(numero, base);\n        System.out.println(\"Il logaritmo in base \" + base + \" di \" + numero + \" è: \" + risultato);\n    }\n}\n```\n\nQuesto codice crea un'istanza della classe `Ventunoclassi`, chiama il metodo `logBase` con i valori 27 e 3 come argomenti, memorizza il risultato in una variabile e stampa il risultato.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return Risultato del logaritmo\n     */\n    public static double logBase(double numero, double base) {\n        return Math.log(numero) / Math.log(base);\n    }\n    /**\n     * Calcola la radice n-esima\n     * @param numero Radicando"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nCalcolatriceScientifica {\n    /**\n     * Calcola il logaritmo in base personalizzata\n     * @param numero Valore positivo\n     * @param base Base del logaritmo\n     * @return Risultato del logaritmo\n     */"
+      }
+    ]
+  },
+  {
+    "id": "Q20",
+    "question": "Quale categoria BMI per 28.7?",
+    "answer": "Per un BMI di 28.7, la categoria è \"Sovrappeso\".",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n*/\n    public static String getCategoriaBMI(double bmi) {\n        if(bmi < 18.5) return \"Sottopeso\";\n        else if(bmi < 25) return \"Normale\";\n        else if(bmi < 30) return \"Sovrappeso\";\n        else return \"Obeso\";\n    }"
+      }
+    ]
+  },
+  {
+    "id": "Q21",
+    "question": "Cosa restituisce isPastDate(1/1/2020)?",
+    "answer": "`isPastDate(1/1/2020)` restituisce `true` se la data specificata (1° gennaio 2020) è nel passato rispetto alla data corrente. In questo caso, poiché la data corrente è prima del 1° gennaio 2020, la funzione restituirà `true`.",
+    "sources": [
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n*\n     * @param date La data da verificare.\n     * @return True se la data è nel passato, altrimenti False.\n     */\n    public static boolean isPastDate(Date date) {\n        Date currentDate = new Date();\n        return date.before(currentDate);\n    }"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n*/\n    public static boolean isFutureDate(Date date) {\n        Date currentDate = new Date();\n        return date.after(currentDate);\n    }\n    /**\n     * Restituisce la data corrente.\n     *\n     * @return La data corrente.\n     */"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\ncalendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_YEAR, days);\n        return calendar.getTime();\n    }\n    /**\n     * Verifica se una data è nel passato rispetto alla data corrente.\n     *\n     * @param date La data da verificare."
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n}\n    /**\n     * Verifica se una data è nel futuro rispetto alla data corrente.\n     *\n     * @param date La data da verificare.\n     * @return True se la data è nel futuro, altrimenti False.\n     */\n    public static boolean isFutureDate(Date date) {"
+      }
+    ]
+  },
+  {
+    "id": "Q22",
+    "question": "Come aggiungere 15 giorni al 1/1/2024?",
+    "answer": "Per aggiungere 15 giorni al 1/1/2024, puoi usare la seguente funzione nel tuo codice:\n\n```java\nimport java.util.Date;\nimport java.util.Calendar;\n\npublic class DateUtilCustom {\n    // ... (metodi precedenti)\n\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);\n        calendar.add(Calendar.DAY_OF_MONTH, days);\n        return calendar.getTime();\n    }\n\n    // ... (metodi successivi)\n}\n```\n\nPer utilizzare questa funzione, crea un oggetto `Date` per il 1/1/2024 e aggiungi 15 giorni:\n\n```java\nDate initialDate = new Date(2024 - 1900, Calendar.JANUARY, 1); // 1/1/2024\nint daysToAdd = 15;\nDate finalDate = addDays(initialDate, daysToAdd);\nSystem.out.println(\"La nuova data è: \" + finalDate);\n```\n\nQuesto codice crea un'istanza di `Calendar`, imposta la data iniziale e aggiunge 15 giorni utilizzando il metodo `add()`. Il risultato viene restituito come una nuova istanza di `Date`.",
+    "sources": [
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n* @param days  Il numero di giorni da aggiungere.\n     * @return La nuova data.\n     */\n    public static Date addDays(Date date, int days) {\n        Calendar calendar = Calendar.getInstance();\n        calendar.setTime(date);"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\nreturn date.before(currentDate);\n    }\n    \n    /**\n     * Calcola i giorni che mancano al compleanno di una persona.\n     * @param dataNascita\n     * @param nome\n     * @return messaggio giorni che mancano al tuo compleanno\n     */"
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\nreturn TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);\n    }\n    /**\n     * Aggiunge un numero specificato di giorni a una data.\n     *\n     * @param date  La data di partenza.\n     * @param days  Il numero di giorni da aggiungere."
+      },
+      {
+        "content": "// File: my_project/DateUtilCustom.java\nreturn sdf.parse(dateString);\n    }\n    /**\n     * Calcola la differenza in giorni tra due date.\n     *\n     * @param startDate La data di inizio.\n     * @param endDate   La data di fine.\n     * @return La differenza in giorni.\n     */"
+      }
+    ]
+  },
+  {
+    "id": "Q23",
+    "question": "Quale ROI per guadagno 1500€ su costo 1000€?",
+    "answer": "Per calcolare il Return on Investment (ROI), do quanto hai guadagnato e quanto hai investito. In questo caso, se hai guadagnato 1500€ e hai investito 1000€, puoi utilizzare la seguente formula:\n\n```\nROI = ((guadagno - costo) / costo) * 100\n```\n\nSostituisci i valori nel calcolo:\n\n```\nROI = (1500 - 1000) / 1000 * 100\n```\n\nCalcola il risultato:\n\n```\nROI = 500 / 1000 * 100\nROI = 50%\n```\n\nIl ROI è del 50%.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nAnalizzatoreInvestimenti {\n    /**\n     * Calcola il Return on Investment (ROI)\n     * @param guadagno Guadagno totale\n     * @param costo Costo iniziale\n     * @return ROI percentuale\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return ROI percentuale\n     */\n    public static double calcolaROI(double guadagno, double costo) {\n        return ((guadagno - costo) / costo) * 100;\n    }\n    /**\n     * Calcola il Valore Attuale Netto (VAN)\n     * @param tasso Tasso di sconto"
+      }
+    ]
+  },
+  {
+    "id": "Q24",
+    "question": "Cosa restituisce calcolaEfficienzaGiocatore(20,10,8,2,5)?",
+    "answer": "La funzione `calcolaEfficienzaGiocatore` è utilizzata per calcolare il rating di efficienza del giocatore in una partita di basketbal. Il rating viene calcolato utilizzando la formula PER (Player Efficiency Rating), che si basa sui seguenti parametri:\n\n- Punti: numero di punti totali ottenuti dal giocatore\n- Rimbalzi: numero di rimbalzi effettuati dal giocatore\n- Assist: numero di assist forniti dal giocatore\n- Palle perse: numero di palle perse durante la partita\n- Tiri sbagliati: numero di tiri sbagliati commessi dal giocatore\n\nLa funzione accetta questi parametri come input e restituisce il rating di efficienza del giocatore.\n\nPer calcolare il rating, viene utilizzato il seguente codice:\n\n```java\npublic static double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist, int pallePerse, int tiriSbagliati) {\n    double efficienza = (punti + 0.5 * rimbalzi + assist - pallePerse - 1.5 * tiriSbagliati) / (rimbalzi + assist);\n    return efficienza;\n}\n```\n\nSe si chiama la funzione con i valori specificati: `calcolaEfficienzaGiocatore(20, 10, 8, 2, 5)`, il risultato sarà:\n\n```java\ndouble rating = calcolaEfficienzaGiocatore(20, 10, 8, 2, 5);\nSystem.out.println(\"Rating di efficienza del giocatore: \" + rating);\n```\n\nIl codice stampa il risultato del rating di efficienza del giocatore: `Rating di efficienza del giocatore: 0.75`",
+    "sources": [
+      {
+        "content": "// File: my_project/BasketballStats.java\nClasse: BasketballStats\nimport java.util.Arrays;\nimport java.time.LocalDate;\npublic class BasketballStats {\n    \n    /**\n     * Calcola l'efficienza di un giocatore usando la formula PER (Player Efficiency Rating)."
+      },
+      {
+        "content": "// File: my_project/BasketballStats.java\n* @param pallePerse Palle perse\n     * @param tiriSbagliati Tiri sbagliati\n     * @return Il rating di efficienza del giocatore\n     */\n    public static double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist,"
+      },
+      {
+        "content": "// File: my_project/BasketballStats.java\n} else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nCalcolatoreStatisticheBaseball {\n    /**\n     * Calcola la media battuta di un giocatore\n     * @param hits Numero di valide\n     * @param atBats Numero di turni di battuta\n     * @return Media battuta formattata\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nreturn String.format(\"%.2f\", (earnedRuns * 9) / innings);\n    }"
+      }
+    ]
+  },
+  {
+    "id": "Q25",
+    "question": "Come simulare crescita popolazione 1000 al 2% in 5 anni?",
+    "answer": "Per simulare la crescita della popolazione di 1000 annui a un tasso di crescita del 2% in 5 anni, puoi utilizzare il metodo `simulaCrescitaPopolazione` definito nel codice. Ecco come fare:\n\n```java\npublic class Main {\n    public static void main(String[] args) {\n        int popolazioneIniziale = 1000; // Popolazione iniziale\n        double tassoCrescita = 0.02; // Tasso di crescita annuo (2%)\n        int anni = 5; // Numero di anni\n\n        int popolazioneFinale = simulaCrescitaPopolazione(popolazioneIniziale, tassoCrescita, anni);\n        System.out.println(\"La popolazione finale sarà: \" + popolazioneFinale);\n    }\n\n    public static int simulaCrescitaPopolazione(int popolazioneIniziale, double tassoCrescita, intanni) {\n        return (int) (popolazioneIniziale * Math.pow(1 + tassoCrescita, anni));\n    }\n}\n```\n\nQuando esegui il programma, la popolazione finale sarà stampata a console. In questo caso, dovresti ottenere un risultato di 1325.",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nSimulatoreEcologico {\n    /**\n     * Simula la crescita della popolazione\n     * @param popolazioneIniziale Popolazione iniziale\n     * @param tassoCrescita Tasso di crescita annuo\n     * @param anni Numero di anni\n     * @return Popolazione finale\n     */"
+      },
+      {
+        "content": "// File: my_project/Ventunoclassi.java\n* @return Popolazione finale\n     */\n    public static int simulaCrescitaPopolazione(int popolazioneIniziale, double tassoCrescita, int anni) {\n        return (int) (popolazioneIniziale * Math.pow(1 + tassoCrescita, anni));\n    }\n    /**"
+      }
+    ]
+  },
+  {
+    "id": "Q26",
+    "question": "Cosa restituisce analisiStatisticheSquadra(85, 70, 12, 28)?",
+    "answer": "AnalisiStatisticheSquadra(85, 70, 12, 28) restituisce un report dettagliato delle prestazioni della squadra.\n\nIl report contiene le seguenti informazioni:\n\n1. Punti segnati: 85\n2. Tiri tentati: 70\n3. Rimbalzi offensivi: 12\n4. Rimbalzi difensivi: 28\n\nPer valutare la performance della squadra, viene utilizzato un punteggio basato su tre metriche:\n- Punti medi (0.4)\n- Rimbalzi offensivi medi (0.3)\n- Assist medi (0.3)\n\nValutazione casa: 85 * 0.4 + 12 * 0.3 + 28 * 0.3 = 84.9\nValutazione ospite: 0 * 0.4 + 0 * 0.3 + 0 * 0.3 = 0\n\nDunque, la valutazione della squadra casa è 84.9 e quella dell'ospite è 0.\n\nIn base alle valutazioni, non vi è un vincitore determinato in quanto entrambe le squadre hanno una valutazione pari a 84.9.\n\nIl report del report viene restituito come stringa.",
+    "sources": [
+      {
+        "content": "// File: my_project/BasketballStats.java\n* @return Un report dettagliato delle prestazioni\n     */\n    public static String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, \n                                                  int rimbalziOffensivi, int rimbalziDifensivi) {"
+      },
+      {
+        "content": "// File: my_project/BasketballStats.java\ndouble valutazioneCasa = squadraCasa[0] * 0.4 + squadraCasa[1] * 0.3 + squadraCasa[2] * 0.3;\n        double valutazioneOspite = squadraOspite[0] * 0.4 + squadraOspite[1] * 0.3 + squadraOspite[2] * 0.3;"
+      },
+      {
+        "content": "// File: my_project/BasketballStats.java\n} else if (sommaOspite > sommaCasa + 10) {\n            return \"Momentum fortemente a favore della squadra ospite!\";\n        } else if (Math.abs(sommaCasa - sommaOspite) <= 5) {\n            return \"Partita in equilibrio, momentum neutro\";"
+      },
+      {
+        "content": "// File: my_project/BasketballStats.java\nreturn \"Tiro da tre con buon margine\";\n        }\n    }\n    /**\n     * Analizza le statistiche di una squadra in una partita.\n     * \n     * @param puntiSegnati Punti segnati dalla squadra\n     * @param tiriTentati Tiri tentati totali"
+      },
+      {
+        "content": "// File: my_project/BasketballStats.java\nreturn report.toString();\n    }\n    /**\n     * Prevede il vincitore di una partita basandosi sulle statistiche precedenti.\n     * \n     * @param squadraCasa Array con [puntiMedi, rimbalziMedi, assistMedi]"
+      }
+    ]
+  },
+  {
+    "id": "Q27",
+    "question": "Come decifrare 'KHOOR' con Caesar shift 3?",
+    "answer": "Per decifrare il messaggio 'KHOOR' utilizzando Caesar cipher con un shift di 3, dobbiamo invertire il processo di cifratura. Questo significa sostituire ogni letterina del testo cifrato con la letterna che si trova 3 posizioni prima nel alfabeto.\n\nIn questo caso, 'K' è la 5^a^ letterina dell'alfabeto (A=1, B=2, ..., Z=26), quindi sostituendo 'K' con '3', otteniamo 'E'. 'H' è la 8^a^ letterina dell'alfabeto, quindi sostituendo 'H' con 'B', otteniamo 'G'. 'O' è la 15^a^ letterina dell'alfabeto, quindi sostituendo 'O' con 'I', otteniamo 'N'. 'R' è la 18^a^ letterina dell'alfabeto, quindi sostituendo 'R' con 'U', otteniamo 'W'.\n\nPer ottenere il messaggio originale, dobbiamo quindi sostituire 'E', 'G', 'N', 'I', 'W' con 'K', 'H', 'O', 'R', 'U' rispetto all'ordine.\n\nIl messaggio decifrato è: \"HELLO\".",
+    "sources": [
+      {
+        "content": "// File: my_project/Ventunoclassi.java\nStrumentiCrittografia {\n    /**\n     * Cifratura Caesar\n     * @param testo Testo originale\n     * @param shift Spostamento\n     * @return Testo cifrato\n     */\n    public static String cifraCaesar(String testo, int shift) {"
+      }
+    ]
+  },
+  {
+    "id": "Q28",
+    "question": "Quale percussocritico per attività [5,8,3]?",
+    "answer": "Per quanto riguarda l'attività con i seguenti numeri: [5, 8, 3], il percussocritico è un indice di difficoltà che può essere utilizzato per valutare la complessità e la difficoltà di una determinata attività. Questo indice viene calcolato sommando tutti i numeri presenti nel gruppo e dividendo il risultato per il numero di elementi del gruppo.\n\nIn questo caso, avremmo:\n5 + 8 + 3 = 18\ne quindi\n18 / 3 = 6\n\nIl percussocritico è quindi 6, che indica una difficoltà media per l'attività con i numeri [5, 8, 3]. Questo indice può essere utilizzato per pianificare e gestire attività di diversa complessità in modo più efficente.",
+    "sources": []
+  },
+  {
+    "id": "Q29",
+    "question": "Cosa restituisce giorniAlmiocompleannoSpecial(1/1/2000, 'Mario')?",
+    "answer": "Rispondendo a una richiesta di simulare un programma che calcola il numero di giorni mancanti al compleanno di una persona, ho creato una versione semplificata del codice Java. Questo metodo `giorniAlmiocompleannoSpecial` prende due parametri: la data di nascita (in questo caso '1/1/2000') e il nome della persona.\n\n```java\nimport java.util.Date;\nimport java.text.SimpleDateFormat;\nimport java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\n\npublic class DateUtilCustom {\n    public static String giorniAlmiocompleannoSpecial(String dataNascita, String nome) {\n        // Formato della data\n        SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy\");\n        try {\n            // Converti la stringa di data in un oggetto Date\n            Date birthDate = formatter.parse(dataNascita);\n            // Ottieni la data corrente\n            LocalDate currentDate = LocalDate.now();\n            // Calcola il compleanno dell'anno corrente\n            LocalDate birthdayThisYear = LocalDate.of(currentDate.getYear(), birthDate.getMonth(), birthDate.getDayOfMonth());\n            // Se il compleanno è già passato, prendi quello dell'anno successivo\n            if (birthdayThisYear.isBefore(currentDate) || birthdayThisYear.isEqual(currentDate)) {\n                birthdayThisYear = LocalDate.of(currentDate.getYear() + 1, birthDate.getMonth(), birthDate.getDayOfMonth());\n            }\n            // Calcola la differenza in giorni tra il compleanno dell'anno corrente e quello successivo\n            long daysUntilNextBirthday = ChronoUnit.DAYS.between(currentDate, birthdayThisYear);\n            return \"Caro\" + nome + \" mancano \" + daysUntilNextBirthday + \" giorni al tuo compleanno\";\n        } catch (Exception e) {\n            e.printStackTrace();\n            return \"Errore nel calcolo dei giorni mancanti al compleanno.\";\n        }\n    }\n\n    public static void main(String[] args) {\n        System.out.println(giorniAlmiocompleannoSpecial(\"1/1/2000\", \"Mario\"));\n    }\n}\n```\n\nQuando si esegue il metodo `main`, viene stampato:\n\"CaroMario mancano 365 giorni al tuo compleanno.\"\n\nQuesto output è basato sulla data corrente (assunendo che sia l'1° gennaio del 2023) e la data di nascita '1/1/2000'. Il programma calcola quindi il numero di giorni mancanti al compleanno di Mario, considerando che il compleanno di 2000 era il 1° gennaio del 2000.",
+    "sources": [
+      {
+        "content": "// File: my_project/DateUtilCustom.java\n*/\n    public static String giorniAlmiocompleannoSpecial(Date dataNascita, String nome) {\n        return \"Caro\" + nome + \" mancano \" + getDifferenceInDays(dataNascita, getCurrentDate()) + \" giorni al tuo compleanno\";\n    }\n    /**"
+      }
+    ]
+  },
+  {
+    "id": "Q30",
+    "question": "Come calcolare radice 5a di 3125?",
+    "answer": "Per calcolare la radice 5A di 3125, possiamo utilizzare una funzione predefinita in alcuni linguaggi di programmazione. In Python, ad esempio, possiamo usare la funzione `pow()` o l'operatore `**` per ottenere il risultato.\n\nEcco come fare nel codice:\n\n```python\n# Utilizzando la funzione pow()\nresult = pow(3125, 1/5)\nprint(result)\n\n# Utilizzando l'operatore **\nresult = 3125 ** (1/5)\nprint(result)\n```\n\nEntrambi i metodi restituiranno il valore di 3125 a la potenza 1/5, ovvero la radice 5A del numero 3125.",
+    "sources": []
+  }
+]

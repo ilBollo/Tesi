@@ -8,6 +8,11 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usepackage{array}   
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 \lstdefinelanguage{json}{
     basicstyle=\footnotesize\ttfamily,
@@ -85,9 +90,9 @@ che solo con la conoscenza del LLM, anche se estremamente performante e completo
 \end{abstract}
 
 \begin{dedication}
-A Giulia e ai miei figli, il dono più grande.
-\newline A tutta la mia famiglia.
-\newline Grazie a tutti voi.
+A Giulia e ai miei figli, il dono più incredibile di questa vita.
+\newline Alla mia grande famiglia.
+\newline Grazie
 \end{dedication}
 
 %----------------------------------------------------------------------------------------
@@ -106,9 +111,9 @@ A Giulia e ai miei figli, il dono più grande.
 \section{Essere programmatori nel 2025}
 Per sviluppare codice sono disponibili tantissimi (IDE), uno di questi è \textbf{Visual Studio Code},
 mentre per condividere i progetti e lavorare in team lo strumento utilizzato potrebbe essere  \textbf{GitHub}.
-Se richiesta memoria GPU per piccoli progetti accademici è disponibile ad esmpio \textbf{COLAB}, che permette di eseguire in remoto codice utilizzando GPU senza costi.
+Se richiesta memoria GPU per piccoli progetti accademici è posssibile utilizzare \textbf{COLAB}, che permette di eseguire in remoto codice Python utilizzando GPU senza costi.
 Questi esempi sono parte di una panoramica di strumenti sempre più vasta, complessa e in rapita evoluzione, con un frequente cambio di software per realizzare un programma.
-Inoltre i possibili modi per realizzare i progetti è aumentanta, disponendo oggi di sempre più librerie e metodi per realizzare il codice.
+Inoltre i possibili modi per realizzare i progetti è aumentanta, disponendo oggi di sempre più librerie e metodi per ottenere risultati finali simili.
 Un esempio d'utilizzo degli strumenti sopra elencati potrebbe seguire la seguente scaletta:
 \begin{itemize}
     \item Realizzazione iniziale del progetto in locale utilizzado Visual Studio Code
@@ -116,12 +121,14 @@ Un esempio d'utilizzo degli strumenti sopra elencati potrebbe seguire la seguent
     \item Esecuzione del codice su Colab per testare il codice su GPU ed eventualmente eseguire modifiche concluse con nuovo Push su GitHub
     \item Pull in locale per continuare a lavorare sul progetto
 \end{itemize}
-Questo modo dinamico di lavorare è recente ma non una novità, come invece lo sono alcuni specifici strumenti forniti da questi software tutti accumunati \textbf{dall'implementazione al loro interno di funzioni basate sull'IA}.
+Questo modo dinamico di lavorare è recente ma non una novità, come invece lo sono alcuni specifici strumenti forniti da questi software.
+Questi strumenti sono tutti accumunati \textbf{dall'implementazione al loro interno di funzioni basate sull'IA}.
 Queste funzioni sono in grado di completare il codice, suggerire correzioni e creare documentazione pertinente.
-GitHub ha introdotto \textbf{Copilot}, un assistente IA per la scrittura del codice, questo strumento è integrabile per vari IDE tra cui proprio Visual Studo Code.
-Un esempio semplice ma che offre già un idea della vastità e della potenza di queste funzioni è l'utility di \textbf{Github Copilot} 'Generate Commit Message with Copilot'
-che propone il testo da utilizzare come descrizione di un commit, ho provato a riscontrare quanto fosse contestualizzato e coerente 
-con quanto aggiornato e ho ottenuto il seguente risultato:
+\textbf{GitHub} ha introdotto \textbf{Copilot}, un assistente IA per la scrittura del codice, questo strumento è integrabile con vari IDE tra cui proprio \textbf{Visual Studo Code}.
+Un esempio semplice ma che offre già un idea della vastità e della potenza di queste funzioni è l'utility di \textbf{Github Copilot}: \emph{'Generate Commit Message with Copilot'}
+che propone il testo da utilizzare come descrizione di un commit,
+ho provato a verificare quanto fosse contestualizzato e coerente 
+con le modifiche apportate al codice ed ho ottenuto il seguente risultato:
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/commit.png}
@@ -152,7 +159,7 @@ Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti 
 \chapter{Addestrare un LLM per la Generazione del Codice}
 
 L'addestramento di LLM per la generazione del codice di programmazione richiede una serie di passaggi complessi e costi significativi.
-Conoscere questo processo, senza addentrarsi nel dettaglio, è utile per poter poi comprendere al meglio la successiva implementazione con le tecniche di \textbf{RAG}.
+Conoscere questo processo è utile per poter poi comprendere al meglio la successiva implementazione con le tecniche di \textbf{RAG}.
 La procedura si divide nelle seguenti fasi:
 \section{Scelta Modello}
 Gli LLM utilizzano tipicamente architetture basate su trasformatori, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
@@ -165,8 +172,8 @@ L'architettura del modello scelto influenzerà in maniera decisiva tutte le succ
 La qualità e la quantità dei dati per l'addestramento è di primaria importanza per prepare un modello alla generazione di codice in maniera efficace.
 È quindi essenziale utilizzare per il training codice proveniente da molteplici fonti tra cui codice sorgente, file readme, documentazione tecnica, commenti nel codice,
 pagine Wiki, API e discussioni su forum specializzati in programmazione, arricchendo così il dataset con esempi pratici e ricchezza terminologica.
-In rete è possibile trovare diverso materiale open source tra cui dataset già etichettati. Alcuni dataset hanno un valore altissimo,
-per tutelare il costo per produrli per certi dataset è previsto il diritto d'autore.
+In rete è possibile trovare diverso materiale open source tra cui dataset già etichettati.
+Alcuni dataset hanno un valore altissimo, per questo motivo per tutelare il costo speso per produrli per certi dataset è previsto il diritto d'autore.
 I dati si dividono in due tipologie:
 \begin{itemize}
     \item \textbf{Dati Strutturati}: seguono un formato specifico e predefinito, seguono la struttora in coppie (descrizione, codice).
@@ -174,9 +181,10 @@ I dati si dividono in due tipologie:
 \end{itemize}
 \subsection{Pulizia e Pre-Processo}
 La raccolta di dati va visionata con cura, se non si conosce la provenienza del codice è possibile che contenga bug o codice obsoleto che possono essere trasmessi al modello.
-Con la rapida evoluzione del codice molte librerie e tecniche vengono rapidamente deprecate e superate per questo anche utilizzando i più noti modelli LLM ad oggi disponibili, può capitare di ricevere come output \textbf{codice obsoleto che risolve il quesito ma con soluzioni contenti tecniche, api e librerie deprecate o non più disponibili.}
-Per questo motivo i dati raccolti devono essere quindi puliti e pre-processati per rimuovere errori e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
-\newline Il modello per poter elaborare il dataset ha bisogno che quest'ultimo venga diviso in parti più piccole chiamate token per mantenere l'integrita del dato \cite{stanford-codegen},
+Con la rapida evoluzione del codice molte librerie e tecniche vengono \textbf{rapidamente deprecate} e superate per questo anche utilizzando i più noti modelli LLM ad oggi disponibili, può capitare di ricevere come output \textbf{codice obsoleto che risolve il quesito ma con soluzioni contenti tecniche, api e librerie deprecate o non più disponibili.}
+Per questo motivo i dati raccolti devono essere puliti e pre-processati per rimuovere errori e informazioni non pertinenti, garantendo così un dataset di alta qualità per l'addestramento.
+\subsubsection{Tokenizzazione}
+Il modello per poter elaborare il dataset ha bisogno che quest'ultimo venga diviso in parti più piccole chiamate token per mantenere l'integrita del dato \cite{stanford-codegen},
 i token possono essere parole, parti di parole o singoli caratteri, e questa suddivisione è fondamentale per:
 
 \begin{itemize}
@@ -193,7 +201,6 @@ Ad esempio, nel codice Java, i token potrebbero includere:
     \item Operatori e simboli (\texttt{+}, \texttt{=}, \texttt{\{}, \texttt{\}})
     \item Stringhe letterali e commenti
 \end{itemize}
-
 \section{Pre-Addestramento}
 Il pre-addestramento di un LLM specializzato nella generazione di codice ha lo scopo di fornire al modello una conoscenza generale della sintassi e delle strutture logiche dei linguaggio di programmazione.
 Durante questa fase il modello impare a generare codice partendo da dati non etichettati utilizzando tecniche come il \emph{language modeling} autoregressivo per insegnare al modello di predire il token successivo in una sequenza.
@@ -201,7 +208,7 @@ Questo approccio rende la generazione contestualmente e coerente di codice, sfru
 \section{Fine-Tuning}
 Il fine-tuning è la fase in cui il modello già pre-addestrato viene ulteriormente specializzato per la generazione di codice adattando e migliorando il modello per specifici domini di applicazione.
 Durante questa fase, il modello affina le sue capacità attraverso dataset specializzati composti da coppie descrizione-codice, documentazione tecnica e commenti, esempi di bug-fixing e refactoring.
-\textbf{Tecniche di Apprendimento}:
+\subsection{Tecniche di Apprendimento}:
     \begin{itemize}
         \item \textbf{Supervisionato}: Training su coppie input-output predefinite, il modello impara a mappare input di descrizione con linguaggio naturale a output di codice corrispondente.
         \item \textbf{Per Rinforzo}: Ottimizzazione basata su feedback e metriche di qualità
@@ -212,7 +219,6 @@ Durante questa fase, il modello affina le sue capacità attraverso dataset speci
 Il processo di fine-tuning richiede un attento bilanciamento nell'apprendere dai dati di addestramento cercando di evitare di incorrere in overfitting.
 L'overfitting si verifica quando il modello si specializza troppo sui dati di addestramento, riducendo la sua capacità di generalizzazione producendo risposte errate o incoerenti su nuovi dati.
 Per evitare l'overfitting vengono utilizzati set di validazione, regolarizzazione e tecniche di dropout.
-
 \section{Pre-Addestramento vs Fine-Tuning}
 È importante comprendere la distinzione tra queste due fasi:
 \subsubsection{Pre-Addestramento}
@@ -230,7 +236,6 @@ Il fine-tuning è invece la fase di specializzazione dove il modello:
     \item Si adatta a un \textbf{dominio specifico} o a compiti particolari
     \item Utilizza dataset specifici e composti da dati strutturati 
 \end{itemize}
-
 \section{Valutazione e Ottimizzazione}
 Una volta addestrato, il modello deve essere rigorosamente valutato utilizzando metriche specifiche per la generazione di codice, come la correttezza sintattica, la funzionalità e l'efficienza del codice prodotto.
 I risultati della valutazione possono essere utilizzati per ulteriori ottimizzazioni, come aggiustamenti dei pesi del modello, modifiche all'architettura o includere dati di addestramento aggiuntivi per affrontare eventuali carenze.
@@ -256,16 +261,16 @@ I risultati della valutazione possono essere utilizzati per ulteriori ottimizzaz
     \label{fig:significa-RAG}
 \end{figure}
 \section{Introduzione}
-RAG \textbf{Retrieval-Augmented Generation}, (in italiano \textit{Generazione Aumentata tramite Recupero} )  è un sistema che permette di migliorare l'output di un LLM estendendo la sua conoscenza con nuove informazioni, al di fuori dai suoi dati di addestramento allo scopo di:
+La sigla RAG rappresenta \textbf{Retrieval Augmented Generation}, (in italiano \textit{Generazione Aumentata tramite Recupero} )  è un sistema che permette di migliorare l'output di un LLM estendendo la sua conoscenza con nuove informazioni, al di fuori dai suoi dati di addestramento allo scopo di:
 \begin{itemize}
-    \item ottenere risposte mirate e personalizzate contenti knowledge relativa a librerie e codice custom;
-    \item migliorare il codice generato rendendolo più specifico al dominio riducendo le allucinazioni;
-    \item facilitare l'assistenza da parte del modello nella fase di debugging migliorando la sua comprensione di sistemi complessi;
-    \item supportare la creazione di documentazione aggiornata;
-    \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni;
+    \item ottenere risposte mirate e personalizzate contenti knowledge relativa a librerie e codice custom
+    \item migliorare il codice generato rendendolo più specifico al dominio riducendo le allucinazioni
+    \item facilitare l'assistenza da parte del modello nella fase di debugging migliorando la sua comprensione di sistemi complessi
+    \item supportare la creazione di documentazione aggiornata
+    \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni
     \item evitare risposte imprecise a causa della confusione terminologica, in cui diverse fonti utilizzano la stessa terminologia per parlare di cose diverse.
 \end{itemize}
-\newpage
+
 \section{Funzionamento}
 Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il prompt della richiesta.
 Il funzionamento si articola in diverse fasi qui sotto illustrate:
@@ -337,7 +342,7 @@ Per creare questo database vengono utilizzati dati esterni al training set origi
     \item Archivi documentali
     \item File di testo e codice
 \end{itemize}
-La creazione di un database ben strutturato e la parte più importante di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la sucessiva fase di interrogazione.
+La creazione di un database ben strutturato e \textbf{\underline{la parte più importante}} di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la sucessiva fase di interrogazione.
 Il processo di creazione del Vector Database segue la seguente pipeline:
 \begin{itemize}
     \item \textbf{Chunking}: Divisione del codice in chunk 
@@ -347,14 +352,14 @@ Il processo di creazione del Vector Database segue la seguente pipeline:
 %Creazione degli Embedding
 
 
-\subsection{FASE 1: User query e function calling}
+\subsection{Fase 1: User query e function calling}
 Data la query d'input da parte dell'utente, il sistema RAG è avviato da una chiamata di funzione per ricercare nel
 \textbf{Vector Database} i chunk più rilevanti per la query.
-Nei modelli più complessi in RAG è di fatto un agente integrato nel sistema che viene chiamato all'occorreza qunado la base di conoscenza del LLM non è sufficiente per fornire una risposta adeguata,
+Nei modelli più complessi in RAG è di fatto un agente integrato nel sistema che viene chiamato all'occorrenza quando la base di conoscenza del LLM non è sufficiente per fornire una risposta adeguata,
 in questo modo viene anche razionalizzato e ottimizzato il costo computazionale del processo,
-attivato solo quando strettamente neceassario.
+attivato solo quando strettamente necessario.
 Rimane comunque questo passaggio una scelta configurabile in base allo specifico utilizzo del sistema,
-ad esempio per un azienda che utilizza il LLM solo per compiti specifici può essere configurato il sistema in modo che chiamii
+ad esempio per un azienda che utilizza il LLM solo per compiti specifici e sempre contestualizzati può essere configurato il sistema in modo che chiami
 la funzione RAG sempre.
 \subsection{Fase 2: Recupero delle Informazioni}
 Quando l'utente sottopone una query:
@@ -362,6 +367,7 @@ Quando l'utente sottopone una query:
     \item La domanda viene convertita in un vettore
     \item Il sistema cerca nel database vettoriale le informazioni più pertinenti
     \item Viene calcolata la rilevanza attraverso calcoli matematici vettoriali
+    \item Se trovate corrispondenze con uno score di similarità sufficiente, i chunk vengono recuperati
 \end{itemize}
 
 \begin{figure}[h]
@@ -369,7 +375,6 @@ Quando l'utente sottopone una query:
     \includegraphics[width=0.8\linewidth]{figures/plotSearch.png}
     \label{fig:Emempio distanze chunk e query}
 \end{figure}
-
 \subsection{Fase 3: Aumento del Prompt}
 Se trovate, il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
 
@@ -378,21 +383,22 @@ Il RAG permette di superare le limitazioni di conoscenza dei LLM, fornendo rispo
 grazie all'integrazione di conoscenze interne e personalizzate.
 Dopo aver costruito un sistema RAG è possibile eseguire rapidamente aggiornamenti al \textbf{Vector database},
 cosa che sarebbe molto più difficile da ottenere con il fine-tuning, che richiede tempo e risorse significative.
-Avere un LLM addestrato fin da subito su misura per le proprie sarebbe fantastico ma per quasi
-tutte le aziende richiede risorse impossibili da sostenere ed è quindi molto più facile costruire un RAG
-che intervenire direttamente sulla conoscenza del LLM solitamente di proprietà di terzi.
+Avere un LLM addestrato fin da subito su misura per le proprie esigenze e sempre aggiornato sarebbe fantastico ma per quasi
+tutte le aziende richiederebbe risorse impossibili da sostenere ed è quindi molto più comune costruire un RAG
+che intervenire direttamente sulla conoscenza del LLM che restano solitamente proprietà di terzi.
 
-\chapter{Implementazione di un Sistema RAG per lo Sviluppo di codice per il linguaggio Java}
+\chapter{Implementazione di un sistema RAG per lo sviluppo di codice per il linguaggio Java}
 \section{Obiettivo}
-Questo caso studio si propone di verificare il livello di personalizzazione e qualità delle risposte di un LLM potenziando la query nel prompt di input 
-attraverso la creazione di un sistema RAG di supporto, analizzando singolarmente le varie fasi che compongono il processo.
-Il sistema RAG è testato con della \textbf{classi JAVA uniche} create appositamente per il caso studio.
+Questo caso studio si propone l'obiettivo di verificare il livello di personalizzazione e qualità delle risposte di un LLM integrato con un sistema RAG.
+Potenziando la query nel prompt di input del LLM attraverso la creazione di un sistema RAG di supporto,
+verranno costruite e analizzate singolarmente tutte le fasi che compongono il processo.
+Il sistema RAG è stato testato con della \textbf{classi JAVA uniche} create appositamente per il caso studio.
 \subsubsection{Problematica da affrontare:}
 Chiamate a più livelli di classi e metodi, dove il RAG potrebbe non essere in grado di estrapolare
 le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte coerenti con quanto richiesto.
 
 \section{Architettura del Sistema}
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance=2cm]
         % Components
@@ -400,7 +406,7 @@ le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte 
         \node [block, right=of chunk] (embed) {Embedder\\(BGE-M3)};
         \node [block, right=of embed] (db) {Vector DB\\(FAISS)};
         \node [block, below=of chunk] (retriever) {Retriever};
-        \node [block, right=of retriever] (llm) {LLM Interface\\(CodeQwen)};
+        \node [block, right=of retriever] (llm) {LLM Interface\\(Es:CodeQwen)};
         
         % Connections
         \path [line] (chunk) -- (embed);
@@ -410,7 +416,7 @@ le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte 
         
         % Box around everything
         \node [draw, dashed, fit=(chunk) (embed) (db) (retriever) (llm),
-            inner sep=1cm, label=above:RAG System] {};
+            inner sep=1cm] {};
     \end{tikzpicture}
     \caption{Architettura del sistema RAG}
     \label{fig:rag-architecture}
@@ -448,9 +454,8 @@ Il sistema RAG implementa un'architettura modulare composta da cinque componenti
 
     \item \textbf{LLM Interface (CodeQwen e Llama 3.2)}:
     \begin{itemize}
-        \item Interfaccia con i modelli CodeQwen e Llama 3.2
+        \item Interfaccia tramite Ollama con i LLM CodeQwen e Llama 3.2
         \item Genera risposte basate sul contesto recuperato
-        \item Ottimizza il prompt per la generazione di codice
     \end{itemize}
 \end{enumerate}
 
@@ -459,15 +464,15 @@ Il sistema RAG implementa un'architettura modulare composta da cinque componenti
 Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM
 senza dover dipendere da servizi cloud esterni.
 Il software è stato scelto per la sua flessibilità, permettendo di integrare facilmente i modelli LLM nel sistema RAG.
-\subsection{LLM}
+\subsubsection{LLM}
 Ogni LLM è specializzato per determinati scopi,
 per questo motivo per rendere più completa la ricerca sono stati utilizzati due modelli con caratteristiche differenti:
-\subsubsection{Llama 3.2}
+\subsection{Llama 3.2}
 Llama 3.2 3B \cite{llama3-2}, un modello di linguaggio open source.
 Il modello, con 3 miliardi di parametri, è ottimizzato per compiti di dialogo multilingue e si distingue per le sue capacità di recupero e sintesi delle informazioni.
 La scelta è ricaduta su questa versione per il suo equilibrio tra prestazioni e requisiti computazionali che permottono il suo utilizzo senza hardware troppo potente.
 
-\subsubsection{Codeqwen 1.5}
+\subsection{Codeqwen 1.5}
 Codeqwen \cite{codeqwen1.5} è un modello di linguaggio open source specializzato nella generazione di codice e documentazione tecnica.  
 Con 7 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato.
 La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità. 
@@ -490,17 +495,19 @@ FAISS (Facebook AI Similarity Search) \cite{faiss} è una libreria open source p
 Progettata per gestire dataset su larga scala, FAISS supporta operazioni di ricerca anche su insiemi di vettori che superano la capacità della RAM, grazie a tecniche di indicizzazione avanzate e ottimizzazioni computazionali.
 
 \section{Dataset}
-Il dataset creato appositamente è composto da tre classi Java:
+Il dataset è stato creato appositamente per testare il sistema RAG ed è composto da diciannove classi Java:
 
 \begin{description}
     \item[DateUtilCustom.java] Classe personalizzata per gestire le date
     \item[GiorniMagici.java] Classe per calcolare in maniera particolare dei giorni
-    \item[BasketballStats.java] Classe per calcolare statistiche relative al mondo del basket.
+    \item[BasketballStats.java] Classe abstract per statistiche di basket
+    \item[AdvancedBasketballStats] Classe che estende BasketballStats
+    \item[BasketballTest] Classe per testare le statistiche di basket implementate in AdvancedBasketballStats
+    \item[Altre classi java] Non strettamente correlate con le prime due
 \end{description}
 
 \section{Scenario base del Caso Studio}
-La classe BasketballStats.java non ha nessuna relazione con le altre due classi,
-mentre DateUtilCustom.java e GiorniMagici.java sono strettamente correlate infatti GiorniMagici.java richiama metodi presenti in DateUtilCustom.java.
+DateUtilCustom.java e GiorniMagici.java sono strettamente correlate infatti GiorniMagici.java richiama metodi definiti in DateUtilCustom.java.
 Andremo a testare il sistema RAG con la seguente query: 
 \begin{itemize}
     \item \textbf{Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 2, 14))}?}
@@ -1000,72 +1007,206 @@ Il tuo segnale Wow è : \textbf{Il giorno perfetto per scoprire segreti nascosti
 Questo è dato che la data 2025-02-14 cade mercoledì, quindi il metodo `getMessaggioMagico()` restituisce il messaggio "Il giorno perfetto per scoprire segreti nascosti.''
 \subsection{Commento risultati ottenuti}
 I risultati ottenuti mostrano come il sistema RAG sia in grado di rispondere in maniera coerente alla query proposta.
-La ricerca dei chunk più simili funziona corrette soprattutto se si scrive la richiesta in maniera più dettagliata possibile.
-CodeQwen ha sbagliato a calcolare il giorno della settimana ma la risposta utilizza correttamente il metodo getMessaggioMagico().
+La ricerca dei chunk più simili funziona correttamente soprattutto se si scrive la richiesta in maniera più dettagliata possibile.
+CodeQwen ha sbagliato a calcolare il giorno della settimana a causa di un suo errore nel calcolare il giorno della settimana corrispondente alla data fornita come parametro ma la risposta utilizza correttamente il metodo getMessaggioMagico().
 
 \section{Valutazione del RAG con llm as a judge}
-Utilizzando l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG
-generiamo una serie di domande al sistema RAG operando una valutazione automatizzata delle risposte prodotte da parte di più LLM.
-Il dataset è stato arricchito di altre classi java generate sinteticamente dal LLM Deepssek.
+Per eseguire una valutazione più ampia del sistema usiamo l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG.
+Generiamo 30 domande sulle quali sarà richiesta risposta al sistema RAG e sucessivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di più LLM.
+Il dataset originale è stato arricchito da altre classi java generate dai LLM Deepseek e Mistral.
 \subsection{Domande}
-Passando il file contenente tutte le librerie a Deepseek, sono state generate 30 domande per valutare il sistema RAG.
+Passando un file contenente tutte le librerie a NotebookLM, sono state generate 30 domande per valutare il sistema RAG.
 La domanda fatta al LLM è stata:
 \begin{quote}
-    \texttt{``Dalle mie classi genera 30 domande/risposte per valutare il mio rag:
-    la prima è: Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))
+    \texttt{``Dalle mie classi genera 30 domande/risposte per valutare il mio rag la prima è:
+    Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))
     che utilizza la funzione getMessaggioMagico() della libreria
     DateUtilCustom?''}
 \end{quote}
 Il risulta è stato il seguente:
-\begin{lstlisting}[language=Python, caption={Domande generate da Deepssek}]
-    id,question,context
-Q1,"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico()?","GiorniMagici.java"
-Q2,"Come calcolare la media battuta con 25 valide su 80 turni?","CalcolatoreStatisticheBaseball.java"
-Q3,"Quale ERA risulta da 5 punti subiti in 7 inning?","CalcolatoreStatisticheBaseball.java"
-Q4,"Come validare una password 'Secret123!'?","GestionePassword.java"
-Q5,"Cosa restituisce invertiStringaMantenendoMaiuscole('AbCde')?","AnalizzatoreTesto.java"
-Q6,"Come convertire 10km in miglia?","ConvertitoreUnita.java"
-Q7,"Quale BMI risulta da 70kg e 1.75m?","CalcolatoreBMI.java"
-Q8,"Cosa significa un momentum [12,15] vs [8,10]?","BasketballStats.java"
-Q9,"Come cifrare 'HELLO' con Caesar shift 3?","StrumentiCrittografia.java"
-Q10,"Quale temperatura a Roma (41.9) a luglio?","SimulatoreMeteo.java"
-Q11,"Cosa restituisce isDataMagica(6, 5, 2030)?","GiorniMagici.java"
-Q12,"Come calcolare rata mutuo 100k al 4\% in 20 anni?","GestioneFinanzePersonali.java"
-Q13,"Cosa restituisce getMessaggioMagico(LocalDate.of(2024,12,25))?","DateUtilCustom.java"
-Q14,"Come calcolare VAN al 5% per flussi [100,200,300]?","AnalizzatoreInvestimenti.java"
-Q15,"Quale complessita' ciclomatica per codice con 3 if e 2 while?","AnalizzatoreCodice.java"
-Q16,"Cosa restituisce modelloPredaPredatore(100,50,0.1,0.05)?","SimulatoreEcologico.java"
-Q17,"Come generare password sicura di 12 caratteri?","GestionePassword.java"
-Q18,"Cosa restituisce convertiGrigio(0xFFAABB)?","StrumentiGrafica.java"
-Q19,"Come calcolare log base 3 di 27?","CalcolatriceScientifica.java"
-Q20,"Quale categoria BMI per 28.7?","CalcolatoreBMI.java"
-Q21,"Cosa restituisce isPastDate(1/1/2020)?","DateUtilCustom.java"
-Q22,"Come aggiungere 15 giorni al 1/1/2024?","DateUtilCustom.java"
-Q23,"Quale ROI per guadagno 1500 su costo 1000?","AnalizzatoreInvestimenti.java"
-Q24,"Cosa restituisce calcolaEfficienzaGiocatore(20,10,8,2,5)?","BasketballStats.java"
-Q25,"Come simulare crescita popolazione 1000 al 2% in 5 anni?","SimulatoreEcologico.java"
-Q26,"Cosa restituisce analisiStatisticheSquadra(85, 70, 12, 28)?","BasketballStats.java"
-Q27,"Come decifrare 'KHOOR' con Caesar shift 3?","StrumentiCrittografia.java"
-Q28,"Quale percussocritico per attivita' [5,8,3]?","GestoreProgetti.java"
-Q29,"Cosa restituisce giorniAlmiocompleannoSpecial(1/1/2000, 'Mario')?","DateUtilCustom.java"
-Q30,"Come calcolare radice 5a di 3125?","CalcolatriceScientifica.java"
+\begin{lstlisting}[language=Python, caption={Domande generate da NotebookLM}]
+[
+    {
+        "id": 1,
+        "question": "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?"
+    },
+    {
+        "id": 2,
+        "question": "La classe AnalizzatoreRilascio contiene un metodo chiamato stimaDataRilascio. Quali sono i due parametri di input richiesti da questo metodo?"
+    },
+    {
+        "id": 3,
+        "question": "Nella classe AnalizzatoreRilascio, come viene calcolato il numero di task rimanenti nel metodo stimaDataRilascio?"
+    },
+    {
+        "id": 4,
+        "question": "Qual e' il valore di soglia critica per l'indice di rischio rilascio (IRR) nella classe AnalizzatoreRilascio?"
+    },
+    {
+        "id": 5,
+        "question": "Quali sono i parametri di input del metodo calcolaProbabilitaSuccesso nella classe AnalizzatoreRilascio e come viene calcolata la probabilita' di successo?"
+    },
+    {
+        "id": 6,
+        "question": "Qual e' lo scopo del metodo stimaTempoRimanente nella classe AnalizzatoreRilascio e quali parametri accetta?"
+    },
+    {
+        "id": 7,
+        "question": "Nella classe BasketballStats, qual e' la formula utilizzata per calcolare l'efficienza di un giocatore nel metodo calcolaEfficienzaGiocatore?"
+    },
+    {
+        "id": 8,
+        "question": "Quali sono i criteri utilizzati nel metodo valutaTiro della classe BasketballStats per valutare la qualia' di un tiro?"
+    },
+    {
+        "id": 9,
+        "question": "Cosa restituisce il metodo analisiStatisticheSquadra della classe BasketballStats?"
+    },
+    {
+        "id": 10,
+        "question": "Quali sono gli input del metodo previsioneVincitore nella classe BasketballStats e cosa rappresentano?"
+    },
+    {
+        "id": 11,
+        "question": "Come viene calcolato il margine nel metodo previsioneVincitore della classe BasketballStats?"
+    },
+    {
+        "id": 12,
+        "question": "Cosa rappresenta l'input del metodo calcolaMomentum nella classe BasketballStats?"
+    },
+    {
+        "id": 13,
+        "question": "Qual e' il requisito per la lunghezza della chiave segreta nel metodo cifraturaVortex della classe CifratoreAziendale?"
+    },
+    {
+        "id": 14,
+        "question": "Cosa fa il metodo mascheraDatiSensibili nella classe TrasformatoreDati?"
+    },
+    {
+        "id": 15,
+        "question": "Nella classe DateUtilCustom, descrivi cosa fa il metodo formatDate(Date date) e fornisci un esempio del formato di output."
+    },
+    {
+        "id": 16,
+        "question": "Qual e' la differenza tra i metodi formatDate(Date date) e formatDate(Date date, String format) nella classe DateUtilCustom?"
+    },
+    {
+        "id": 17,
+        "question": "Cosa puo' accadere se si utilizza il metodo parseDate della classe DateUtilCustom con una stringa che non corrisponde al formato specificato?"
+    },
+    {
+        "id": 18,
+        "question": "Nella classe DateUtilCustom, cosa calcola il metodo getDifferenceInDays(Date startDate, Date endDate)?"
+    },
+    {
+        "id": 19,
+        "question": "Cosa fa il metodo addDays(Date date, int days) nella classe DateUtilCustom?"
+    },
+    {
+        "id": 20,
+        "question": "Come si verifica se una data e' nel passato usando la classe DateUtilCustom?"
+    },
+    {
+        "id": 21,
+        "question": "Cosa fa il metodo giorniAlmiocompleannoSpecial(Date dataNascita, String nome) nella classe DateUtilCustom?"
+    },
+    {
+        "id": 22,
+        "question": "In ElaboratoreLinguaggio, come viene calcolato il punteggio di sentimento di un testo?"
+    },
+    {
+        "id": 23,
+        "question": "Qual e' lo scopo del metodo estraiEntitaNominate nella classe ElaboratoreLinguaggio?"
+    },
+    {
+        "id": 24,
+        "question": "Cosa fa il metodo applicaTemplate nella classe GestoreConfigurazioni?"
+    },
+    {
+        "id": 25,
+        "question": "In GestoreConoscenza, cosa fa il metodo estraiMetadati?"
+    },
+    {
+        "id": 26,
+        "question": "Qual e' lo scopo del metodo generaIdentitaDigitale nella classe GestoreIdentita e cosa prende come input?"
+    },
+    {
+        "id": 27,
+        "question": "Cosa verifica il metodo verificaIdentita nella classe GestoreIdentita?"
+    },
+    {
+        "id": 28,
+        "question": "Quali controlli vengono eseguiti all'interno del metodo generaChiaveAttivazione della classe GestoreLicenze?"
+    },
+    {
+        "id": 29,
+        "question": "Cosa calcola il metodo calcolaIndiceManutenibilita della classe IspezionatoreCodice?"
+    },
+    {
+        "id": 30,
+        "question": "In MetricheAgili, cosa rappresenta il fattoreComplessita' nel metodo calcolaVelocityScore e qual e' il suo range?"
+    }
+]
 \end{lstlisting}
 \subsection{Punteggio delle domande}
-Per valutare le domande generate da \textbf{Deepssek}, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
+Per valutare le domande generate da \textbf{LMNotebook}, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
 fornire un "punteggio totale" che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
 Date la vostra risposta su una scala da 1 a 5, dove 1 significa che la domanda non è affatto risolvibile in base al contesto e 5 significa che la domanda è chiaramente e inequivocabilmente risolvibile in base al contesto.
 \subsubsection{Risultati}
-Entrambi i modelli hanno valutato le domande generate da Deepssek con un punteggio medio di 4.63 su 5:
+I modelli hanno valutato le domande generate da LMNotebook con punteggi diversi:
 \begin{itemize}
-    \item \textbf{GPT4o}: 139 su 150
-    \item \textbf{Mistral}: 139 su 150
+    \item \textbf{Mistral}: 145 su 150
+    \item \textbf{GPT4o}: 121 su 150
 \end{itemize}
-\subsection{Risposta alle domande da parte dei LLM con RAG}
-Essendo poco performanti le versioni dei LLM installati in locale, per questo test ho valutato di utilizzare le versioni commerciali di Deepseek, o1 in Copilot e Mistral 
-presenti in rete per rispondere alle domande.
-Fornendo per ogni domanda lo stesso prompt creato dal mio sistema RAG, arricchito con i chunk estratti dalla funzione vector\_store.similarity\_search\_with\_score precedentemente creata.
-\subsection{Risultati}
-miao
+GPT4o mi ha fornito anche una tabella riepilogativa con i punteggi di ogni domanda:
+\begin{longtable}{c L{6cm} c L{6cm}}
+    \toprule
+    \textbf{ID} & \textbf{Domanda} & \textbf{Punteggio (1-5)} & \textbf{Motivazione} \\
+    \midrule
+    \endhead
+    1  & Metodo \texttt{segnaleWow} e \texttt{getMessaggioMagico()} & 5 & Impossibile senza accesso al codice specifico. \\
+    2  & Parametri di \texttt{stimaDataRilascio} & 5 & I parametri sono arbitrari e non deducibili senza documentazione. \\
+    3  & Calcolo task rimanenti in \texttt{stimaDataRilascio} & 5 & La logica interna non \`e prevedibile senza codice. \\
+    4  & Soglia critica dell'IRR & 5 & Questo valore \`e arbitrario e definito solo nel codice/documentazione specifica. \\
+    5  & Parametri e calcolo di \texttt{calcolaProbabilitaSuccesso} & 5 & La formula \`e sconosciuta senza accesso diretto. \\
+    6  & Scopo e parametri di \texttt{stimaTempoRimanente} & 5 & Dipende dalla logica implementata. \\
+    7  & Formula di \texttt{calcolaEfficienzaGiocatore} & 4 & Se usa metriche standard NBA, potrebbe essere ipotizzabile, altrimenti no. \\
+    8  & Criteri di \texttt{valutaTiro} & 4 & Se segue principi di analisi statistica sportiva, si pu\`o ipotizzare, ma senza certezza. \\
+    9  & Output di \texttt{analisiStatisticheSquadra} & 4 & Pu\`o essere stimato, ma la struttura esatta non \`e nota. \\
+    10 & Input e significato di \texttt{previsioneVincitore} & 4 & Alcuni parametri sono prevedibili, ma i dettagli precisi no. \\
+    11 & Calcolo del margine in \texttt{previsioneVincitore} & 5 & La formula specifica \`e ignota. \\
+    12 & Input di \texttt{calcolaMomentum} & 4 & Se segue definizioni standard, potrebbe essere deducibile. \\
+    13 & Lunghezza chiave in \texttt{cifraturaVortex} & 5 & \`E una regola arbitraria del software specifico. \\
+    14 & Scopo di \texttt{mascheraDatiSensibili} & 3 & Il concetto \`e generico, ma l'implementazione varia. \\
+    15 & Scopo e output di \texttt{formatDate} & 2 & \`E un metodo comune, altamente prevedibile. \\
+    16 & Differenza tra i due \texttt{formatDate} & 2 & Differenza standard tra metodi di formattazione con/senza specifica del formato. \\
+    17 & Comportamento di \texttt{parseDate} con input errato & 3 & Tipicamente lancia un'eccezione, ma la gestione pu\`o variare. \\
+    18 & Funzione \texttt{getDifferenceInDays} & 2 & Metodo comune, implementazione prevedibile. \\
+    19 & Funzione \texttt{addDays} & 2 & Standard in qualsiasi utility di date. \\
+    20 & Verifica se una data \`e nel passato & 2 & Operazione semplice con \texttt{isBefore()}. \\
+    21 & Scopo di \texttt{giorniAlmiocompleannoSpecial} & 5 & Nome ambiguo, logica ignota. \\
+    22 & Calcolo punteggio di sentimento & 4 & Se segue NLP standard, potrebbe essere ipotizzabile. \\
+    23 & Scopo di \texttt{estraiEntitaNominate} & 3 & NLP standard, facile da descrivere. \\
+    24 & Funzione \texttt{applicaTemplate} & 5 & Nome troppo generico, pu\`o fare qualsiasi cosa. \\
+    25 & Funzione \texttt{estraiMetadati} & 4 & Dipende da cosa si intende per metadati nel contesto specifico. \\
+    26 & Scopo e input di \texttt{generaIdentitaDigitale} & 5 & Implementazione sconosciuta, input indefiniti. \\
+    27 & Verifica di \texttt{verificaIdentita} & 4 & Probabilmente autenticazione, ma non si pu\`o sapere esattamente come. \\
+    28 & Controlli in \texttt{generaChiaveAttivazione} & 5 & Dipende dalle policy aziendali specifiche. \\
+    29 & Calcolo di \texttt{calcolaIndiceManutenibilita} & 5 & Nessuno standard universale, dipende dalla formula interna. \\
+    30 & \texttt{fattoreComplessita} in \texttt{calcolaVelocityScore} & 5 & Senza definizione esatta, non si pu\`o dedurre. \\
+    \bottomrule
+\end{longtable}
+Verranno usati come riferimento i punteggi dati da \textbf{GPT4o}, nel dettaglio hanno questa corrispondenza:
+\begin{itemize}
+    \item Domande con punteggio 5: Non risolvibili senza accesso al codice/documentazione.
+    \item Domande con punteggio 4: Difficili, ma in alcuni casi il modello può ipotizzare una risposta sensata.
+    \item Domande con punteggio 3: Risolvibili parzialmente con conoscenze standard, ma con margini di errore.
+    \item Domande con punteggio 2: Generalmente risolvibili perché rientrano in pattern comuni di programmazione.
+\end{itemize}
+\subsection{Valutazione risultati risposte sistema RAG}
+Il sistema RAG ha elaborato le domande e fornito risposta salvando il risultato in un file JSON.
+Questo file è stato valutato da \textbf{GPT4o} e \textbf{Mistral} per valutare la coerenza delle risposte.
+
 \chapter{Conclusioni}
 
 da completare

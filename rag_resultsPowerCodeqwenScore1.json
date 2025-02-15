@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "question": "Cosa ritorna il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` che utilizza la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`?",
+    "answerOK": "Ritorna la stringa \"il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.\"",
+    "answerRAG": "Ritornerà \"il tuo segnale Wow è :Il giorno perfetto per scoprire segreti nascosti.\"\n\nQuando si chiama il metodo `segnaleWow(LocalDate.of(2025, 2, 14))`, viene utilizzato il metodo `getMessaggioMagico()` della libreria `DateUtilCustom`. Questo metodo restituisce un messaggio magico associato a una data specifica (in questo caso, 14 febbraio 2025).\n\nDal codice fornito, il messaggio associato a questa data è \"Il giorno perfetto per scoprire segreti nascosti.\" quindi il metodo `segnaleWow()` restituisce la stringa \"il tuo segnale Wow è :Il giorno perfetto per scoprire segreti nascosti.\"",
+    "punteggio": 5
+  },
+  {
+    "id": 2,
+    "question": "La classe `AnalizzatoreRilascio` contiene un metodo chiamato `stimaDataRilascio`. Quali sono i due parametri di input richiesti da questo metodo?",
+    "answerOK": "Il metodo `stimaDataRilascio` richiede un array di interi (`int[] taskCompletati`) e un valore double (`double velocitaSviluppo`) come input [3].",
+    "answerRAG": "I due parametri di input richiesti dal metodo `stimaDataRilascio` della classe `AnalizzatoreRilascio` sono:\n\n1. `taskCompletati` (array di interi): Questo parametro è un array che contiene il numero di task completati per ogni giorno del processo di sviluppo.\n2. `velocitaSviluppo` (double): Questo parametro è una media dei story points completati per giorno durante il processo di sviluppo.\n\nQuesti due parametri sono utilizzati per stimare la data di rilascio del prodotto, tenendo conto della velocità di sviluppo e dei task completati.",
+    "punteggio": 5
+  },
+  {
+    "id": 3,
+    "question": "Nella classe `AnalizzatoreRilascio`, come viene calcolato il numero di task rimanenti nel metodo `stimaDataRilascio`?",
+    "answerOK": "Il numero di task rimanenti viene calcolato sottraendo la somma dei task completati (assumendo un totale di 100 task).",
+    "answerRAG": "Il metodo `stimaDataRilascio` in `AnalizzatoreRilascio` utilizza la seguente formula per stimare la data di rilascio:\n\n```java\npublic static LocalDate stimaDataRilascio(int taskCompletati, double velocitaSviluppo) {\n    // Calcola il numero di task rimanenti\n    double taskRimanenti = 100 - Arrays.stream(taskCompletati).sum();\n\n    // Calcola il tempo rimasto in giorni\n    double tempoRimanente = stimaTempoRimanente(taskRimanenti, velocitaSviluppo);\n\n    // Calcola la data corrente\n    LocalDate dataCorrente = LocalDate.now();\n\n    // Aggiungi al tempo rimasto il numero di giorni della settimana corrente\n    int giorniSettimanaCorrente = dataCorrente.getDayOfWeek().getValue();\n    tempoRimanente += giorniSettimanaCorrente;\n\n    // Calcola la data di rilascio\n    LocalDate dataRilascio = dataCorrente.plusDays((int) Math.ceil(tempoRimanente));\n\n    return dataRilascio;\n}\n```\n\nIn questo metodo, viene prima calcolato il numero di task rimanenti utilizzando la formula `100 - Arrays.stream(taskCompletati).sum()`. Viene quindi stimato il tempo rimasto in giorni utilizzando il metodo `stimaTempoRimanente` precedentemente definito.\n\nPer stimare la data di rilascio, viene calcolata la data corrente utilizzando `LocalDate.now()` e viene aggiunto al tempo rimasto il numero di giorni della settimana corrente. Viene quindi convertita la somma del tempo rimasto con i giorni della settimana ad un numero intero arrotondato per eccesso utilizzando `Math.ceil(tempoRimanente)`.\n\nInfine, viene creata una nuova data di rilascio aggiungendo il numero di giorni stimati al giorno corrente utilizzando `dataCorrente.plusDays((int) Math.ceil(tempoRimanente))`. Viene restituita la data di rilascio come un oggetto `LocalDate`.",
+    "punteggio": 5
+  },
+  {
+    "id": 4,
+    "question": "Qual è il valore di soglia critica per l'indice di rischio rilascio (IRR) nella classe `AnalizzatoreRilascio`?",
+    "answerOK": "La soglia critica per l'IRR è **8.5**.",
+    "answerRAG": "La soglia critica per l'indice di rischio rilascio (IRR) è impostata a 8.5 nel metodo `calcolaIRR` della classe `AnalizzatoreRilascio`. Questo valore viene utilizzato per determinare se ilrilascio ha un indice di rischio elevato e stampare una notifica all'utente.",
+    "punteggio": 5
+  },
+  {
+    "id": 5,
+    "question": "Quali sono i parametri di input del metodo `calcolaProbabilitaSuccesso` nella classe `AnalizzatoreRilascio` e come viene calcolata la probabilità di successo?",
+    "answerOK": "I parametri sono `numeroBugRisolti` e `numeroTestPassati`. La probabilità di successo è calcolata come `(numeroBugRisolti * 0.4) + (numeroTestPassati * 0.6)`.",
+    "answerRAG": "I parametri di input del metodo `calcolaProbabilitaSuccesso` nella classe `AnalizzatoreRilascio` sono:\n\n1. `numeroBugRisolti` (int): Numero di bug risolti nel processo di rilascio del software.\n2. `numeroTestPassati` (int): Numero di test superati durante il processo di rilascio del software.\n\nLa probabilità di successo del rilascio viene calcolata utilizzando la formula semplificata:\n\n```java\ndouble probabilitaSuccesso = (numeroBugRisolti * 0.4) + (numeroTestPassati * 0.6);\nreturn probabilitaSuccesso;\n```\n\nIn questo caso, il metodo assume che un bug risolto ha una probabilità di successo del 40%, mentre un test superato ha una probabilità di successo del 60%. Queste probabilità sono valori arbitrari e possono variare in base alle specifiche del processo di rilascio.",
+    "punteggio": 5
+  },
+  {
+    "id": 6,
+    "question": "Qual è lo scopo del metodo `stimaTempoRimanente` nella classe `AnalizzatoreRilascio` e quali parametri accetta?",
+    "answerOK": "Stima il tempo rimanente per il rilascio. Accetta `taskRimanenti` (numero di task rimanenti) e `velocitaSviluppo` come parametri.",
+    "answerRAG": "Lo scopo del metodo `stimaTempoRimanente` nella classe `AnalizzatoreRilascio` è quello di stimare il tempo rimanente per il rilascio di un prodotto software. Questo metodo accetta due parametri:\n\n1. `taskRimanenti` (int): Questo parametro indica il numero di task che rimangono da completare per il rilascio del prodotto.\n2. `velocitaSviluppo` (double): Questo parametro indica la velocità di sviluppo attuale del team, espressa in task completati al giorno.\n\nIl metodo restituisce un valore double che rappresenta il tempo stimato rimanente per il rilascio in giorni.",
+    "punteggio": 5
+  },
+  {
+    "id": 7,
+    "question": "Nella classe `BasketballStats`, qual è la formula utilizzata per calcolare l'efficienza di un giocatore nel metodo `calcolaEfficienzaGiocatore`?",
+    "answerOK": "La formula è `(punti + rimbalzi + assist) - (pallePerse + tiriSbagliati)`.",
+    "answerRAG": "La formula utilizzata per calcolare l'efficienza di un giocatore nel metodo `calcolaEfficienzaGiocatore` è la seguente:\n\n```java\npublic static double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist, int pallePerse) {\n    return (punti + rimbalzi + assist) - (pallePerse + tiriSbagliati);\n}\n```\n\nQuesta formula semplificata calcola l'efficienza del giocatore basandosi sui suoi punteggi, rimbalzi e assist. L'espressione `(punti + rimbalzi + assist) - (pallePerse + tiriSbagliati)` restituisce un valore numerico che indica la performance del giocatore in termini di efficienza.",
+    "punteggio": 4
+  },
+  {
+    "id": 8,
+    "question": "Quali sono i criteri utilizzati nel metodo `valutaTiro` della classe `BasketballStats` per valutare la qualità di un tiro?",
+    "answerOK": "La **distanza dal canestro** (`distanzaCanestro`) e la **pressione difensiva** (`pressioneDifensiva`).",
+    "answerRAG": "Il metodo `valutaTiro` della classe `BasketballStats` ha come scopo principalmente quello di valutare la qualità di un tiro in una partita di basket. Utilizza i seguenti criteri per basarsi sulla valutazione:\n\n1. **Distanza dal canestro**: La distanza del tiro è un fattore chiave per determinare se il tiro è facile o difficile. Se la distanza è inferiore a 1.5 metri, viene considerato un tiro facile sotto il canestro. Se la distanza è compresa tra 1.5 e 6.75 metri, indica un tiro da tre con buon margine. Altrimenti, se la distanza è superiore a 6.75 metri, si tratta di un tiro da tre difficile sotto pressione.\n\n2. **Pressione difensiva**: La pressione difensiva viene utilizzata per valutare la difficoltà del tiro. Un valore inferiore a 7 indica una buona pressione difensiva, quindi il tiro è considerato da tre con buon margine. Se la pressione difensiva è superiore a 8, si tratta di un tiro da tre difficile sotto pressione.\n\nIl metodo restituisce un messaggio che descrive la valutazione del tiro in base ai criteri specificati.",
+    "punteggio": 4
+  },
+  {
+    "id": 9,
+    "question": "Cosa restituisce il metodo `analisiStatisticheSquadra` della classe `BasketballStats`?",
+    "answerOK": "Restituisce un report dettagliato delle prestazioni della squadra.",
+    "answerRAG": "Il metodo `analisiStatisticheSquadra` restituisce un report dettagliato delle prestazioni di una squadra in terms of basketball. Questo report include:\n\n1. Punti segnati: Numero di punti totali ottenuti dalla squadra.\n2. Tir i tentati: Numero di tiri totali effettuati dalla squadra.\n3. Rimbalzi offensivi: Numero di rimbalzi totali sui palloni della squadra.\n4. Rimbalzi difensivi: Numero di rimbalzi totali sui palloni contro la squadra.\n\nIl metodo restituisce un report in formato stringa che fornisce una panoramica delle prestazioni della squadra, come ad esempio:\n\n```\n\"Squadra: [nome_squadra], Punti: [puntiSegnati], Tir i tentati: [tiriTentati], Rimbalzi offensivi: [rimbalziOffensivi], Rimbalzi difensivi: [rimbalziDifensivi]\"\n```\n\nQuesto report può essere utilizzato per monitorare le prestazioni e prevedere il risultato delle partite.",
+    "punteggio": 4
+  },
+  {
+    "id": 10,
+    "question": "Quali sono gli input del metodo `previsioneVincitore` nella classe `BasketballStats` e cosa rappresentano?",
+    "answerOK": "Gli input sono due array di double (`squadraCasa` e `squadraOspite`) che contengono `[puntiMedi, rimbalziMedi, assistMedi]`, e una `LocalDate dataPartita`.",
+    "answerRAG": "```java\npublic static String previsioneVincitore(double[] squadraCasa, double[] squadraOspite, LocalDate dataPartita) {\n    // Input del metodo:\n    // - squadraCasa: array di tre elementi (puntiMedi, rimbalziMedi, assistMedi) che contengono le statistiche medi delle squadre in casa.\n    // - squadraOspite: array di tre elementi (puntiMedi, rimbalziMedi, assistMedi) che contengono le statistiche medi delle squadre all'esterno.\n    // - dataPartita: oggetto LocalDate che indica la data della partita per cui si vuole fare la previsione del vincitore.\n\n    // Output del metodo:\n    // - Stringa che indica la previsione del vincitore basata sulle statistiche precedenti e il margine di probabilità.\n}\n```",
+    "punteggio": 4
+  },
+  {
+    "id": 11,
+    "question": "Come viene calcolato il margine nel metodo `previsioneVincitore` della classe `BasketballStats`?",
+    "answerOK": "Il margine è calcolato come il valore assoluto della differenza tra la valutazione della squadra di casa e la valutazione della squadra ospite.",
+    "answerRAG": "Il margine viene calcolato come la differenza tra le valutazioni medie delle squadre. In questo caso, la valutazione media di una squadra è il risultato del metodo `valutazioneMedia()` che restituisce la somma dei punti segnati, rimbalzi e assist medi.\n\n```java\npublic static double valutazioneMedia(double[] statistiche) {\n    return (statistiche[0] + statistiche[1] + statistiche[2]) / 3;\n}\n```\n\nQuindi, nel metodo `previsioneVincitore`, prima viene calcolata la valutazione media di entrambe le squadre:\n\n```java\ndouble valutazioneCasa = valutazioneMedia(squadraCasa);\ndouble valutazioneOspite = valutazioneMedia(squadraOspite);\n```\n\nDopo, viene calcolato il margine come la differenza tra le valutazioni medie:\n\n```java\ndouble margine = Math.abs(valutazioneCasa - valutazioneOspite);\n```\n\nInfine, viene restituita una stringa che indica il vincitore previsto con il margine di punteggio:\n\n```java\nif (valutazioneCasa > valutazioneOspite) {\n    return String.format(\"Vittoria casa prevista con margine di %.1f punti\", margine);\n} else if (valutazioneOspite > valutazioneCasa) {\n    return String.format(\"Vittoria ospite prevista con margine di %.1f punti\", margine);\n} else {\n    return \"Partita equilibrata, impossibile fare previsioni\";\n}\n```\n\nQuesto metodo fornisce una previsione del vincitore basata sulle statistiche medie delle due squadre e sul tempo rimasto per la partita.",
+    "punteggio": 5
+  },
+  {
+    "id": 12,
+    "question": "Cosa rappresenta l'input del metodo `calcolaMomentum` nella classe `BasketballStats`?",
+    "answerOK": "Rappresenta gli ultimi punti segnati dalla squadra di casa (`ultimiPuntiCasa`) e dalla squadra ospite (`ultimiPuntiOspite`).",
+    "answerRAG": "L'input del metodo `calcolaMomentum` nella classe `BasketballStats` è un array di due dimensioni, in questo caso `int[][] eventiGiornata`. Questo input viene utilizzato per calcolare il \"momentum\" della partita basato sugli ultimi eventi.\n\nIl metodo `calcolaMomentum` accetta come parametro un array di interi `eventiGiornata`, dove:\n- `eventiGiornata[0]` contiene un array di interi che rappresentano i punti segnati dalla squadra di casa.\n- `eventiGiornata[1]` contiene un array di interi che rappresentano i punti segnati dalla squadra ospite.\n\nIl metodo restituisce una stringa che descrive il momentum della partita in base alle ultime eventi registrate.",
+    "punteggio": 4
+  },
+  {
+    "id": 13,
+    "question": "Qual è il requisito per la lunghezza della chiave segreta nel metodo `cifraturaVortex` della classe `CifratoreAziendale`?",
+    "answerOK": "La chiave segreta deve essere di 12 caratteri.",
+    "answerRAG": "Il requisito per la lunghezza della chiave segreta nel metodo `cifraturaVortex` della classe `CifratoreAziendale` è che essa debba essere di 12 caratteri. Se la chiave non rispetta questo requisito, viene lanciata un'eccezione di tipo `IllegalArgumentException`, con il messaggio \"La chiave deve essere di 12 caratteri.\"",
+    "punteggio": 5
+  },
+  {
+    "id": 14,
+    "question": "Cosa fa il metodo `mascheraDatiSensibili` nella classe `TrasformatoreDati`?",
+    "answerOK": "Il metodo maschera i dati sensibili sostituendo i caratteri originali con caratteri casuali.",
+    "answerRAG": "Il metodo `applicaShadowMask` nella classe `TrasformatoreDati` ha lo scopo di applicare una trasformazione di mascheratura ai dati sensibili in formato JSON. La maschera utilizzata è la \"ShadowMask\", che consiste nel codificare i dati con un algoritmo di cifratura AES (Advanced Encryption Standard) utilizzando una chiave privata specificata.\n\nIl metodo accetta come parametri:\n- `dati`: una stringa JSON contenente i dati sensibili che devono essere mascherati.\n- `chiavePrivata`: una stringa utilizzata per generare la chiave segreta necessaria per cifrare i dati.\n\nIl metodo restituisce una nuova stringa JSON con i dati originali ma codificati in formato Base64, utilizzando la chiave privata specificata per la cifratura AES. In caso di errori durante l'esecuzione del processo di mascheratura, viene lanciata un'eccezione `RuntimeException` con un messaggio d'errore appropriato.\n\nEsempio di utilizzo:\n```java\nString datiOriginali = \"{\\\"nome\\\":\\\"John Doe\\\", \\\"email\\\":\\\"john.doe@example.com\\\"}\";\nString chiavePrivata = \"secretKey123\";\nString datiMascherati = TrasformatoreDati.applicaShadowMask(datiOriginali, chiavePrivata);\nSystem.out.println(datiMascherati);  // Output: \"eyJuYW1lIjogIkpvaG4gRG9lIiwgImVtYm9kIjogIkpvaG4gRG9lIn0=\"\n```",
+    "punteggio": 3
+  },
+  {
+    "id": 15,
+    "question": "Nella classe `DateUtilCustom`, descrivi cosa fa il metodo `formatDate(Date date)` e fornisci un esempio del formato di output.",
+    "answerOK": "Formatta una data nel formato \"dd/MM/yyyy\". Ad esempio, se la data è il 25 dicembre 2023, l'output sarà \"25/12/2023\".",
+    "answerRAG": "La classe `DateUtilCustom` contiene vari metodi statici utilizzati per manipolare e formattere date in Java. Il metodo `formatDate(Date date)` è responsabile della conversione di un oggetto `Date` in una stringa formattata utilizzando il formato \"dd/MM/yyyy\".\n\nEcco un esempio di utilizzo del metodo:\n\n```java\nimport java.util.Date;\nimport My_project.classi_java_custom.DateUtilCustom;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Creazione di una data\n        Date currentDate = new Date();\n\n        // Utilizzo del metodo formatDate per formattare la data\n        String formattedDate = DateUtilCustom.formatDate(currentDate);\n\n        // Stampa della data formattata\n        System.out.println(\"Data corrente: \" + formattedDate);\n    }\n}\n```\n\nQuando viene eseguito il codice, verrà stampata la data corrente nel formato \"dd/MM/yyyy\".",
+    "punteggio": 2
+  },
+  {
+    "id": 16,
+    "question": "Qual è la differenza tra i metodi `formatDate(Date date)` e `formatDate(Date date, String format)` nella classe `DateUtilCustom`?",
+    "answerOK": "Il primo utilizza il formato predefinito \"dd/MM/yyyy\", mentre il secondo permette di specificare un formato personalizzato.",
+    "answerRAG": "Nella classe `DateUtilCustom`, i metodi `formatDate(Date date)` e `formatDate(Date date, String format)` si differenziano principalmente per il numero di parametri richiesti.\n\nIl metodo `formatDate(Date date)` ha un solo parametro: la data da formattare. Utilizza il formato predefinito \"dd/MM/yyyy\" per restituire una stringa che rappresenta la data in formato leggibile.\n\nIl metodo `formatDate(Date date, String format)`, invece, accetta due parametri: la data e un formato specifico. Questo formato viene utilizzato per creare una stringa che descrive la data in base alle preferenze dell'utente. Il formato è fornito come stringa, ad esempio \"yyyy-MM-dd\" per ottenere una data nel formato \"anno-mese-giorno\".\n\nIn sintesi, il metodo `formatDate(Date date)` utilizza un formato predefinito, mentre il metodo `formatDate(Date date, String format)` consente di specificare un formato personalizzato.",
+    "punteggio": 2
+  },
+  {
+    "id": 17,
+    "question": "Cosa può accadere se si utilizza il metodo `parseDate` della classe `DateUtilCustom` con una stringa che non corrisponde al formato specificato?",
+    "answerOK": "Verrà lanciata una `ParseException`.",
+    "answerRAG": "Se si utilizza il metodo `parseDate` della classe `DateUtilCustom` con una stringa che non corrisponde al formato specificato, viene lanciato un'eccezione di tipo `ParseException`. Questo è perchè il metodo `SimpleDateFormat.parse()` lancia questa eccezione se la stringa fornita non può essere analizzata come data nel formato specificato.\n\nPer gestire questo caso, è necessario aggiungere un blocco `try-catch` al codice che utilizza il metodo `parseDate`, in modo da catturare l'eccezione e gestirla in modo appropriato, ad esempio stampando un messaggio di errore o tentando di convertire la stringa in una data con un formato diverso.",
+    "punteggio": 3
+  },
+  {
+    "id": 18,
+    "question": "Nella classe `DateUtilCustom`, cosa calcola il metodo `getDifferenceInDays(Date startDate, Date endDate)`?",
+    "answerOK": "Calcola la differenza in giorni tra due date.",
+    "answerRAG": "La classe `DateUtilCustom` contiene vari metodi statici per manipolare e calcolare date. Il metodo `getDifferenceInDays(Date startDate, Date endDate)` calcola la differenza in giorni tra due date.\n\nIl metodo utilizza il costruttore di `java.util.Date` per ottenere il numero di millisecondi passati da 1° gennaio 1970 (epoch time). Quindi, calcola la differenza in millisecondi tra le due date e converte tale valore in giorni utilizzando `TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS)`.\n\nIl risultato è un valore long che indica la differenza in giorni tra le due date specificate.",
+    "punteggio": 2
+  },
+  {
+    "id": 19,
+    "question": "Cosa fa il metodo `addDays(Date date, int days)` nella classe `DateUtilCustom`?",
+    "answerOK": "Aggiunge un numero specificato di giorni a una data.",
+    "answerRAG": "The method `addDays(Date date, int days)` in the class `DateUtilCustom` is used to add a specified number of days to a given date. It creates a new instance of the `Calendar` class and sets its time to the provided date. Then, it adds the specified number of days to the calendar using the `add()` method with the parameter `Calendar.DAY_OF_MONTH`. Finally, it returns the new date as a `Date` object.\n\nHere's how the code snippet explains this:\n\n```java\npublic static Date addDays(Date date, int days) {\n    // Create a Calendar instance and set its time to the provided date\n    Calendar calendar = Calendar.getInstance();\n    calendar.setTime(date);\n\n    // Add the specified number of days to the calendar\n    calendar.add(Calendar.DAY_OF_MONTH, days);\n\n    // Return the new date as a Date object\n    return calendar.getTime();\n}\n```",
+    "punteggio": 2
+  },
+  {
+    "id": 20,
+    "question": "Come si verifica se una data è nel passato usando la classe `DateUtilCustom`?",
+    "answerOK": "Utilizzando il metodo `isPastDate(Date date)`.",
+    "answerRAG": "Per verificare se una data è nel passato utilizzando la classe `DateUtilCustom`, puoi utilizzare il metodo `isPastDate(Date date)`. Questo metodo accetta un oggetto `Date` come parametro e restituisce `true` se la data è nel passato, altrimenti `false`.\n\nEcco un esempio di come utilizzare questo metodo:\n\n```java\nimport java.util.Date;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Creazione di una nuova data\n        Date myBirthday = new Date(1990, 6, 15); // Note: Month is 0-based (0 for January, 1 for February, etc.)\n\n        // Verifica se la mia data di nascita è nel passato\n        boolean isMyBirthdayInThePast = DateUtilCustom.isPastDate(MyBirthday);\n\n        if (IsMyBirthdayInThePast) {\n            System.out.println(\"La mia data di nascita è nel passato.\");\n        } else {\n            System.out.println(\"La mia data di nascita non è nel passato.\");\n        }\n    }\n}\n```\n\nNell'esempio above, we create a new `Date` object representing my birthday in 1990. We then call the `isPastDate()` method from our `DateUtilCustom` class to check if this date is in the past. The result will be printed out accordingly.",
+    "punteggio": 2
+  },
+  {
+    "id": 21,
+    "question": "Cosa fa il metodo `giorniAlmiocompleannoSpecial(Date dataNascita, String nome)` nella classe `DateUtilCustom`?",
+    "answerOK": "Calcola i giorni che mancano al compleanno di una persona e restituisce un messaggio personalizzato.",
+    "answerRAG": "Il metodo `giorniAlmiocompleannoSpecial(Date dataNascita, String nome)` è un metodo statico della classe `DateUtilCustom`. Ha due parametri:\n\n1. `dataNascita` (Date): Questo è l'oggetto `Date` che rappresenta la data di nascita della persona.\n2. `nome` (String): Questa è una stringa che contiene il nome della persona.\n\nIl metodo restituisce una stringa che indica quanti giorni mancano al compleanno della persona specificata. Utilizza i seguenti metodi della classe `DateUtilCustom`:\n\n- `getDifferenceInDays(Date dataNascita, Date currentDate)`: Questo metodo calcola la differenza in giorni tra la data di nascita e la data corrente.\n- `getCurrentDate()`: Questo metodo restituisce l'oggetto `Date` corrente.\n\nLa stringa restituita è nel seguente formato: \"Caro [nome] mancano [numero_di_giorni] giorni al tuo compleanno\".\n\nEsempio:\n```java\nDate dataNascita = new Date(1990, 5, 15); // 15 maggio 1990\nString nome = \"Mario\";\nString messaggioCompleanno = DateUtilCustom.giorniAlmiocompleannoSpecial(dataNascita, nome);\nSystem.out.println(messaggioCompleanno); // Output: \"Caro Mario mancano [numero_di_giorni] giorni al tuo compleanno\"\n```",
+    "punteggio": 5
+  },
+  {
+    "id": 22,
+    "question": "In `ElaboratoreLinguaggio`, come viene calcolato il punteggio di sentimento di un testo?",
+    "answerOK": "Il punteggio di sentimento è calcolato come `(punteggioPositivo - punteggioNegativo) / (double) (punteggioPositivo + punteggioNegativo + 1)`",
+    "answerRAG": "Come è calcolato il punteggio di sentimento in `ElaboratoreLinguaggio`?\n\nIl metodo `analizzaSentimento` analizza il sentiment di un testo utilizzando un modello NLP (Natural Language Processing) personalizzato. In questo caso, l'analisi viene simulata e basata su parole chiave positive o negative.\n\n1. Creare due contatori: `punteggioPositivo` e `punteggioNegativo`, inizializzati a 0.\n2. Dividere il testo in singole parole utilizzando lo spazio come delimitatore.\n3. Per ogni parola nel testo:\n   - Se la parola è contenuta in un array di parole chiave positive, incrementa `punteggioPositivo` di 1.\n   - Altrimenti, se la parola è contenuta in un array di parole chiave negative, incrementa `punteggioNegativo` di 1.\n4. Calcolare il punteggio di sentimento come la differenza tra `punteggioPositivo` e `punteggioNegativo`, divisa per la somma dei tre contatori (in questo modo, se un testo è più positivo o negativo).\n5. Restituire il punteggio di sentimento, limitato a valori compresi tra -1.0 e 1.0 utilizzando `Math.max` e `Math.min`.\n\nQuesto metodo fornisce un punteggio di sentimento basato su parole chiave simulate, ma in una applicazione reale, potrebbe essere utilizzato un modello NLP o un algoritmo di analisi del sentiment realizzato con Machine Learning per ottenere risultati più precisi.",
+    "punteggio": 4
+  },
+  {
+    "id": 23,
+    "question": "Qual è lo scopo del metodo `estraiEntitaNominate` nella classe `ElaboratoreLinguaggio`?",
+    "answerOK": "Estrae entità nominate dal testo.",
+    "answerRAG": "Il metodo `estraiEntitaNominate` nella classe `ElaboratoreLinguaggio` ha lo scopo di estrarre entità nominate (nome, cognome, azienda, prodotto) dal testo fornito come parametro. Queste entità sono simbolizzate da parole chiave specifiche, ad esempio \"nome\", \"cognome\", \"azienda\" e \"prodotto\".\n\nL'implementazione del metodo utilizza un array di stringhe `paroleChiaveEntita` per iterare su queste parole chiave. Per ognuna di esse, il metodo verifica se la stringa di testo (in minuscolo) contiene la parola chiave. Se una parola chiave viene trovata nel testo, viene aggiunta alla lista `entitaNominate`.\n\nIn questo modo, il metodo restituisce una lista di entità nominate presenti nel testo fornito.",
+    "punteggio": 3
+  },
+  {
+    "id": 24,
+    "question": "Cosa fa il metodo `applicaTemplate` nella classe `GestoreConfigurazioni`?",
+    "answerOK": "Sostituisce i placeholder in un template con i valori corrispondenti forniti in una mappa di configurazioni.",
+    "answerRAG": "Il metodo `applicaTemplate` nella classe `GestoreConfigurazioni` è responsabile di sostituire i placeholder presenti nel template con i valori dei parametri dinamici. Questo metodo accetta due argomenti:\n\n1. `template` (String): Il template base in cui verranno sostituiti i placeholder.\n2. `parametri` (Map<String, Object>): Una mappa che contiene i nomi dei placeholder come chiavi e i relativi valori come valori.\n\nIl metodo itera su tutte le entry della mappa `parametri`, crea un placeholder utilizzando la chiave corrente (nome del parametro) e il valore corrente, e lo sostituisce nel template utilizzando il metodo `replace()`.\n\nAl termine di questa operazione, il metodo restituisce il template modificato con i placeholder sostituiti con i valori dei parametri dinamici.",
+    "punteggio": 5
+  },
+  {
+    "id": 25,
+    "question": "In `GestoreConoscenza`, cosa fa il metodo `estraiMetadati`?",
+    "answerOK": "Estrae metadati da un documento, inclusi autore, data e parole chiave.",
+    "answerRAG": "Il metodo `estraiMetadati` in `GestoreConoscenza` è responsabile dell'arricchimento dei metadati di un documento. Questo metodo prende come input il contenuto del documento e lo utilizza per estrarre titoli, autori, date e parole chiave.\n\n1. Estrae il titolo: Chiama la funzione `estraiTitolo` passando il documento come parametro. Questa funzione simula l'estrazione del titolo del documento e restituisce una stringa che viene memorizzata nel dizionario `metadati` con la chiave \"titolo\".\n\n2. Estrae l'autore: Chiama la funzione `estraiAutore` passando il documento come parametro. Questa funzione simula l'estrazione dell'autore del documento e restituisce una stringa che viene memorizzata nel dizionario `metadati` con la chiave \"autore\".\n\n3. Estrae la data: Chiama la funzione `estraiData` passando il documento come parametro. Questa funzione simula l'estrazione della data del documento e restituisce una stringa che viene memorizzata nel dizionario `metadati` con la chiave \"data\".\n\n4. Estrae le parole chiave: Chiama la funzione `estraiParoleChiave` passando il documento come parametro. Questa funzione simula l'estrazione delle parole chiave del documento e restituisce una lista di stringhe che viene memorizzata nel dizionario `metadati` con la chiave \"paroleChiave\".\n\n5. Restituisce il dizionario `metadati` arricchito con i metadati estratti.",
+    "punteggio": 4
+  },
+  {
+    "id": 26,
+    "question": "Qual è lo scopo del metodo `generaIdentitaDigitale` nella classe `GestoreIdentita` e cosa prende come input?",
+    "answerOK": "Genera un'identità digitale sotto forma di token JWT firmato digitalmente [49]. Prende come input dati biometrici codificati (`byte[] parametriBiometrici`)",
+    "answerRAG": "Lo scopo del metodo `generaIdentitaDigitale` nella classe `GestoreIdentita` è quello di generare un token JSON Web Token (JWT) firmato digitalmente basato sui dati biometrici forniti. Il token JWT contiene le seguenti informazioni:\n\n1. Payload: Contiene i dati biometrici codificati in base64Url.\n2. Header: Contiene la chiave di firma utilizzata per firmare il token.\n3. Signature: Risultato della firma del payload concatenato con l'header utilizzando la chiave di firma.\n\nIl metodo prende come input un array di byte `parametriBiometrici`, che contiene i dati biometrici codificati in formato binario. Questi dati biometrici verranno utilizzati per calcolare l'hash SHA-256 e generare il token JWT firmato digitalmente.",
+    "punteggio": 5
+  },
+  {
+    "id": 27,
+    "question": "Cosa verifica il metodo `verificaIdentita` nella classe `GestoreIdentita`?",
+    "answerOK": "Verifica l'identità confrontando un token JWT con un'impronta hash attesa.",
+    "answerRAG": "Il metodo `verificaIdentita` verifica l'identità di un utente utilizzando un token JWT e un hash atteso. Esegue le seguenti operazioni:\n\n1. Decodifica il token JWT utilizzando la chiave segreta (`CHIAVE_FIRMA`) e recupera il valore dell'attestazione (claim) relativo all'hash biometrico memorizzato nel token.\n2. Genera un hash del valore dell'attestazione (claim) utilizzando l'algoritmo SHA-256.\n3. Confronta il hash generato con il hash atteso e restituisce `true` se coincidono, altrimenti restituisce `false`.\n\nNel caso di errori durante la decodifica del token o la generazione del hash, viene lanciata un'eccezione `RuntimeException`, indicando un errore durante la verifica dell'identità.",
+    "punteggio": 4
+  },
+  {
+    "id": 28,
+    "question": "Quali controlli vengono eseguiti all'interno del metodo `generaChiaveAttivazione` della classe `GestoreLicenze`?",
+    "answerOK": "Verifica che il codice cliente sia di 8 cifre e che la data di scadenza sia nel formato corretto (AAAAMMGG).",
+    "answerRAG": "Il metodo `generaChiaveAttivazione` della classe `GestoreLicenze` ha due controlli principali:\n\n1. Controllo sul formato della data di scadenza:\n   - Verifica se la data di scadenza è nel formato AAAAMMGG.\n   - Se non è nel formato corretto, viene lanciata un'eccezione `IllegalArgumentException` con il messaggio \"Formato data non valido\".\n\n2. Generazione della chiave di attivazione:\n   - Utilizza la classe `KeyGenerator` per generare una chiave criptografica basata sul protocollo AES (Advanced Encryption Standard).\n   - La chiave viene codificata in formato Base64 utilizzando la classe `Base64`.\n   - Viene restituita la chiave di attivazione codificata.\n\n3. Controllo sui parametri:\n   - Verifica che il codice del cliente sia composto solo da 8 cifre.\n   - Se non è valido, viene lanciata un'eccezione `IllegalArgumentException` con il messaggio \"Codice cliente non valido\".\n\n4. Generazione di una nuova chiave se la data di scadenza è passata:\n   - Verifica se la data di scadenza è precedente alla data corrente.\n   - Se è passata, viene generata una nuova chiave con la nuova data di scadenza utilizzando il metodo `generaChiaveAttivazione` ricorsivo.\n\n5. Controllo sul formato della nuova data di scadenza:\n   - Verifica se la nuova data di scadenza è nel formato AAAAMMGG.\n   - Se non è nel formato corretto, viene lanciata un'eccezione `IllegalArgumentException` con il messaggio \"Formato data non valido\".\n\n6. Generazione della chiave di attivazione con la nuova data di scadenza:\n   - Utilizza la classe `KeyGenerator` per generare una chiave criptografica basata sul protocollo AES.\n   - La chiave viene codificata in formato Base64 utilizzando la classe `Base64`.\n   - Viene restituita la nuova chiave di attivazione codificata.",
+    "punteggio": 5
+  },
+  {
+    "id": 29,
+    "question": "Cosa calcola il metodo `calcolaIndiceManutenibilita` della classe `IspezionatoreCodice`?",
+    "answerOK": "Calcola un valore MI (Maintainability Index) basato su metriche interne come la lunghezza delle righe, il numero di commenti e la complessità ciclomatica.",
+    "answerRAG": "Il metodo `calcolaIndiceManutenibilità` della classe `IspezionatoreCodice` è utilizzato per calcolare l'indice di manutenibilità (MI) di un codice Java. L'indice di manutenibilità è un valore compreso tra 0 e 100 che indica la facilità con cui il codice può essere modificato, aggiornato o sostituito nel tempo.\n\nIl metodo utilizza tre metriche interne per calcolare l'MI:\n1. Lunghezza media delle righe: Questa misura viene utilizzata per stimare la complessità del codice e quindi influisce sulla manutenibilità. Un codice con lunghezze di riga corte è generalmente più manutenibile.\n2. Numero di commenti: I commenti nel codice possono influenzare la comprensione del codice e rendere il codice meno manutenibile se non sono utilizzati correttamente. Un numero elevato di commenti può limitare la capacità del team di modificare o sostituire il codice.\n3. Complessità ciclomatica: La complessità ciclomatica misura quanto il codice è strutturato in modo che sia possibile seguirlo e comprendere. Un codice con una alta complessità ciclomatica può essere difficile da manutenire.\n\nIl metodo `calcolaIndiceManutenibilita` utilizza queste metriche per calcolare l'indice di manutenibilità (MI) applicando le seguenti formule:\n```\nMI = 100 - (lunghezzaMediaRighe * 0.1) + (numeroCommenti * 0.5) - (complessitaCiclomatica * 0.2)\n```\nDove:\n- `lunghezzaMediaRighe` è la lunghezza media delle righe di codice analizzate.\n- `numeroCommenti` è il numero di commenti nel codice.\n- `complessitaCiclomatica` è la complessità ciclomatica del codice.\n\nIl risultato viene restituito come un valore compreso tra 0 e 100, dove un valore più elevato indica una manutenibilità migliore.",
+    "punteggio": 5
+  },
+  {
+    "id": 30,
+    "question": "In `MetricheAgili`, cosa rappresenta il `fattoreComplessità` nel metodo `calcolaVelocityScore` e qual è il suo range?",
+    "answerOK": "Rappresenta un fattore di complessità e il suo range è da 1 a 5.",
+    "answerRAG": "Il `fattoreComplessità` nel metodo `calcolaVelocityScore` di `MetricheAgili` ha la funzione di quantificare l'impatto della complessità del codice sui risultati dell'analisi. Il valore è un numero intero compreso tra 1 e 5, dove:\n\n- 1 indica un codice di bassa complessità\n- 2 indica una complessità media\n- 3 indica una complessità alta\n- 4 indica una complessità molto alta\n- 5 indica un codice estremamente complesso\n\nIl fattore di complessità viene utilizzato per adattare il Velocity Score in modo che sia più sensibile alle modifiche del codice e meno influenzato da piccole variazioni. In questo modo, si può ottenere una stima più precisa del risultato dell'analisi, anche se il codice è complesso.",
+    "punteggio": 5
+  }
+]
