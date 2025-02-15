@@ -53,7 +53,6 @@ def process_file(file_path):
 
 # Carica e suddividi i file Java
 files = glob.glob("my_project/classi_java_custom/*.java") #["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java", "my_project/Ventunoclassi.java"]
-print(files)
 all_chunks = []
 
 for file_path in files:

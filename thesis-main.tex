@@ -85,7 +85,7 @@ Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzi
 il fine-tuning di un \ac{LLM} è un processo molto costoso e difficile da utilizzare per mantenere aggiornato frequentemente la base di conoscenza del modello.
 Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza, esterna al modello, come librerie specifiche di un azienda, arricchendo il prompt della query di input che sarà elaborata dal LLM.
 Il \ac{RAG}, ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, li inserirà per aumentare il prompt del LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
-Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} specifico per codice Java e un \ac{LLM} con lo scopo di ottenere dal LLM risposte personalizzate
+Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} specifico per codice Java e un \ac{LLM} con lo scopo di ottenere risposte personalizzate
 che solo con la conoscenza del LLM, anche se estremamente performante e completo, sarebbe stato impossibile ottenere.
 \end{abstract}
 
@@ -503,7 +503,7 @@ Il dataset è stato creato appositamente per testare il sistema RAG ed è compos
     \item[BasketballStats.java] Classe abstract per statistiche di basket
     \item[AdvancedBasketballStats] Classe che estende BasketballStats
     \item[BasketballTest] Classe per testare le statistiche di basket implementate in AdvancedBasketballStats
-    \item[Altre classi java] Non strettamente correlate con le prime due
+    \item[Altre classi java] Non strettamente correlate con le prime due utili per aumentare la base dati sul quale effettuare le ricerche e per testare la capacità di generalizzazione del sistema.
 \end{description}
 
 \section{Scenario base del Caso Studio}
@@ -605,7 +605,7 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
         return chunk_metadata
     
     # Carica e suddividi i file Java
-    files = ["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java"]
+    files = glob.glob("my_project/classi_java_custom/*.java") #["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java", "my_project/Ventunoclassi.java"]
     all_chunks = []
     
     for file_path in files:
@@ -645,22 +645,22 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         [
             {
                 "id": 1,
-                "text": "// File: my_project/DateUtilCustom.java\nimport java.text.ParseException;\nimport java.text.SimpleDateFormat;\nimport java.time.DayOfWeek;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeParseException;\nimport java.util.Calendar;\nimport java.util.Date;",
-                "source": "my_project/DateUtilCustom.java",
+                "text": "// File: my_project/classi_java_custom\\AnalizzatoreRilascio.java\nClasse: AnalizzatoreRilascio\npackage classi_java_custom;\nimport java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\nimport java.util.Arrays;\n\npublic class AnalizzatoreRilascio {",
+                "source": "my_project/classi_java_custom\\AnalizzatoreRilascio.java",
                 "type": "code",
                 "start_line": 1,
-                "end_line": 7,
-                "class": ""
+                "end_line": 6,
+                "class": "AnalizzatoreRilascio\n"
             },
             {
                 "id": 2,
-                "text": "// File: my_project/DateUtilCustom.java\nClasse: DateUtilCustom\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.concurrent.TimeUnit;\npublic class DateUtilCustom {\n    /**\n     * Formatta una data nel formato \"dd/MM/yyyy\".\n     *\n     * @param date La data da formattare.",
-                "source": "my_project/DateUtilCustom.java",
+                "text": "// File: my_project/classi_java_custom\\AnalizzatoreRilascio.java\n* Stima la data di rilascio usando l'algoritmo \"QuantumSchedule\"\n     * @param taskCompletati Array di task completati negli ultimi 7 giorni\n     * @param velocitaSviluppo Media story points/giorno",
+                "source": "my_project/classi_java_custom\\AnalizzatoreRilascio.java",
                 "type": "code",
-                "start_line": 7,
-                "end_line": 16,
-                "class": "DateUtilCustom\n"
-            }
+                "start_line": 6,
+                "end_line": 11,
+                "class": ""
+            },
             ............continua
         ]
     \end{lstlisting}
@@ -712,7 +712,7 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
 \subsection{Generazione degli Embedding}
     Gli embedding trasformano i chunk in rappresentazioni vettoriali che catturano il significato semantico.
     Il seguente codice Python mostra come generare gli embedding e creare un database Faiss.
-    Come precedentemente descritto, il modello di embedding utilizzato è BGE-M3, questo modello usa due rappresentazioni per complementarietà, la rappresentazione denza cattura relazioni semantiche mentre quella sparsa cattura relazioni sintattiche.
+    Come precedentemente descritto, il modello di embedding utilizzato è BGE-M3, questo modello usa due rappresentazioni per complementarietà, la rappresentazione densa cattura relazioni semantiche mentre quella sparsa cattura relazioni sintattiche.
     Mentre sul database FAISS ad alta dimensionalità verrà settata la ricerca di somiglianza utilizzando la distanza euclidea tra i vettori.
     
     \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database FAISS}, label={lst:embeddings}]

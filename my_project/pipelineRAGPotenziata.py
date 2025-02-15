@@ -93,7 +93,7 @@ def load_questions(file_path: str) -> List[Dict]:
             data = json.load(f)
             
         # Validazione della struttura
-        required_keys = {'id', 'question', 'context', 'punteggio'}
+        required_keys = {'id', 'question', 'answer', 'punteggio'}
         for item in data:
             if not required_keys.issubset(item.keys()):
                 raise ValueError("Struttura JSON non valida")
@@ -126,7 +126,7 @@ def process_questions(questions: List[Dict]) -> List[Dict]:
             }
             results.append(entry)
             
-            print(f"Processata {q['id']} - {q['context'][:30]}...")
+            print(f"Processata {q['id']}")
             
         except Exception as e:
             print(f"Errore su {q['id']}: {str(e)}")
@@ -134,8 +134,7 @@ def process_questions(questions: List[Dict]) -> List[Dict]:
                 "id": q["id"],
                 "punteggio": q["punteggio"],
                 "error": str(e),
-                "question": q["question"],
-                "context": q["context"]
+                "question": q["question"]
             })
     
     return results
@@ -147,7 +146,7 @@ if __name__ == "__main__":
     # Processamento e salvataggio risultati
     all_results = process_questions(questions)
     
-    output_file = Path("rag_resultsllamascore08.json")
+    output_file = Path("rag_resultsllamascore1.json")
     output_file.write_text(
         json.dumps(all_results, ensure_ascii=False, indent=2), 
         encoding='utf-8'

@@ -210,3 +210,127 @@
     "punteggio": 5
   }
 ]
+
+punteggio assegnato da DeepSeek:
+[
+  {
+    "id": 1,
+    "punteggio_assegnato": 0
+  },
+  {
+    "id": 2,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 3,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 4,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 5,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 6,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 7,
+    "punteggio_assegnato": 4
+  },
+  {
+    "id": 8,
+    "punteggio_assegnato": 4
+  },
+  {
+    "id": 9,
+    "punteggio_assegnato": 4
+  },
+  {
+    "id": 10,
+    "punteggio_assegnato": 4
+  },
+  {
+    "id": 11,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 12,
+    "punteggio_assegnato": 0
+  },
+  {
+    "id": 13,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 14,
+    "punteggio_assegnato": 0
+  },
+  {
+    "id": 15,
+    "punteggio_assegnato": 2
+  },
+  {
+    "id": 16,
+    "punteggio_assegnato": 2
+  },
+  {
+    "id": 17,
+    "punteggio_assegnato": 3
+  },
+  {
+    "id": 18,
+    "punteggio_assegnato": 2
+  },
+  {
+    "id": 19,
+    "punteggio_assegnato": 2
+  },
+  {
+    "id": 20,
+    "punteggio_assegnato": 2
+  },
+  {
+    "id": 21,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 22,
+    "punteggio_assegnato": 4
+  },
+  {
+    "id": 23,
+    "punteggio_assegnato": 3
+  },
+  {
+    "id": 24,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 25,
+    "punteggio_assegnato": 4
+  },
+  {
+    "id": 26,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 27,
+    "punteggio_assegnato": 4
+  },
+  {
+    "id": 28,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 29,
+    "punteggio_assegnato": 5
+  },
+  {
+    "id": 30,
+    "punteggio_assegnato": 5
+  }
+]
