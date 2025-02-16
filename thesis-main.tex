@@ -15,36 +15,16 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 \lstdefinelanguage{json}{
-    basicstyle=\footnotesize\ttfamily,
-    numbers=left,
-    numberstyle=\tiny,
-    breaklines=true,
-    frame=lines,
-    backgroundcolor=\color{gray!10},
-    showstringspaces=false,
-    string=[db]{"},
-    stringstyle=\color{green!50!black},
-    morestring=[s][\color{black}]{\ \ "}{":},
-    keywordstyle=\color{blue},
-    keywords={true,false,null},
-    literate=
-     *{0}{{{\color{red}0}}}{1}
-      {1}{{{\color{red}1}}}{1}
-      {2}{{{\color{red}2}}}{1}
-      {3}{{{\color{red}3}}}{1}
-      {4}{{{\color{red}4}}}{1}
-      {5}{{{\color{red}5}}}{1}
-      {6}{{{\color{red}6}}}{1}
-      {7}{{{\color{red}7}}}{1}
-      {8}{{{\color{red}8}}}{1}
-      {9}{{{\color{red}9}}}{1}
-      {.}{{{\color{red}.}}}{1}
-      {:}{{{\color{gray}{:}}}}{1}
-      {,}{{{\color{gray}{,}}}}{1}
-      {\{}{{{\color{gray}{\{}}}}{1}
-      {\}}{{{\color{gray}{\}}}}}{1}
-      {[}{{{\color{gray}{[}}}}{1}
-      {]}{{{\color{gray}{]}}}}{1},
+    basicstyle=\footnotesize\ttfamily,numbers=none,breaklines=true,
+    frame=lines,backgroundcolor=\color{gray!10},showstringspaces=false,
+    string=[db]{"},stringstyle=\color{green!50!black},
+    morestring=[s][\color{black}]{\ \ "}{":},keywordstyle=\color{blue},
+    keywords={true,false,null},literate=*{0}{{{\color{red}0}}}{1}
+    {1}{{{\color{red}1}}}{1}{2}{{{\color{red}2}}}{1}{3}{{{\color{red}3}}}{1}
+    {4}{{{\color{red}4}}}{1}{5}{{{\color{red}5}}}{1}{6}{{{\color{red}6}}}{1}
+    {7}{{{\color{red}7}}}{1}{8}{{{\color{red}8}}}{1}{9}{{{\color{red}9}}}{1}
+    {.}{{{\color{red}.}}}{1}{:}{{{\color{gray}{:}}}}{1}{,}{{{\color{gray}{,}}}}{1}
+    {\{}{{{\color{gray}{\{}}}}{1}{\}}{{{\color{gray}{\}}}}}{1}{[}{{{\color{gray}{[}}}}{1}{]}{{{\color{gray}{]}}}}{1}
 }
 
 \usetikzlibrary{shapes,arrows,positioning}
@@ -551,7 +531,7 @@ I modelli di embedding hanno limiti massimi di input (512-4096 token)  per quest
 Inoltre occorre prestare attenzione alla dimensione dei chunk generati, se troppo piccoli riducono il contesto disponibile per il modello mentre se troppo grandi perdono focalizzazione semantica.
 Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
 Il seguente codice Python mostra come suddividere i file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
-\begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione dei file Java in chunk}, label={lst:chunking}]
+\begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione dei file Java in chunk}, label={lst:chunking}, inputencoding=utf8]
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     import json
     
@@ -564,8 +544,8 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
         text = ''.join(lines)
     
         splitter = RecursiveCharacterTextSplitter(
-        chunk_size=256, #molto basso per prevenire merge di metodi
-        chunk_overlap=64,
+        chunk_size=512, # medio-basso per prevenire merge di metodi
+        chunk_overlap=128,
         separators=[
             # I seguenti separatori sono stati usati per mantenere i metodi uniti
             # Prioritari: catturano la fine dei metodi
@@ -576,14 +556,13 @@ Il seguente codice Python mostra come suddividere i file Java in chunk di dimens
             "\n}\n\n// End of method", 
             
             # Secondari: separatori generici
-            "\n}\n",  # Qualsiasi chiusura di blocco
             "\nclass ",  # Inizio nuove classi
             "\n@",  # Annotazioni
             "\n/**",  # Javadoc
             "\n * ", 
             "\n"
         ],
-        keep_separator=False, # per evitare riporto di separatori
+        keep_separator=True
         is_separator_regex=False
     )
     
@@ -645,20 +624,20 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         [
             {
                 "id": 1,
-                "text": "// File: my_project/classi_java_custom\\AnalizzatoreRilascio.java\nClasse: AnalizzatoreRilascio\npackage classi_java_custom;\nimport java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\nimport java.util.Arrays;\n\npublic class AnalizzatoreRilascio {",
-                "source": "my_project/classi_java_custom\\AnalizzatoreRilascio.java",
+                "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\nClasse: AdvancedBasketballStats extends BasketballStats\npackage classi_java_custom;\nimport java.time.LocalDate;\nimport java.util.Arrays;\npublic class AdvancedBasketballStats extends BasketballStats {\n    \n    // Override con formula avanzata PER\n    @Override\n    public double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist, \n                                           int pallePerse, int tiriSbagliati) {\n        return (punti * 1.2 + rimbalzi * 1.1 + assist * 1.3) - \n              (pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }",
+                "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
                 "type": "code",
                 "start_line": 1,
-                "end_line": 6,
-                "class": "AnalizzatoreRilascio\n"
+                "end_line": 14,
+                "class": "AdvancedBasketballStats extends BasketballStats\n"
             },
             {
                 "id": 2,
-                "text": "// File: my_project/classi_java_custom\\AnalizzatoreRilascio.java\n* Stima la data di rilascio usando l'algoritmo \"QuantumSchedule\"\n     * @param taskCompletati Array di task completati negli ultimi 7 giorni\n     * @param velocitaSviluppo Media story points/giorno",
-                "source": "my_project/classi_java_custom\\AnalizzatoreRilascio.java",
+                "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\n(pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }\n    \n    // Override con valutazione dettagliata\n    @Override\n    public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {\n            return \" Tiro ad alto rendimento (85% successo) \";\n        } else if (distanzaCanestro >= 7.0 && pressioneDifensiva > 6) {\n            return \" Tiro ad alto rischio (30% successo) \";\n        }",
+                "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
                 "type": "code",
-                "start_line": 6,
-                "end_line": 11,
+                "start_line": 14,
+                "end_line": 24,
                 "class": ""
             },
             ............continua
@@ -795,12 +774,12 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
                 \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
             \newline
         \item \textbf{Output:}
-        viene restituito il chunk corretto con uno score di similarità di \textbf{0.6547}. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
+        viene restituito il chunk corretto con uno score di similarità di \textbf{0.7014}. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
     \end{itemize}
     \paragraph{Nota:}
     È importante riscontrare che viene restituito un solo chunk nonostante \texttt{k=5}.
     Questo accade perché nessun altro chunk supera la soglia di similarità impostata.
-    Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow} richiama un metodo presente nella libreria \texttt{DateUtilCustom} che non viene estratto dal Dataset.
+    Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow()} richiama un metodo presente nella libreria \texttt{DateUtilCustom} che non viene estratto dal Dataset.
 
     \subsubsection{Riformulazione query (aggiungendo riferimento al metodo utilizzato all'interno di segnale Wow)}
         \begin{itemize}
@@ -810,15 +789,15 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
             \end{quote}
             \item \textbf{L'output fornisce 5 risultati:}
             \begin{itemize}
-                \item Primo chunk \textbf{(score: 0.5276)}: contiene la funzione \texttt{segnaleWow}
-                \item Secondo, terzo e quarto chunk \textbf{(scores: 0.7188, 0.7258, 0.7605)}: contengono la funzione \texttt{getMessaggioMagico}
-                \item Quinto chunk \textbf{(score: 0.8958)}: funzione non rilevante relativa alle date
+                \item Primo chunk \textbf{(score: 0.5441)}: contiene la funzione \texttt{segnaleWow}
+                \item Secondo, terzo e quarto chunk \textbf{(scores: 0.7325, 0.7466, 0.7989)}: contengono la funzione \texttt{getMessaggioMagico}
+                \item Quinto chunk \textbf{(score: 0.8301)}: funzione non rilevante relativa alle date
             \end{itemize}
         \end{itemize}
 
     \paragraph{Conclusione:}
     Sono state riscontrate due problematiche molto rilevanti, la prima riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
-    Mentre la seconda guarda i chunck estratti, lo score ottenuto non è particolarmente alto e questo con un database più ampio potrebbe portare a risultati non coerenti.
+    Mentre la seconda guarda i chunck estratti, lo score ottenuto non è particolarmente alto e questo con un database più ampio relativo a funzioni con terminologie e meccanismi simili potrebbe portare a risultati non coerenti.
     Per il secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
     questa piccola correzione risolve in parte la problematica o almeno evita di propagarla ulteriormente preferendo non ottenere risultati piuttosto che ricevere risposte non coerenti.
     
@@ -854,7 +833,7 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
             }
         )
     
-    varStileLLM = "Sei un programmatore che risponde conciso ma sintetico."
+    varStileLLM = "Sei un programmatore che risponde conciso e sintetico."
     
     # Configurazione Template del prompt specifici per i modelli
     LLAMA_TEMPLATE = """<|begin_of_text|>
@@ -928,13 +907,13 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
     
     # Esempio d'uso
     if __name__ == "__main__":
-        ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
-        #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?")
+        ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
+        #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
 \end{lstlisting}
 \subsubsection{Spiegazione Pipeline del RAG}
     Seguendo la struttura precedentemente creata, per eseguire l'embedder della query di input viene utilizzato il modello BAAI/bge-m3 e
     caricato il database FAISS contenente la \textbf{knowledge base}.
-    La chiamata iniziale alla funzione \emph{ask\_ollama()} richiede come parametro \textbf{la query di input} che verrà processata dalla pipeline RAG.
+    La chiamata iniziale alla funzione \emph{ask\_ollama()} richiede come parametro \textbf{la query di input} per poi essere processata dalla pipeline RAG.
     Sfruttando le funzionalità della libreria LangChain \cite{langchain-retrieval-chain}, \textbf{\emph{result}} sarà un array contente la risposta("answer") e il contesto("context") fornito alla query.
 \subsubsection{\emph{rag\_chain.invoke()}}
  Questa funzione esegue la catena RAG creata tramite il metodo \emph{create\_retrieval\_chain()} che prende come parametri il retriever e il document chain.
@@ -947,7 +926,8 @@ Per i due LLM è stata data una temperature molto bassa \textbf{0.3} in modo da 
 \subsubsection{Top\_p}
 Il parametro \texttt{top\_p} è stato impostato a 0.85 per bilanciare creatività e controllo nei token generati.
 \subsubsection{System}
-Come parametro di sistema da passare al LLM è stato esplicitamente richiesto di rispondere in italiano come esperto di programmazione ma solo se è sicuro.
+Come parametro di sistema da passare al LLM è stata creata la variabile \texttt{varStileLLM} con il seguente valore: \textbf{"Sei un programmatore che risponde conciso e sintetico"}
+questa richiesta verrà sempre passata al LLM e condizionerà tutte le risposte fornite.
 
 \section{Test Sistema RAG}
 Valutiamo se il sistema RAG  è in grado di rispondere in maniera coerente alla query proposta.
@@ -994,7 +974,7 @@ Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
 In questo caso il RAG aggiunge 5 chunk, ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
 Ne consegue che \textbf{le risposte date dai due modelli sono coerenti con quanto atteso}.
 \subsubsection{Output con LLM Llama3.2}
-``Il metodo `segnaleWow` restituisce una stringa che contiene il messaggio magico per la data specificata. 
+``Il metodo \texttt{segnaleWow} restituisce una stringa che contiene il messaggio magico per la data specificata. 
 Per determinare il messaggio esatto, dobbiamo analizzare la data fornita: `LocalDate.of(2025, 2, 14)`.
 La data è il 14 febbraio 2025. Il giorno della settimana corrisponde a `FRIDAY`.
 Quindi, il messaggio magico restituito dal metodo `getMessaggioMagico` sarà:
@@ -1010,148 +990,145 @@ I risultati ottenuti mostrano come il sistema RAG sia in grado di rispondere in 
 La ricerca dei chunk più simili funziona correttamente soprattutto se si scrive la richiesta in maniera più dettagliata possibile.
 CodeQwen ha sbagliato a calcolare il giorno della settimana a causa di un suo errore nel calcolare il giorno della settimana corrispondente alla data fornita come parametro ma la risposta utilizza correttamente il metodo getMessaggioMagico().
 
-\section{Valutazione del RAG con llm as a judge}
+\section{Valutazione ``llm as a judge"}
 Per eseguire una valutazione più ampia del sistema usiamo l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG.
-Generiamo 30 domande sulle quali sarà richiesta risposta al sistema RAG e sucessivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di più LLM.
-Il dataset originale è stato arricchito da altre classi java generate dai LLM Deepseek e Mistral.
-\subsection{Domande}
-Passando un file contenente tutte le librerie a NotebookLM, sono state generate 30 domande per valutare il sistema RAG.
+Generiamo \textbf{30 domande} sulle quali sarà richiesta risposta al sistema RAG e sucessivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di un altro LLM.
+\subsection{Crezione domande}
+Passando un file contenente tutte le librerie a \textbf{NotebookLM}, sono state generate 30 domande per valutare il sistema RAG.
 La domanda fatta al LLM è stata:
 \begin{quote}
     \texttt{``Dalle mie classi genera 30 domande/risposte per valutare il mio rag la prima è:
-    Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))
+    \newline Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))
     che utilizza la funzione getMessaggioMagico() della libreria
     DateUtilCustom?''}
 \end{quote}
 Il risulta è stato il seguente:
-\begin{lstlisting}[language=Python, caption={Domande generate da NotebookLM}]
-[
+\begin{lstlisting}[language=json, caption={Domande/Risposte generate da NotebookLM}]
     {
-        "id": 1,
-        "question": "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?"
+        "question1": "Cosa ritorna il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` che utilizza la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`?",
+        "answer": "Ritorna la stringa \"il tuo segnale Wow e': Attenzione agli incantesimi del crepuscolo.\""
     },
     {
-        "id": 2,
-        "question": "La classe AnalizzatoreRilascio contiene un metodo chiamato stimaDataRilascio. Quali sono i due parametri di input richiesti da questo metodo?"
+        "question2": "La classe `AnalizzatoreRilascio` contiene un metodo chiamato `stimaDataRilascio`. Quali sono i due parametri di input richiesti da questo metodo?",
+        "answer": "Il metodo `stimaDataRilascio` richiede un array di interi (`int[] taskCompletati`) e un valore double (`double velocitaSviluppo`) come input."
     },
     {
-        "id": 3,
-        "question": "Nella classe AnalizzatoreRilascio, come viene calcolato il numero di task rimanenti nel metodo stimaDataRilascio?"
+        "question3": "Nella classe `AnalizzatoreRilascio`, come viene calcolato il numero di task rimanenti nel metodo `stimaDataRilascio`?",
+        "answer": "Il numero di task rimanenti viene calcolato sottraendo la somma dei task completati (assumendo un totale di 100 task)."
+      },
+    {
+        "question4": "Qual e' il valore di soglia critica per l'indice di rischio rilascio (IRR) nella classe `AnalizzatoreRilascio`?",
+        "answer": "La soglia critica per l'IRR e' **8.5**."
+      },
+    {
+        "question5": "Quali sono i parametri di input del metodo `calcolaProbabilitaSuccesso` nella classe `AnalizzatoreRilascio` e come viene calcolata la probabilita' di successo?",
+        "answer": "I parametri sono `numeroBugRisolti` e `numeroTestPassati`. La probabilita' di successo e' calcolata come `(numeroBugRisolti * 0.4) + (numeroTestPassati * 0.6)`."
     },
     {
-        "id": 4,
-        "question": "Qual e' il valore di soglia critica per l'indice di rischio rilascio (IRR) nella classe AnalizzatoreRilascio?"
+        "question6": "Qual e' lo scopo del metodo `stimaTempoRimanente` nella classe `AnalizzatoreRilascio` e quali parametri accetta?",
+        "answer": "Stima il tempo rimanente per il rilascio. Accetta `taskRimanenti` (numero di task rimanenti) e `velocitaSviluppo` come parametri."
     },
     {
-        "id": 5,
-        "question": "Quali sono i parametri di input del metodo calcolaProbabilitaSuccesso nella classe AnalizzatoreRilascio e come viene calcolata la probabilita' di successo?"
+        "question7": "Nella classe `BasketballStats`, qual e' la formula utilizzata per calcolare l'efficienza di un giocatore nel metodo `calcolaEfficienzaGiocatore`?",
+        "answer": "La formula e' `(punti + rimbalzi + assist) - (pallePerse + tiriSbagliati)`."
     },
     {
-        "id": 6,
-        "question": "Qual e' lo scopo del metodo stimaTempoRimanente nella classe AnalizzatoreRilascio e quali parametri accetta?"
+        "question8": "Quali sono i criteri utilizzati nel metodo `valutaTiro` della classe `BasketballStats` per valutare la qualita' di un tiro?",
+        "answer": "La **distanza dal canestro** (`distanzaCanestro`) e la **pressione difensiva** (`pressioneDifensiva`)."
     },
     {
-        "id": 7,
-        "question": "Nella classe BasketballStats, qual e' la formula utilizzata per calcolare l'efficienza di un giocatore nel metodo calcolaEfficienzaGiocatore?"
+        "question9": "Cosa restituisce il metodo `analisiStatisticheSquadra` della classe `BasketballStats`?",
+        "answer": "Restituisce un report dettagliato delle prestazioni della squadra."
     },
     {
-        "id": 8,
-        "question": "Quali sono i criteri utilizzati nel metodo valutaTiro della classe BasketballStats per valutare la qualia' di un tiro?"
+        "question10": "Quali sono gli input del metodo `previsioneVincitore` nella classe `BasketballStats` e cosa rappresentano?",
+        "answer": "Gli input sono due array di double (`squadraCasa` e `squadraOspite`) che contengono `[puntiMedi, rimbalziMedi, assistMedi]`, e una `LocalDate dataPartita`."
     },
     {
-        "id": 9,
-        "question": "Cosa restituisce il metodo analisiStatisticheSquadra della classe BasketballStats?"
+        "question11": "Come viene calcolato il margine nel metodo `previsioneVincitore` della classe `BasketballStats`?",
+        "answer": "Il margine e' calcolato come il valore assoluto della differenza tra la valutazione della squadra di casa e la valutazione della squadra ospite."
     },
     {
-        "id": 10,
-        "question": "Quali sono gli input del metodo previsioneVincitore nella classe BasketballStats e cosa rappresentano?"
+        "question12": "Cosa rappresenta l'input del metodo `calcolaMomentum` nella classe `BasketballStats`?",
+        "answer": "Rappresenta gli ultimi punti segnati dalla squadra di casa (`ultimiPuntiCasa`) e dalla squadra ospite (`ultimiPuntiOspite`)."
     },
     {
-        "id": 11,
-        "question": "Come viene calcolato il margine nel metodo previsioneVincitore della classe BasketballStats?"
+        "question13": "Qual e' il requisito per la lunghezza della chiave segreta nel metodo `cifraturaVortex` della classe `CifratoreAziendale`?",
+        "answer": "La chiave segreta deve essere di 12 caratteri."
     },
     {
-        "id": 12,
-        "question": "Cosa rappresenta l'input del metodo calcolaMomentum nella classe BasketballStats?"
+        "question14": "Cosa fa il metodo `mascheraDatiSensibili` nella classe `TrasformatoreDati`?",
+        "answer": "Il metodo maschera i dati sensibili sostituendo i caratteri originali con caratteri casuali."
     },
     {
-        "id": 13,
-        "question": "Qual e' il requisito per la lunghezza della chiave segreta nel metodo cifraturaVortex della classe CifratoreAziendale?"
+        "question15": "Nella classe `DateUtilCustom`, descrivi cosa fa il metodo `formatDate(Date date)` e fornisci un esempio del formato di output.",
+        "answer": "Formatta una data nel formato \"dd/MM/yyyy\". Ad esempio, se la data e' il 25 dicembre 2023, l'output sara' \"25/12/2023\"."
     },
     {
-        "id": 14,
-        "question": "Cosa fa il metodo mascheraDatiSensibili nella classe TrasformatoreDati?"
+        "question16": "Qual e' la differenza tra i metodi `formatDate(Date date)` e `formatDate(Date date, String format)` nella classe `DateUtilCustom`?",
+        "answer": "Il primo utilizza il formato predefinito \"dd/MM/yyyy\", mentre il secondo permette di specificare un formato personalizzato."
     },
     {
-        "id": 15,
-        "question": "Nella classe DateUtilCustom, descrivi cosa fa il metodo formatDate(Date date) e fornisci un esempio del formato di output."
+        "question17": "Cosa puo' accadere se si utilizza il metodo `parseDate` della classe `DateUtilCustom` con una stringa che non corrisponde al formato specificato?",
+        "answer": "Verra' lanciata una `ParseException`."
     },
     {
-        "id": 16,
-        "question": "Qual e' la differenza tra i metodi formatDate(Date date) e formatDate(Date date, String format) nella classe DateUtilCustom?"
+        "question18": "Nella classe `DateUtilCustom`, cosa calcola il metodo `getDifferenceInDays(Date startDate, Date endDate)`?",
+        "answer": "Calcola la differenza in giorni tra due date."
     },
     {
-        "id": 17,
-        "question": "Cosa puo' accadere se si utilizza il metodo parseDate della classe DateUtilCustom con una stringa che non corrisponde al formato specificato?"
+        "question19": "Cosa fa il metodo `addDays(Date date, int days)` nella classe `DateUtilCustom`?",
+        "answer": "Aggiunge un numero specificato di giorni a una data."
     },
     {
-        "id": 18,
-        "question": "Nella classe DateUtilCustom, cosa calcola il metodo getDifferenceInDays(Date startDate, Date endDate)?"
+        "question20": "Come si verifica se una data e' nel passato usando la classe `DateUtilCustom`?",
+        "answer": "Utilizzando il metodo `isPastDate(Date date)`."
     },
     {
-        "id": 19,
-        "question": "Cosa fa il metodo addDays(Date date, int days) nella classe DateUtilCustom?"
+        "question21": "Cosa fa il metodo `giorniAlmiocompleannoSpecial(Date dataNascita, String nome)` nella classe `DateUtilCustom`?",
+        "answer": "Calcola i giorni che mancano al compleanno di una persona e restituisce un messaggio personalizzato."
     },
     {
-        "id": 20,
-        "question": "Come si verifica se una data e' nel passato usando la classe DateUtilCustom?"
+        "question22": "In `ElaboratoreLinguaggio`, come viene calcolato il punteggio di sentimento di un testo?",
+        "answer": "Il punteggio di sentimento e' calcolato come `(punteggioPositivo - punteggioNegativo) / (double) (punteggioPositivo + punteggioNegativo + 1)`."
     },
     {
-        "id": 21,
-        "question": "Cosa fa il metodo giorniAlmiocompleannoSpecial(Date dataNascita, String nome) nella classe DateUtilCustom?"
+        "question23": "Qual e' lo scopo del metodo `estraiEntitaNominate` nella classe `ElaboratoreLinguaggio`?",
+        "answer": "Estrae entita' nominate dal testo."
     },
     {
-        "id": 22,
-        "question": "In ElaboratoreLinguaggio, come viene calcolato il punteggio di sentimento di un testo?"
+        "question24": "Cosa fa il metodo `applicaTemplate` nella classe `GestoreConfigurazioni`?",
+        "answer": "Sostituisce i placeholder in un template con i valori corrispondenti forniti in una mappa di configurazioni."
     },
     {
-        "id": 23,
-        "question": "Qual e' lo scopo del metodo estraiEntitaNominate nella classe ElaboratoreLinguaggio?"
+        "question25": "In `GestoreConoscenza`, cosa fa il metodo `estraiMetadati`?",
+        "answer": "Estrae metadati da un documento, inclusi autore, data e parole chiave."
     },
     {
-        "id": 24,
-        "question": "Cosa fa il metodo applicaTemplate nella classe GestoreConfigurazioni?"
+        "question26": "Qual e' lo scopo del metodo `generaIdentitaDigitale` nella classe `GestoreIdentita` e cosa prende come input?",
+        "answer": "Genera un'identita' digitale sotto forma di token JWT firmato digitalmente. Prende come input dati biometrici codificati (`byte[] parametriBiometrici`)."
     },
     {
-        "id": 25,
-        "question": "In GestoreConoscenza, cosa fa il metodo estraiMetadati?"
+        "question27": "Cosa verifica il metodo `verificaIdentita` nella classe `GestoreIdentita`?",
+        "answer": "Verifica l'identita' confrontando un token JWT con un'impronta hash attesa."
     },
     {
-        "id": 26,
-        "question": "Qual e' lo scopo del metodo generaIdentitaDigitale nella classe GestoreIdentita e cosa prende come input?"
+        "question28": "Quali controlli vengono eseguiti all'interno del metodo `generaChiaveAttivazione` della classe `GestoreLicenze`?",
+        "answer": "Verifica che il codice cliente sia di 8 cifre e che la data di scadenza sia nel formato corretto (AAAAMMGG)."
     },
     {
-        "id": 27,
-        "question": "Cosa verifica il metodo verificaIdentita nella classe GestoreIdentita?"
+        "question29": "Cosa calcola il metodo `calcolaIndiceManutenibilita` della classe `IspezionatoreCodice`?",
+        "answer": "Calcola un valore MI (Maintainability Index) basato su metriche interne come la lunghezza delle righe, il numero di commenti e la complessita' ciclomatica."
     },
     {
-        "id": 28,
-        "question": "Quali controlli vengono eseguiti all'interno del metodo generaChiaveAttivazione della classe GestoreLicenze?"
-    },
-    {
-        "id": 29,
-        "question": "Cosa calcola il metodo calcolaIndiceManutenibilita della classe IspezionatoreCodice?"
-    },
-    {
-        "id": 30,
-        "question": "In MetricheAgili, cosa rappresenta il fattoreComplessita' nel metodo calcolaVelocityScore e qual e' il suo range?"
+        "question30": "In `MetricheAgili`, cosa rappresenta il `fattoreComplessita'` nel metodo `calcolaVelocityScore` e qual e' il suo range?",
+        "answer": "Rappresenta un fattore di complessita' e il suo range e' da 1 a 5."
     }
-]
 \end{lstlisting}
-\subsection{Punteggio delle domande}
+\subsection{Metrica del punteggio}
 Per valutare le domande generate da \textbf{LMNotebook}, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
 fornire un "punteggio totale" che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
-Date la vostra risposta su una scala da 1 a 5, dove 1 significa che la domanda non è affatto risolvibile in base al contesto e 5 significa che la domanda è chiaramente e inequivocabilmente risolvibile in base al contesto.
+Su una scala da 1 a 5, dove 1 significa che la domanda è risolvibile anche senza conoscere il contesto specifico, mentre 5 quando la domanda è chiaramente e inequivocabilmente risolvibile solo conoscendo il contesto.
 \subsubsection{Risultati}
 I modelli hanno valutato le domande generate da LMNotebook con punteggi diversi:
 \begin{itemize}
@@ -1203,9 +1180,34 @@ Verranno usati come riferimento i punteggi dati da \textbf{GPT4o}, nel dettaglio
     \item Domande con punteggio 3: Risolvibili parzialmente con conoscenze standard, ma con margini di errore.
     \item Domande con punteggio 2: Generalmente risolvibili perché rientrano in pattern comuni di programmazione.
 \end{itemize}
-\subsection{Valutazione risultati risposte sistema RAG}
+\subsection{llm as a judge}
 Il sistema RAG ha elaborato le domande e fornito risposta salvando il risultato in un file JSON.
-Questo file è stato valutato da \textbf{GPT4o} e \textbf{Mistral} per valutare la coerenza delle risposte.
+Questo file è stato valutato da \textbf{DeepSeek} per valutare la coerenza delle risposte.
+Sono state fatte quattro elaborazioni differenti:
+\begin{itemize}
+    \item CodeQwen con score threshold 1.0
+    \item Llama3.2 score threshold 1.0
+    \item Llama3.2 score threshold 0.8
+    \item Llama3.2 score threshold 0.4
+\end{itemize}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{confronto_modelli_corretto.png}
+    \caption{Confronto modelli RAG correttamente allineato}
+    \label{fig:confronto-modelli}
+\end{figure}
+La configurazione migliore è stata quella di CodeQwen con score threshold 1.0 questo perchè i test effettuati hanno dimostrato che è meglio aumentare a volte il Prompt con Chunck non corretto che risciare di escluderne alcuni invece realmente validi.
+Lasciando comunque il limite a 5 Chunck il prompt non viene mai eccessivamente appesantito e il modello riescie ad elaborare buone risposte.
+Llma3.2 con score threshold 1.0 ha ottenuto una completezza media deell 80% mentre lo stesso modello ma con score threshold 0.8 ha ottenuto una completezza media del 70% questo a causa di esclusione di troppo Chunks validi.
+Ma in conclusione è possibile affermare che il sistema RAG funziona correttamente vedendo il risultato ottenuto da Llama3.2 con score threshold 0.4, questo punteggio esclude praticamente tutti i Chunck e per questo le risposte del modello sono solo il risultato delle conoscenze del LLM che danno un risultato estremamente basso.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{completezza_per_domanda.png}
+    \caption{Completezza per domanda}
+    \label{fig:completezza-per-domanda}
+\end{figure}
+
+
 
 \chapter{Conclusioni}
 
@@ -1218,12 +1220,8 @@ da completare
 %\end{itemize}
 
 \section{Impatto sullo Sviluppo Software}
-L'integrazione di strumenti basati su AI nel processo di sviluppo software sta rivoluzionando il settore. Durante il periodo di sviluppo di questa tesi (Ottobre 2024 - Febbraio 2025), abbiamo osservato:
-\begin{itemize}
-    \item Rapida evoluzione degli strumenti di AI per lo sviluppo software
-    \item Crescente disponibilità di soluzioni open source
-    \item Miglioramento continuo nelle capacità di generazione e comprensione del codice
-\end{itemize}
+L'integrazione di strumenti basati su AI nel processo di sviluppo software sta rivoluzionando il settore. Durante il periodo di sviluppo di questa tesi (Ottobre 2024 - Febbraio 2025), il mondo ha visto una continuata e rapida evoluzione degli strumenti di AI per lo sviluppo software
+Dove continua a stupire il miglioramento continuo nelle capacità di generazione e comprensione del codice
 
 \section{Sfide e Prospettive Future}
 %Nonostante i progressi significativi, rimangono diverse sfide da affrontare:

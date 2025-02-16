@@ -12,85 +12,81 @@ modelli = {
                 5,4,5,0,2,
                 2,3,0,2,2,
                 0,4,3,5,4,
-                5,4,5,5,5]
+                5,4,5,5,5],
+    "LLAMA04" : [0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,2,
+    2,3,0,2,2,
+    5,0,3,5,4,
+    0,0,0,0,0],
 }
 
 # Calcolo percentuali di completezza
 percentuali = {nome: [(p/max_)*100 for p, max_ in zip(punti, punteggi_max)] for nome, punti in modelli.items()}
 
-# Inizializzazione grafico
-plt.figure(figsize=(16, 10))
-plt.suptitle("Confronto Prestazioni Modelli RAG", y=0.95, fontsize=20, fontweight='bold')
+# Configurazione figura e assi per il grafico delle medie
+plt.figure(figsize=(12, 6))
+plt.title("Confronto Prestazioni Modelli RAG", fontsize=18, fontweight='bold', pad=20)
 
-# Grafico a barre (Medie)
-ax1 = plt.subplot(2, 2, (1, 3))
+# Creazione diretta dell'asse (senza subplot)
+ax = plt.gca()
 colors = ['#2ecc71', '#3498db', '#e74c3c', '#f1c40f', '#9b59b6']
 medie = [np.mean(p) for p in percentuali.values()]
+# Barre più larghe e spaziate
+bars = ax.bar(modelli.keys(), 
+             medie, 
+             color=colors[:len(modelli)], 
+             edgecolor='black',
+             width=0.6,
+             zorder=3)
 
-bars = ax1.bar(modelli.keys(), medie, 
-               color=colors[:len(modelli)], 
-               edgecolor='black',
-               width=0.7)
+# Miglioramento dell'asse y
+ax.set_ylim(0, 100)
+ax.set_ylabel('Completezza Media (%)', fontsize=14, labelpad=15)
+ax.tick_params(axis='both', which='major', labelsize=12)
+ax.yaxis.set_major_formatter('{x}%')
 
-ax1.set_ylim(0, 100)
-ax1.set_ylabel('Completezza Media (%)', fontsize=14)
-ax1.tick_params(axis='both', labelsize=12)
-ax1.grid(axis='y', alpha=0.3)
+# Griglia più evidente
+ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
 
-# Annotazioni valori medi
+# Annotazioni riposizionate
 for bar, media in zip(bars, medie):
-    ax1.text(bar.get_x() + bar.get_width()/2, 5,
+    ax.text(bar.get_x() + bar.get_width()/2, 
+            media + 2,  # Spostato sopra la barra
             f'{media:.1f}%',
-            ha='center', va='bottom',
-            color='black' if media < 50 else 'white',
-            fontsize=14,
-            fontweight='bold')
+            ha='center', 
+            va='bottom',
+            color='black',
+            fontsize=12,
+            fontweight='semibold')
 
-# Boxplot (Distribuzioni)
-ax2 = plt.subplot(2, 2, 2)
-positions = range(1, len(modelli)+1)
+# Aggiustamento spazi
+plt.margins(y=0.1)
+plt.tight_layout()
+plt.savefig('confronto_modelli_corretto.png', dpi=300, bbox_inches='tight')
+plt.show()
 
-box = ax2.boxplot(percentuali.values(),
-                 vert=False,
-                 patch_artist=True,
-                 widths=0.6,
-                 showfliers=True,
-                 boxprops=dict(facecolor='#3498db', alpha=0.7),
-                 medianprops=dict(color='white'))
+# Grafico 2: Punteggi per Domanda
+plt.figure(figsize=(16, 10))
+plt.title("Punteggi per Domanda - Confronto Modelli RAG", fontsize=20, fontweight='bold')
 
-ax2.set_yticklabels(modelli.keys())
-ax2.set_xlim(0, 100)
-ax2.set_xlabel('Percentuale Completezza', fontsize=14)
-ax2.tick_params(axis='both', labelsize=12)
-ax2.grid(axis='x', alpha=0.3)
+# Asse x: numeri delle domande (da 1 a 30)
+domande = np.arange(1, len(punteggi_max) + 1)
 
-# Tabella riassuntiva
-ax3 = plt.subplot(2, 2, 4)
-ax3.axis('off')
+# Traccia la linea dei punteggi per ciascun modello
+for nome, punteggi in modelli.items():
+    plt.plot(domande, punteggi, marker='o', label=nome, linewidth=2)
 
-stats_data = []
-for nome, p in percentuali.items():
-    stats_data.append([
-        nome,
-        f'{np.mean(p):.1f} ± {np.std(p):.1f}%',
-        f'{np.median(p):.1f}%',
-        f'{np.min(p):.1f}% - {np.max(p):.1f}%'
-    ])
+# Traccia la linea dei punteggi massimi per ogni domanda
+plt.plot(domande, punteggi_max, marker='x', linestyle='--', color='black', 
+         label='Punteggio Max', linewidth=2)
 
-table = ax3.table(
-    cellText=stats_data,
-    colLabels=['Modello', 'Media ± Dev.Std', 'Mediana', 'Range'],
-    colColours=['#eeeeee']*4,
-    cellLoc='center',
-    loc='center'
-)
-
-table.auto_set_font_size(False)
-table.set_fontsize(12)
-table.scale(1.2, 1.5)
-
-# Salvataggio e visualizzazione
-plt.tight_layout(pad=4)
-plt.savefig('confronto_modelli.png', dpi=300, bbox_inches='tight')
-
+plt.xlabel("Numero Domanda", fontsize=14)
+plt.ylabel("Punteggio", fontsize=14)
+plt.xticks(domande)
+plt.ylim(0, max(punteggi_max) + 1)
+plt.grid(alpha=0.3)
+plt.legend(fontsize=12)
+plt.tight_layout()
+plt.savefig('punteggi_per_domanda.png', dpi=300, bbox_inches='tight')
 plt.show()

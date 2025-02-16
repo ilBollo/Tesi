@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "question": "Cosa ritorna il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` che utilizza la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`?",
+    "answerOK": "Ritorna la stringa \"il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.\"",
+    "answerRAG": "Non ho informazioni sulla libreria `DateUtilCustom`. Tuttavia, supponendo che `getMessaggioMagico()` sia una funzione che restituisce un messaggio personalizzato in base al parametro passato, posso fornirti una risposta generica.\n\nIl metodo `segnaleWow(LocalDate.of(2025, 2, 14))` utilizza la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, quindi il risultato dipenderà dalla definizione di questa funzione.\n\nSe `getMessaggioMagico()` è una funzione che restituisce un messaggio personalizzato in base al parametro passato, allora potrebbe essere qualcosa come:\n\n- \"È il giorno del gioco\" se la data è il 14 febbraio\n- \"Anno del gioco: 2025\"\n- Un messaggio specifico che richiede una definizione più dettagliata della libreria `DateUtilCustom`\n\nPer fornire un' risposta precisa, avrei bisogno di sapere come funziona esattamente la funzione `getMessaggioMagico()` e cosa intendi per \"ritorna\".",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 2,
+    "question": "La classe `AnalizzatoreRilascio` contiene un metodo chiamato `stimaDataRilascio`. Quali sono i due parametri di input richiesti da questo metodo?",
+    "answerOK": "Il metodo `stimaDataRilascio` richiede un array di interi (`int[] taskCompletati`) e un valore double (`double velocitaSviluppo`) come input.",
+    "answerRAG": "Non ho informazioni sulla classe `AnalizzatoreRilascio`, quindi non posso fornire una risposta precisa. Tuttavia, posso fare alcune supposizioni basate sul nome del metodo e sull'uso comune di tale tipo di analisi.\n\nIl metodo `stimaDataRilascio` potrebbe richiedere due parametri di input:\n\n1.  **Una data o un intervallo di date**: potrebbe essere necessario fornire una data specifica o un intervallo di date per la quale si vuole stimare il rilascio.\n2.  **Un fattore di incertezza**: potrebbe essere richiesto un fattore di incertezza, come ad esempio una probabilità o una percentuale, che rappresenta la quantità di incertezza associata alla data prevista.\n\nTuttavia, senza ulteriori informazioni sulla classe `AnalizzatoreRilascio` e sul suo comportamento specifico, non posso fornire una risposta più precisa.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 3,
+    "question": "Nella classe `AnalizzatoreRilascio`, come viene calcolato il numero di task rimanenti nel metodo `stimaDataRilascio`?",
+    "answerOK": "Il numero di task rimanenti viene calcolato sottraendo la somma dei task completati (assumendo un totale di 100 task).",
+    "answerRAG": "Nella classe `AnalizzatoreRilascio`, il numero di task rimanenti nel metodo `stimaDataRilascio` viene calcolato utilizzando la seguente formula:\n\n```c++\nint taskRemaining = totalTasks - (tasksCompleted + tasksInProgress);\n```\n\nQuesta formula sottrae il numero di task completati (`tasksCompleted`) e il numero di task in corso di esecuzione (`tasksInProgress`) dal totale di task disponibili (`totalTasks`). Il risultato è l'importo di task rimanenti.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 4,
+    "question": "Qual è il valore di soglia critica per l'indice di rischio rilascio (IRR) nella classe `AnalizzatoreRilascio`?",
+    "answerOK": "La soglia critica per l'IRR è **8.5**.",
+    "answerRAG": "Non ho informazioni sulla classe `AnalizzatoreRilascio`. Tuttavia, posso fornirti una risposta generica.\n\nL'indice di rischio rilascio (IRR) è un metrica utilizzata per valutare il rischio associato a un investimento o a un progetto. Il valore di soglia critica per l'IRR dipende dal contesto e dalle esigenze specifiche del progetto.\n\nIn generale, il valore di soglia critica per l'IRR può variare a seconda delle seguenti considerazioni:\n\n*   **Rischio basso**: un IRR superiore al 10% potrebbe indicare un investimento relativamente sicuro.\n*   **Rischio medio**: un IRR compreso tra il 5% e il 10% potrebbe indicare un investimento con un rischio moderato.\n*   **Rischio alto**: un IRR inferiore al 5% potrebbe indicare un investimento con un rischio elevato.\n\nTuttavia, è importante notare che il valore di soglia critica per l'IRR può variare a seconda delle esigenze specifiche del progetto e del contesto in cui si trova. In alcuni casi, un IRR inferiore al 5% potrebbe essere considerato accettabile se il progetto ha una bassa probabilità di successo.\n\nIn sintesi, non è possibile fornire un valore di soglia critica univoco per l'IRR senza conoscere meglio il contesto e le esigenze specifiche del progetto.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 5,
+    "question": "Quali sono i parametri di input del metodo `calcolaProbabilitaSuccesso` nella classe `AnalizzatoreRilascio` e come viene calcolata la probabilità di successo?",
+    "answerOK": "I parametri sono `numeroBugRisolti` e `numeroTestPassati`. La probabilità di successo è calcolata come `(numeroBugRisolti * 0.4) + (numeroTestPassati * 0.6)`.",
+    "answerRAG": "Il metodo `calcolaProbabilitaSuccesso` della classe `AnalizzatoreRilascio` è un passaggio fondamentale nel processo di analisi dei dati relativi ai rilasci.\n\nI parametri di input del metodo sono:\n\n1.  **numeriTotali**: una lista di numeri che rappresentano la quantità totale di ogni tipo di evento (ad esempio, il numero di eventi di successo e di fallimento).\n2.  **numeriSuccessori**: una lista di numeri che rappresenta la quantità di ogni tipo di evento di successo.\n\nLa probabilità di successo viene calcolata utilizzando la formula:\n\n\\[ P(S) = \\frac{\\text{numeriTotali}[S]}{\\text{numeriTotale}} \\]\n\ndove $P(S)$ è la probabilità di successo, $\\text{numeriTotale}$ è il numero totale di eventi e $\\text{numeriTotale}[S]$ è il numero di eventi di successo.\n\nIn sintesi, la formula calcola la probabilità di successo come il rapporto tra il numero di eventi di successo e il numero totale di eventi.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 6,
+    "question": "Qual è lo scopo del metodo `stimaTempoRimanente` nella classe `AnalizzatoreRilascio` e quali parametri accetta?",
+    "answerOK": "Stima il tempo rimanente per il rilascio. Accetta `taskRimanenti` (numero di task rimanenti) e `velocitaSviluppo` come parametri.",
+    "answerRAG": "Il metodo `stimaTempoRimanente` nella classe `AnalizzatoreRilascio` è utilizzato per stimare il tempo rimanente necessario per completare un ciclo di rilascio.\n\nQuesto metodo accetta due parametri:\n\n1.  `tempoTotale`: il tempo totale necessario per completare il ciclo di rilascio.\n2.  `tempoEffettivo`: il tempo effettivamente trascorso fino a quel momento nel ciclo di rilascio.\n\nIl metodo restituisce un valore numerico che rappresenta la differenza tra il tempo totale e il tempo effettivo, cioè il tempo rimanente necessario per completare il ciclo.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 7,
+    "question": "Nella classe `BasketballStats`, qual è la formula utilizzata per calcolare l'efficienza di un giocatore nel metodo `calcolaEfficienzaGiocatore`?",
+    "answerOK": "La formula è `(punti + rimbalzi + assist) - (pallePerse + tiriSbagliati)`.",
+    "answerRAG": "Non ho informazioni sulla classe \"BasketballStats\". Se puoi fornire più contesto o dettagli sulla classe, sarò felice di aiutarti.",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 8,
+    "question": "Quali sono i criteri utilizzati nel metodo `valutaTiro` della classe `BasketballStats` per valutare la qualità di un tiro?",
+    "answerOK": "La **distanza dal canestro** (`distanzaCanestro`) e la **pressione difensiva** (`pressioneDifensiva`).",
+    "answerRAG": "Il metodo `valutaTiro` della classe `BasketballStats` utilizza diversi criteri per valutare la qualità di un tiro in basket. Ecco i principali criteri:\n\n1. **Distanza**: il tiro è valutato in base alla distanza da dove viene eseguito. I tiraggi più lunghi sono generalmente considerati più difficili e quindi più difficili da realizzare.\n2. **Tipo di tiro**: il tipo di tiro (ad esempio, tiro da 3 punti o tiro da 2 punti) influenza la valutazione della qualità del tiro.\n3. **Precisione**: la precisione del tiro è misurata in base alla quantità di punti segnati rispetto al numero totale di tentativi.\n4. **Difficoltà**: il livello di difficoltà del tiro, come ad esempio il fatto che il tiro debba essere eseguito da una certa distanza o con un certo angolo di inclinazione.\n\nIn generale, il metodo `valutaTiro` utilizza un algoritmo che pesa questi criteri in base a una scala di valutazione predefinita. L'algoritmo può variare a seconda della implementazione specifica della classe `BasketballStats`.\n\nEcco un esempio di come potrebbe essere implementato il metodo `valutaTiro`:\n```java\npublic class BasketballStats {\n    // ...\n\n    public double valutaTiro(Tiro tiro) {\n        double distanza = tiro.getDistanza();\n        String tipoTiro = tiro.getTipoTiro();\n        int puntiSegnati = tiro.getPuntiSegnati();\n        int tentativi = tiro.getTentativi();\n\n        // Scala di valutazione\n        double scalaValutazione = 0.4 * (1 - distanza / 10) + 0.3 * tipoTiro.getDifficoltà() + 0.3 * puntiSegnati / tentativi;\n\n        return scalaValutazione;\n    }\n}\n```\nIn questo esempio, la scala di valutazione è composta da tre componenti:\n\n*   `1 - distanza / 10`: il tiro più lungo è considerato più difficile e quindi ha una valutazione più alta.\n*   `tipoTiro.getDifficoltà()`: il tipo di tiro influenza la valutazione della qualità del tiro. Ad esempio, un tiro da 3 punti potrebbe essere considerato più difficile di un tiro da 2 punti.\n*   `puntiSegnati / tentativi`: la precisione del tiro è misurata in base alla quantità di punti segnati rispetto al numero totale di tentativi.\n\nLa scala di valutazione viene quindi calcolata come una combinazione di questi tre componenti, con pesi diversi per ciascuno. La somma dei pesi può variare a seconda della necessità specifica dell'applicazione.",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 9,
+    "question": "Cosa restituisce il metodo `analisiStatisticheSquadra` della classe `BasketballStats`?",
+    "answerOK": "Restituisce un report dettagliato delle prestazioni della squadra.",
+    "answerRAG": "Il metodo `analisiStatisticheSquadra` della classe `BasketballStats` restituisce un oggetto di tipo `AnalisiStatistiche`, che rappresenta la statistica generale del team.\n\nIn particolare, il metodo restituisce un oggetto con le seguenti proprietà:\n\n*   `vittorie`: il numero di partite vinte dal team\n*   `sconfitte`: il numero di partite perse dal team\n*   `partiteParificate`: il numero di partite pareggiate dal team\n*   `puntiTotali`: la somma dei punti totali segnati dal team\n*   `puntenzaTotale`: la somma delle punte totali subite dal team",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 10,
+    "question": "Quali sono gli input del metodo `previsioneVincitore` nella classe `BasketballStats` e cosa rappresentano?",
+    "answerOK": "Gli input sono due array di double (`squadraCasa` e `squadraOspite`) che contengono `[puntiMedi, rimbalziMedi, assistMedi]`, e una `LocalDate dataPartita`.",
+    "answerRAG": "Il metodo `previsioneVincitore` nella classe `BasketballStats` prevede due input principali:\n\n1. **Team**: un oggetto di tipo `Team`, che rappresenta la squadra di basket che si sta valutando per la previsione del vincitore.\n2. **Opponent**: un oggetto di tipo `Team`, che rappresenta l'avversario della squadra valutata.\n\nQuesti due input sono fondamentali perché permettono al metodo di calcolare le probabilità di vittoria della squadra valutata contro la sua opponent, utilizzando dati storici e statistiche relative alle partite tra queste due squadre.",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 11,
+    "question": "Come viene calcolato il margine nel metodo `previsioneVincitore` della classe `BasketballStats`?",
+    "answerOK": "Il margine è calcolato come il valore assoluto della differenza tra la valutazione della squadra di casa e la valutazione della squadra ospite.",
+    "answerRAG": "Il margine nella classe `BasketballStats` viene calcolato utilizzando la formula:\n\n```python\nmargine = (punti_vincitori - punti perdenti) / punti_vincitori * 100\n```\n\nQuesta formula restituisce il margine di vittoria come percentuale.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 12,
+    "question": "Cosa rappresenta l'input del metodo `calcolaMomentum` nella classe `BasketballStats`?",
+    "answerOK": "Rappresenta gli ultimi punti segnati dalla squadra di casa (`ultimiPuntiCasa`) e dalla squadra ospite (`ultimiPuntiOspite`).",
+    "answerRAG": "Il metodo `calcolaMomentum` della classe `BasketballStats` prevede come input un oggetto che contiene le statistiche di movimento (momentum) di un giocatore. Questo oggetto, chiamato \"PlayerMovement\", dovrebbe avere le seguenti proprietà:\n\n*   `posizione`: il punto in cui si trova il giocatore al momento della scelta\n*   `velocità`: la velocità del giocatore\n*   `accelerazione`: l'accelerazione del giocatore\n\nQuesto oggetto viene passato come parametro al metodo `calcolaMomentum` per calcolare il momentum del giocatore. Il risultato viene poi memorizzato nella classe `BasketballStats`.",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 13,
+    "question": "Qual è il requisito per la lunghezza della chiave segreta nel metodo `cifraturaVortex` della classe `CifratoreAziendale`?",
+    "answerOK": "La chiave segreta deve essere di 12 caratteri.",
+    "answerRAG": "Non ho informazioni specifiche sulla classe `CifratoreAziendale` e sul suo metodo `cifraturaVortex`. Tuttavia, posso fornirti una risposta generale.\n\nIn generale, la lunghezza della chiave segreta è un requisito importante per garantire la sicurezza della cifratura. La scelta della lunghezza della chiave dipende da diversi fattori, come ad esempio:\n\n* La quantità di dati che si vuole proteggere\n* Il livello di sicurezza richiesto\n* Le limitazioni tecniche del sistema\n\nIn alcuni casi, la lunghezza della chiave può essere calcolata utilizzando algoritmi di crittografia come l'algoritmo RSA, che richiede una chiave pubblica e privata con lunghezze specifiche.\n\nSe non hai informazioni sulla classe `CifratoreAziendale` e sul suo metodo `cifraturaVortex`, ti consiglio di consultare la documentazione ufficiale della libreria o del framework utilizzato per ottenere informazioni più precise sulla lunghezza della chiave segreta richiesta.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 14,
+    "question": "Cosa fa il metodo `mascheraDatiSensibili` nella classe `TrasformatoreDati`?",
+    "answerOK": "Il metodo maschera i dati sensibili sostituendo i caratteri originali con caratteri casuali.",
+    "answerRAG": "Il metodo `mascheraDatiSensibili` nella classe `TrasformatoreDati` è utilizzato per mascherare i dati sensibili, come ad esempio numeri di telefono o indirizzi email, in modo da non essere visualizzati apertamente.\n\nQuesto metodo prende in input un oggetto che contiene i dati da mascherare e restituisce un nuovo oggetto con i dati modificati. La modifica è effettuata sostituendo le parti sensibili con una rappresentazione più neutra, come \"* XXX-XXX-XXXX\" per numeri di telefono o \"esempio@example.com\" per indirizzi email.\n\nEsempio:\n\n```java\nTrasformatoreDati trasformatore = new TrasformatoreDati();\nString dati = \"Il mio numero di telefono è 1234567890\";\nString mascherato = trasformatore.mascheraDatiSensibili(dati);\nSystem.out.println(mascherato); // Output: Il mio numero di telefono è * XXX-XXX-XXXX\n```\n\nIn questo modo, il metodo `mascheraDatiSensibili` aiuta a proteggere la privacy dei dati sensibili.",
+    "punteggio": 3,
+    "sources": []
+  },
+  {
+    "id": 15,
+    "question": "Nella classe `DateUtilCustom`, descrivi cosa fa il metodo `formatDate(Date date)` e fornisci un esempio del formato di output.",
+    "answerOK": "Formatta una data nel formato \"dd/MM/yyyy\". Ad esempio, se la data è il 25 dicembre 2023, l'output sarà \"25/12/2023\".",
+    "answerRAG": "Certo, posso aiutarti!\n\nIl metodo `formatDate` della classe `DateUtilCustom` è una funzione che prende una data come input e la trasforma in una stringa nel formato desiderato.\n\nIn questo caso, il metodo `formatDate` utilizza un formato di output predefinito, che può essere personalizzato. Ad esempio, se si passa una data del tipo `yyyy-MM-dd`, il metodo restituirà una stringa nel formato \"2023-02-20\".\n\nEcco un esempio di come potrebbe essere utilizzato:\n\n```java\nDate date = new Date();\nString formattedDate = DateUtilCustom.formatDate(date);\nSystem.out.println(formattedDate); // Output: 2023-02-20\n```\n\nIn questo caso, il metodo `formatDate` ha preso la data del sistema e l'ha trasformata in una stringa nel formato \"yyyy-MM-dd\".",
+    "punteggio": 2,
+    "sources": []
+  },
+  {
+    "id": 16,
+    "question": "Qual è la differenza tra i metodi `formatDate(Date date)` e `formatDate(Date date, String format)` nella classe `DateUtilCustom`?",
+    "answerOK": "Il primo utilizza il formato predefinito \"dd/MM/yyyy\", mentre il secondo permette di specificare un formato personalizzato.",
+    "answerRAG": "La differenza tra i metodi `formatDate(Date date)` e `formatDate(Date date, String format)` nella classe `DateUtilCustom` è la seguente:\n\n**Metodo `formatDate(Date date)`**\n\nQuesto metodo assegna il formato di data al parametro `date`. Il formato viene utilizzato per rappresentare la data in una forma standardizzata. Ad esempio, se si passa un oggetto `Date` con la data \"2022-07-25\", questo metodo lo restituirà come stringa \"2022-07-25\".\n\n**Metodo `formatDate(Date date, String format)`**\n\nQuesto metodo assegna il formato di data al parametro `date`, ma inoltre richiede un formato specifico per la rappresentazione della data. Il formato viene utilizzato per determinare come la data debba essere visualizzata. Ad esempio, se si passa un oggetto `Date` con la data \"2022-07-25\" e il formato \"yyyy-MM-dd\", questo metodo lo restituirà come stringa \"2022-07-25\".\n\nIn sintesi:\n\n*   `formatDate(Date date)` assegna il formato di data senza specificare alcun formato.\n*   `formatDate(Date date, String format)` assegna il formato di data e richiede un formato specifico per la rappresentazione della data.",
+    "punteggio": 2,
+    "sources": []
+  },
+  {
+    "id": 17,
+    "question": "Cosa può accadere se si utilizza il metodo `parseDate` della classe `DateUtilCustom` con una stringa che non corrisponde al formato specificato?",
+    "answerOK": "Verrà lanciata una `ParseException`.",
+    "answerRAG": "Se si utilizza il metodo `parseDate` della classe `DateUtilCustom` con una stringa che non corrisponde al formato specificato, potrebbe accadere diversi errori.\n\nEcco alcuni possibili scenari:\n\n1. **Errore di tipo**: Il metodo `parseDate` potrebbe lanciare un'eccezione di tipo `ParseException`, che indica che la stringa non corrisponde al formato specificato.\n2. **Ritorno di nullità**: In alcuni casi, il metodo potrebbe restituire `null` anziché lanciare un errore, ma questo dipenderà dalla configurazione del sistema e dalle impostazioni della classe `DateUtilCustom`.\n3. **Restituzione di una data non corretta**: Se la stringa non corrisponde al formato specificato, il metodo potrebbe restituire una data non corretta o fuori range.\n4. **Consumo di risorse**: In alcuni casi, l'errore potrebbe essere silenzioso e il metodo potrebbe consumare risorse (ad esempio, memoria) senza lanciare un errore esplicito.\n\nPer evitare questi problemi, è importante:\n\n* Verificare che la stringa passata al metodo `parseDate` corrisponda al formato specificato.\n* Utilizzare un formato di data valido e coerente.\n* Gestire le eccezioni di tipo `ParseException` o altre eccezioni rilevanti per prevenire problemi di sicurezza e stabilità.\n\nIn sintesi, l'uso del metodo `parseDate` con una stringa non corrispondente al formato specificato può portare a errori diversi, quindi è importante essere cauti e gestire le eccezioni in modo appropriato.",
+    "punteggio": 3,
+    "sources": []
+  },
+  {
+    "id": 18,
+    "question": "Nella classe `DateUtilCustom`, cosa calcola il metodo `getDifferenceInDays(Date startDate, Date endDate)`?",
+    "answerOK": "Calcola la differenza in giorni tra due date.",
+    "answerRAG": "Il metodo `getDifferenceInDays` della classe `DateUtilCustom` calcola la differenza in giorni tra due date specificate.\n\nEcco un esempio di implementazione sintetica:\n\n```java\npublic class DateUtilCustom {\n    public static int getDifferenceInDays(Date startDate, Date endDate) {\n        // Calcola la differenza in millisecondi\n        long differenceInMilliseconds = Math.abs(endDate.getTime() - startDate.getTime());\n        \n        // Converte i millisecondi in giorni\n        return (int) (differenceInMilliseconds / (1000 * 60 * 60 * 24));\n    }\n}\n```\n\nQuesta implementazione utilizza la proprietà `getTime()` di Date per ottenere il tempo in millisecondi tra le due date, e poi divide questo valore per il numero di millisecondi in un giorno (1.000.000) per calcolare la differenza in giorni.\n\nNota che si utilizza l'espressionione `Math.abs` per evitare errori dovuti a date non ordinate.",
+    "punteggio": 2,
+    "sources": []
+  },
+  {
+    "id": 19,
+    "question": "Cosa fa il metodo `addDays(Date date, int days)` nella classe `DateUtilCustom`?",
+    "answerOK": "Aggiunge un numero specificato di giorni a una data.",
+    "answerRAG": "Il metodo `addDays(Date date, int days)` nella classe `DateUtilCustom` aggiunge un numero specifico di giorni alla data passata.\n\nIn sintesi, questo metodo consente di incrementare la data di un determinato periodo di tempo, permettendo di calcolare future date.",
+    "punteggio": 2,
+    "sources": []
+  },
+  {
+    "id": 20,
+    "question": "Come si verifica se una data è nel passato usando la classe `DateUtilCustom`?",
+    "answerOK": "Utilizzando il metodo `isPastDate(Date date)`.",
+    "answerRAG": "Per verificare se una data è nel passato utilizzando la classe `DateUtilCustom`, puoi utilizzare il metodo `isPast()`.\n\nEcco un esempio di come potresti implementarlo:\n\n```java\nimport java.time.LocalDate;\nimport java.time.format.DateTimeFormatter;\n\npublic class DateUtilCustom {\n\n    public static boolean isPast(LocalDate date) {\n        return date.isBefore(LocalDate.now());\n    }\n\n    public static void main(String[] args) {\n        LocalDate dataOggetto = LocalDate.of(2022, 1, 1);\n        System.out.println(isPast(dataOggetto)); // true\n    }\n}\n```\n\nIn questo esempio, il metodo `isPast()` prende una data come input e restituisce `true` se la data è nel passato e `false` altrimenti. La funzione utilizza il metodo `isBefore()` della classe `LocalDate`, che verifica se la data passata è prima della data corrente.\n\nNota: la classe `LocalDate` è stata introdotta nella versione 9 di Java, quindi se stai utilizzando una versione precedente, potresti dover utilizzare un'altra classe come `java.util.Date`.",
+    "punteggio": 2,
+    "sources": []
+  },
+  {
+    "id": 21,
+    "question": "Cosa fa il metodo `giorniAlmiocompleannoSpecial(Date dataNascita, String nome)` nella classe `DateUtilCustom`?",
+    "answerOK": "Calcola i giorni che mancano al compleanno di una persona e restituisce un messaggio personalizzato.",
+    "answerRAG": "Il metodo `giorniAlmoCompleannoSpecial` nella classe `DateUtilCustom` sembra essere un metodo che calcola il numero di giorni tra la data di nascita di una persona e la sua data di compleanno.\n\nIn sintesi, il metodo prende due parametri:\n\n*   `dataNascita`: la data di nascita della persona\n*   `nome`: il nome della persona (non utilizzato nel calcolo)\n\nIl metodo restituisce il numero di giorni tra la data di nascita e la data del compleanno, considerando che il compleanno si celebra l'anno successivo alla data di nascita.\n\nEsempio di implementazione:\n```java\npublic class DateUtilCustom {\n    public static int giorniAlmoCompleannoSpecial(Date dataNascita, String nome) {\n        // Calcola la data del compleanno dell'anno successivo\n        Calendar calendario = Calendar.getInstance();\n        calendario.setTime(dataNascita);\n        calendario.add(Calendar.YEAR, 1);\n        Date dataCompleanno = calendario.getTime();\n\n        // Calcola il numero di giorni tra le due date\n        long differenza = Math.abs(dataCompleanno.getTime() - dataNascita.getTime());\n        return (int) (differenza / (1000 * 60 * 60 * 24));\n    }\n}\n```\nNota che questo è solo un esempio di implementazione e potrebbe essere necessario aggiustare il metodo in base alle specifiche richieste del progetto.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 22,
+    "question": "In `ElaboratoreLinguaggio`, come viene calcolato il punteggio di sentimento di un testo?",
+    "answerOK": "Il punteggio di sentimento è calcolato come `(punteggioPositivo - punteggioNegativo) / (double) (punteggioPositivo + punteggioNegativo + 1)`.",
+    "answerRAG": "Un ottimo tema!\n\nNel contesto dell'Elaboratore Linguaggio, il punteggio di sentimento (sentiment analysis) è un processo che consiste nell'analizzare il contenuto emotivo di un testo per determinare la sua valutazione sentimentale.\n\nIn generale, ci sono diverse tecniche utilizzate per calcolare il punteggio di sentimento, ma alcune delle più comuni includono:\n\n1. **Tokenizzazione**: il testo viene diviso in singoli token (parole o frasi) e analizzato separatamente.\n2. **Part-of-speech tagging**: vengono identificate le parti del parlato (ad esempio, verbi, nomi, aggettivi) per comprendere meglio il significato del testo.\n3. **Sentimento linguistico**: si utilizzano regole e algoritmi per identificare parole e frasi con sentimenti specifici (ad esempio, \"buono\" o \"cattivo\").\n4. **Analisi dei sintagmi**: vengono analizzati gli schemi di sintassi per comprendere meglio il significato del testo.\n\nPer calcolare il punteggio di sentimento, si utilizzano spesso algoritmi come:\n\n1. **Algoritmo di sentiment analysis**: utilizza un modello di apprendimento automatico per classificare il testo come positivo, neutro o negativo.\n2. **Matrici di sentimento**: vengono utilizzate matrici predefinite per associare parole e frasi a sentimenti specifici.\n\nIn sintesi, il punteggio di sentimento viene calcolato analizzando il testo, identificando le parti del parlato, comprendendo il significato linguistico e utilizzando algoritmi di apprendimento automatico per classificare il testo.",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 23,
+    "question": "Qual è lo scopo del metodo `estraiEntitaNominate` nella classe `ElaboratoreLinguaggio`?",
+    "answerOK": "Estrae entità nominate dal testo.",
+    "answerRAG": "Il metodo `estraiEntitaNominate` nella classe `ElaboratoreLinguaggio` ha lo scopo di estrarre le entità nominate (in italiano, \"nominative\") da una stringa o un testo. Questo metodo è probabily utilizzato per identificare i nomi o le parole che si riferiscono a persone, luoghi, oggetti, ecc.\n\nIn sintesi, lo scopo di questo metodo è quello di analizzare il linguaggio naturale e ricavare informazioni pertinenti su entità nominate.",
+    "punteggio": 3,
+    "sources": []
+  },
+  {
+    "id": 24,
+    "question": "Cosa fa il metodo `applicaTemplate` nella classe `GestoreConfigurazioni`?",
+    "answerOK": "Sostituisce i placeholder in un template con i valori corrispondenti forniti in una mappa di configurazioni.",
+    "answerRAG": "Il metodo `applicaTemplate` nella classe `GestoreConfigurazioni` è utilizzato per applicare un template di configurazione a una specifica sezione del file di configurazione.\n\nIn sintesi, il metodo `applicaTemplate` prende in input un template di configurazione e lo applica al file di configurazione esistente, sostituendo le variabili con i loro valori corrispondenti.\n\nEsempio:\n\n```java\npublic class GestoreConfigurazioni {\n    public void applicaTemplate(String template, String sezione) {\n        // Legge il template e lo analizza per identificare le variabili da sostituire\n        Pattern pattern = Pattern.compile(\"\\\\$(\\\\w+)\");\n        Matcher matcher = pattern.matcher(template);\n        \n        while (matcher.find()) {\n            String varName = matcher.group(1);\n            // Trova il valore corrispondente della variabile nella sezione del file di configurazione\n            String value = trovareValoreSezione(sezione, varName);\n            \n            if (value != null) {\n                template = template.replace(\"$(\" + varName + \")\", value);\n            }\n        }\n        \n        // Scrive il nuovo valore modificato nel file di configurazione\n        scriviNelFileConfigurazione(template, sezione);\n    }\n    \n    private String trovareValoreSezione(String sezione, String varName) {\n        // Implementa la logica per trovare il valore della variabile nella sezione del file di configurazione\n        // ...\n    }\n    \n    private void scriviNelFileConfigurazione(String template, String sezione) {\n        // Implementa la logica per scrivere il nuovo valore modificato nel file di configurazione\n        // ...\n    }\n}\n```\n\nIn questo esempio, il metodo `applicaTemplate` prende in input un template di configurazione e una sezione del file di configurazione. Il metodo legge il template, sostituisce le variabili con i loro valori corrispondenti nella sezione del file di configurazione e scrive il nuovo valore modificato nel file di configurazione.\n\nNota che la logica per trovare il valore della variabile nella sezione del file di configurazione e per scrivere il nuovo valore modificato nel file di configurazione è implementata nei metodi `trovaValoreSezione` e `scriviNelFileConfigurazione`, rispettivamente.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 25,
+    "question": "In `GestoreConoscenza`, cosa fa il metodo `estraiMetadati`?",
+    "answerOK": "Estrae metadati da un documento, inclusi autore, data e parole chiave.",
+    "answerRAG": "Il metodo `estraiMetadati` nel contesto di `GestoreConoscenza` è probabilmente utilizzato per ritirare i metadati associati a un'entità specifica, come ad esempio un concetto o una relazione.\n\nIn particolare, questo metodo potrebbe essere parte di una classe che gestisce la rappresentazione dei metadati di un sistema di conoscenza. Il suo scopo è quello di restituire i metadati associati a un'entità specifica, come ad esempio:\n\n*   Informazioni sulla definizione dell'entità (ad esempio, nome, descrizione, tipo)\n*   Metadati sul contesto in cui l'entità viene utilizzata\n*   Informazioni sull'accesso e sulla gestione dell'entità\n\nIn sintesi, il metodo `estraiMetadati` serve a ritornare i metadati associati a un'entità specifica, permettendo di comprendere meglio la struttura e le caratteristiche di quel concetto all'interno del sistema.",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 26,
+    "question": "Qual è lo scopo del metodo `generaIdentitaDigitale` nella classe `GestoreIdentita` e cosa prende come input?",
+    "answerOK": "Genera un'identità digitale sotto forma di token JWT firmato digitalmente. Prende come input dati biometrici codificati (`byte[] parametriBiometrici`).",
+    "answerRAG": "Il metodo `generaIdentitaDigitale` nella classe `GestoreIdentita` ha lo scopo di generare un identificatore digitale univoco per un utente.\n\nCome input, il metodo prevede la seguente informazione:\n\n*   Un oggetto `Utente` con le sue caratteristiche personali (ad esempio nome, cognome, data di nascita, ecc.)\n*   Una stringa di codice QR che rappresenta i dati dell'utente\n\nIl metodo utilizza questi dati per generare un identificatore digitale che può essere utilizzato per identificare l'utente in modo sicuro e univoco.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 27,
+    "question": "Cosa verifica il metodo `verificaIdentita` nella classe `GestoreIdentita`?",
+    "answerOK": "Verifica l'identità confrontando un token JWT con un'impronta hash attesa.",
+    "answerRAG": "Il metodo `verificaIdentita` nella classe `GestoreIdentita` verifica se un utente ha una identità corretta, ovvero se la sua email e password sono valide.\n\nIn particolare, il metodo controlla se:\n\n*   L'email è stata inserita correttamente (ad esempio, con l'indirizzo \"@\")\n*   La password è stata inserita correttamente\n*   La password è stata inserita correttamente anche in termini di lunghezza e contenuti\n\nIn sintesi, il metodo `verificaIdentita` serve a verificare che un utente abbia fornito informazioni accurate per l'accesso alla piattaforma.",
+    "punteggio": 4,
+    "sources": []
+  },
+  {
+    "id": 28,
+    "question": "Quali controlli vengono eseguiti all'interno del metodo `generaChiaveAttivazione` della classe `GestoreLicenze`?",
+    "answerOK": "Verifica che il codice cliente sia di 8 cifre e che la data di scadenza sia nel formato corretto (AAAAMMGG).",
+    "answerRAG": "Il metodo `generaChiaveAttivazione` della classe `GestoreLicenze` effettua diversi controlli per garantire la sicurezza e l'integrità del processo di attivazione delle licenze. Ecco una sintesi dei controlli eseguiti:\n\n1. **Verifica dell'accesso**: Il metodo verifica se l'utente è autorizzato a eseguire l'operazione di attivazione della chiave.\n2. **Validazione della chiave**: La chiave di attivazione viene verificata per garantire che sia corretta e non sia stata già utilizzata.\n3. **Controlli sulla disponibilità del prodotto**: Il metodo verifica se il prodotto è ancora disponibile e se la licenza è ancora valida.\n4. **Verifica della data di scadenza**: La chiave di attivazione viene verificata per garantire che non sia scaduta o che non sia stata già utilizzata oltre la sua data di scadenza.\n5. **Generazione di una chiave unica**: Il metodo genera una chiave unica e casuale per l'attivazione della licenza, assicurandosi che non venga generata più volte con lo stesso valore.\n6. **Registrazione dell'attivazione**: La chiave di attivazione viene registrata nel database o in un file di configurazione per tenere traccia delle attivazioni effettuate.\n\nQuesti controlli sono essenziali per garantire che il processo di attivazione delle licenze sia sicuro e affidabile.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 29,
+    "question": "Cosa calcola il metodo `calcolaIndiceManutenibilita` della classe `IspezionatoreCodice`?",
+    "answerOK": "Calcola un valore MI (Maintainability Index) basato su metriche interne come la lunghezza delle righe, il numero di commenti e la complessità ciclomatica.",
+    "answerRAG": "Il metodo `calcolaIndiceManutenibilità` della classe `IspezionatoreCodice` calcola un indice di manutenibilità del codice, che rappresenta la facilità con cui il codice può essere mantenuto e modificato.\n\nIn sintesi, l'indice di manutenibilità è una misura della complessità del codice e può essere influenzata da fattori come la lunghezza dei metodi, la quantità di commenti, la presenza di commenti documentari, la struttura del codice e la consistenza delle dipendenze.\n\nIl metodo `calcolaIndiceManutenibilità` potrebbe utilizzare algoritmi come:\n\n1. **Lunghezza dei metodi**: calcolare il rapporto tra la lunghezza totale del codice e la somma della lunghezza di tutti i metodi.\n2. **Quantità di commenti**: calcolare il rapporto tra la quantità totale di commenti e la quantità totale di codice.\n3. **Presenza di commenti documentari**: valutare la presenza di commenti documentari per ogni sezione del codice e calcolare un punteggio per ognuno di essi.\n4. **Struttura del codice**: analizzare la struttura del codice, ad esempio, la quantità di dipendenze tra metodi, la presenza di cicli e condizioni if-else.\n\nIl risultato finale è un indice di manutenibilità che può essere espresso come una percentuale o come un punteggio compreso tra 0 e 100, dove:\n\n*   Indici più alti indicano un codice più facile da mantenere.\n*   Indici più bassi indicano un codice più difficile da mantenere.\n\nEcco un esempio di implementazione del metodo `calcolaIndiceManutenibilità` in Python:\n```python\nclass IspezionatoreCodice:\n    def __init__(self, codice):\n        self.codice = codice\n\n    def calcolaIndiceManutenibilità(self):\n        # Calcolare la lunghezza dei metodi\n        lunghezza_metodi = sum(len(linea) for linea in self.codice.split('\\n'))\n        lunghezza_totale = len(self.codice)\n\n        # Calcolare il rapporto tra la lunghezza totale e la somma della lunghezza di tutti i metodi\n        indice_lunghezza = (lunghezza_totale - lunghezza_metodi) / lunghezza_totale if lunghezza_totale != 0 else 0\n\n        # Calcolare la quantità di commenti\n        quantità_commenti = len([linea for linea in self.codice.split('\\n') if '#' in linea])\n\n        # Calcolare il rapporto tra la quantità totale e la somma della lunghezza di tutti i metodi\n        indice_quantità_commenti = quantità_commenti / lunghezza_totale if lunghezza_totale != 0 else 0\n\n        # Valutare la presenza di commenti documentari\n        punteggio_commenti = len([linea for linea in self.codice.split('\\n') if '##' in linea])\n\n        # Calcolare il punteggio finale\n        indice_manutenibilità = (indice_lunghezza + indice_quantità_commenti + punteggio_commenti) / 3\n\n        return indice_manutenibilità\n```\nNota che questo è solo un esempio di implementazione e potrebbe essere necessario adattarlo alle specifiche del tuo codice.",
+    "punteggio": 5,
+    "sources": []
+  },
+  {
+    "id": 30,
+    "question": "In `MetricheAgili`, cosa rappresenta il `fattoreComplessità` nel metodo `calcolaVelocityScore` e qual è il suo range?",
+    "answerOK": "Rappresenta un fattore di complessità e il suo range è da 1 a 5.",
+    "answerRAG": "Nel contesto di MetricheAgili, il fattore \"complessità\" (in inglese: complexity) rappresenta una misura dell'incidenza di variabili che influenzano la velocità del progetto. È un fattore importante per calcolare il punteggio della velocità.\n\nIl fattore complessità è calcolato in base alle seguenti categorie:\n\n- **Fattori positivi**: sono considerati fattori che favoriscono una maggiore velocità, come ad esempio la presenza di un team esperto e motivato, la presenza di tecnologie innovative e l'adeguamento delle risorse.\n- **Fattori negativi**: sono considerati fattori che rallentano la velocità del progetto, come ad esempio la mancanza di risorse, la complessità dei requisiti e la mancanza di coordinazione tra i team.\n\nIl range del fattore complessità può variare da 0 a 100. Un valore più alto indica una maggiore complessità e quindi una minore velocità.",
+    "punteggio": 5,
+    "sources": []
+  }
+]

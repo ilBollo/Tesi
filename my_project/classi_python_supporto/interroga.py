@@ -23,7 +23,7 @@ query = "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utiliz
 docs = vector_store.similarity_search_with_score(
     query,
     k=5,
-    score_threshold=0.80,  # medio-bassa similarità inizialmente era 0.90
+    score_threshold=0.90,  # medio-bassa similarità inizialmente era 0.90
     search_type="similarity",  # Più efficace per il codice usare mmr per diversità
     lambda_mult=0.5       # Bilancia diversità/rilevanza
 )

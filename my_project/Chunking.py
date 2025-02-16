@@ -11,8 +11,8 @@ def process_file(file_path):
     text = ''.join(lines)
 
     splitter = RecursiveCharacterTextSplitter(
-    chunk_size=256, #molto basso per prevenire merge di metodi
-    chunk_overlap=64,
+    chunk_size=512, # medio-basso per prevenire merge di metodi
+    chunk_overlap=128,
     separators=[
         # I seguenti separatori sono stati usati per mantenere i metodi uniti
         # Prioritari: catturano la fine dei metodi
@@ -23,14 +23,13 @@ def process_file(file_path):
         "\n}\n\n// End of method", 
         
         # Secondari: separatori generici
-        "\n}\n",  # Qualsiasi chiusura di blocco
         "\nclass ",  # Inizio nuove classi
         "\n@",  # Annotazioni
         "\n/**",  # Javadoc
         "\n * ", 
         "\n"
     ],
-    keep_separator=False, # per evitare riporto di separatori
+    keep_separator=True,
     is_separator_regex=False
 )
 

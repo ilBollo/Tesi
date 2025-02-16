@@ -28,7 +28,7 @@ retriever=vector_store.as_retriever(
         }
     )
 
-varStileLLM = "Sei un programmatore che risponde conciso ma sintetico."
+varStileLLM = "Sei un programmatore che risponde conciso e sintetico."
 
 # Configurazione Template del prompt specifici per i modelli
 LLAMA_TEMPLATE = """<|begin_of_text|>
@@ -47,7 +47,7 @@ CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
 
 COMMON_PARAMS = {
     "temperature": 0.2,
-    "top_p": 0.90  # Bilancia creatività/controllo nei token generati
+    "top_p": 0.85  # Bilancia creatività/controllo nei token generati
 }
 
 # Caricamento modello

@@ -25,7 +25,7 @@ vector_store = FAISS.load_local(
 retriever=vector_store.as_retriever(
         search_kwargs={
             "k": 5,                   # Più documenti per contesto
-            "score_threshold": 0.8, # alzo la soglia per includere più file anche se fuori contesto
+            "score_threshold": 0.4, # troverà pochissimi chunk file
             "search_type" :"similarity",  # Più efficace per il codice usare mmr per diversità
             "lambda_mult":0.5       # Bilancia diversità/rilevanza
         }
@@ -146,7 +146,7 @@ if __name__ == "__main__":
     # Processamento e salvataggio risultati
     all_results = process_questions(questions)
     
-    output_file = Path("rag_resultsllamascore1.json")
+    output_file = Path("rag_resultsllamascore04.json")
     output_file.write_text(
         json.dumps(all_results, ensure_ascii=False, indent=2), 
         encoding='utf-8'
