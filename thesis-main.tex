@@ -188,7 +188,7 @@ Questo approccio rende la generazione contestualmente e coerente di codice, sfru
 \section{Fine-Tuning}
 Il fine-tuning è la fase in cui il modello già pre-addestrato viene ulteriormente specializzato per la generazione di codice adattando e migliorando il modello per specifici domini di applicazione.
 Durante questa fase, il modello affina le sue capacità attraverso dataset specializzati composti da coppie descrizione-codice, documentazione tecnica e commenti, esempi di bug-fixing e refactoring.
-\subsection{Tecniche di Apprendimento}:
+\subsection{Tecniche di Apprendimento}
     \begin{itemize}
         \item \textbf{Supervisionato}: Training su coppie input-output predefinite, il modello impara a mappare input di descrizione con linguaggio naturale a output di codice corrispondente.
         \item \textbf{Per Rinforzo}: Ottimizzazione basata su feedback e metriche di qualità
@@ -250,7 +250,7 @@ La sigla RAG rappresenta \textbf{Retrieval Augmented Generation}, (in italiano \
     \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni
     \item evitare risposte imprecise a causa della confusione terminologica, in cui diverse fonti utilizzano la stessa terminologia per parlare di cose diverse.
 \end{itemize}
-
+\newpage
 \section{Funzionamento}
 Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il prompt della richiesta.
 Il funzionamento si articola in diverse fasi qui sotto illustrate:
@@ -306,13 +306,6 @@ Il funzionamento si articola in diverse fasi qui sotto illustrate:
     \node [data] at ($(context)!0.5!(llm)$) {Integra};
     \node [data] at ($(llm)!0.5!(output)$) {Genera};
 \end{tikzpicture}
-
-%\begin{figure}[h]
-%    \centering
-%    \includegraphics[width=.8\linewidth]{figures/jumpstart-fm-rag.jpg}
-%    \caption{Flusso di una request ad un LLM integrato con un RAG}
-%    \label{fig:jumpstart-fm-rag}
-%\end{figure}
 
 \subsection{Creazione Vector Database}
 La propria \emph{knowledge base} deve essere salvata in un database vettoriale, in modo da poter essere interrogata in maniera efficiente dal sistema RAG.
@@ -1323,7 +1316,7 @@ ma resta sempre il peso e la consapevolezza che in questo momento sono sempre un
 giornalmente vengono rilasciati.
 Come programmatore al momento userò questi strumenti nel mio lavoro marginalmente perchè è mio desiderio continuare ad avere il controllo dei progetti realizzati e allo stesso tempo continuare ad avere soddisfazione e orgoglio nel riuscirci da solo.
 Certo sono consapevole che permettendo di velocizzare e migliorare la qualità del mio codice facendomi conoscere e ragionare su nuove tecniche e soluzioni aumentando la mia base di conoscenza.
-Proprio per questo mi piace concludere pensando che noi programmatori 'semplicemente' stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e i LLM sono 'solo' dei trasmettitori di conoscenza.
+Proprio per questo mi piace concludere pensando che noi programmatori 'semplicemente' stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e l'IA sia, in questo campo, 'solo' un grandissimo trasmettitore di conoscenza.
 
 \begin{quote}
     “De nihilo nihil”
