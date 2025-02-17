@@ -7,12 +7,7 @@ punteggi_max = [5,5,5,5,5,5,4,4,4,4,5,4,5,3,2,2,3,2,2,2,5,4,3,5,4,5,4,5,5,5]
 modelli = {
     "CodeQwen1": [0,5,5,5,5,5,4,4,4,4,5,0,5,0,2,2,3,2,2,2,5,4,3,5,4,5,4,5,5,5],
     "LLAMA08": [0,5,0,5,5,5,4,4,0,4,5,4,5,0,2,2,3,0,0,2,0,4,3,5,0,5,0,5,5,5],
-    "LLAMA1" : [ 0,5,0,5,5,
-                5,4,4,0,4,
-                5,4,5,0,2,
-                2,3,0,2,2,
-                0,4,3,5,4,
-                5,4,5,5,5],
+    "LLAMA1" : [ 0,5,0,5,5,5,4,4,0,4,5,4,5,0,2,2,3,0,2,2,0,4,3,5,4,5,4,5,5,5],
     "LLAMA04" : [0,0,0,0,0,
     0,0,0,0,0,
     0,0,0,0,2,
@@ -63,7 +58,7 @@ for bar, media in zip(bars, medie):
 # Aggiustamento spazi
 plt.margins(y=0.1)
 plt.tight_layout()
-plt.savefig('confronto_modelli_corretto.png', dpi=300, bbox_inches='tight')
+plt.savefig('confronto_valutazioni_modelli.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # Grafico 2: Punteggi per Domanda

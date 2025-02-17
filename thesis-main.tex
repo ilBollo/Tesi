@@ -353,7 +353,7 @@ Quando l'utente sottopone una query:
 \begin{figure}[h]
     \raggedright
     \includegraphics[width=0.8\linewidth]{figures/plotSearch.png}
-    \label{fig:Emempio distanze chunk e query}
+    \label{fig:Esempio distanze chunk e query}
 \end{figure}
 \subsection{Fase 3: Aumento del Prompt}
 Se trovate, il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
@@ -797,7 +797,7 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
 
     \paragraph{Conclusione:}
     Sono state riscontrate due problematiche molto rilevanti, la prima riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
-    Mentre la seconda guarda i chunck estratti, lo score ottenuto non è particolarmente alto e questo con un database più ampio relativo a funzioni con terminologie e meccanismi simili potrebbe portare a risultati non coerenti.
+    Mentre la seconda guarda i chunk estratti, lo score ottenuto non è particolarmente alto e questo con un database più ampio relativo a funzioni con terminologie e meccanismi simili potrebbe portare a risultati non coerenti.
     Per il secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
     questa piccola correzione risolve in parte la problematica o almeno evita di propagarla ulteriormente preferendo non ottenere risultati piuttosto che ricevere risposte non coerenti.
     
@@ -1181,58 +1181,161 @@ Verranno usati come riferimento i punteggi dati da \textbf{GPT4o}, nel dettaglio
     \item Domande con punteggio 2: Generalmente risolvibili perché rientrano in pattern comuni di programmazione.
 \end{itemize}
 \subsection{llm as a judge}
-Il sistema RAG ha elaborato le domande e fornito risposta salvando il risultato in un file JSON.
-Questo file è stato valutato da \textbf{DeepSeek} per valutare la coerenza delle risposte.
-Sono state fatte quattro elaborazioni differenti:
-\begin{itemize}
-    \item CodeQwen con score threshold 1.0
-    \item Llama3.2 score threshold 1.0
-    \item Llama3.2 score threshold 0.8
-    \item Llama3.2 score threshold 0.4
+Il sistema RAG ha elaborato le domande e fornito risposta salvando il risultato in un file JSON:
+\begin{lstlisting}[language=Python, caption={Codice aggiunto alla pipeline per elaborare massivamente le domande}, label={lst:chunking}, inputencoding=utf8]
+def load_questions(file_path: str) -> List[Dict]:
+    """Carica le domande dal file JSON esterno"""
+    try:
+        actual_path = Path(__file__).parent / file_path
+        with actual_path.open('r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+        # Validazione della struttura
+        required_keys = {'id', 'question', 'answer', 'punteggio'}
+        for item in data:
+            if not required_keys.issubset(item.keys()):
+                raise ValueError("Struttura JSON non valida")
+                
+        return data
+        
+    except FileNotFoundError:
+        raise Exception(f"File {file_path} non trovato")
+    except json.JSONDecodeError:
+        raise Exception("Errore nel parsing del JSON")
+
+def process_questions(questions: List[Dict]) -> List[Dict]:
+    results = []
+    for q in questions:
+        try:
+            result = rag_chain.invoke({"input": q["question"]})
+            
+            entry = {
+                "id": q["id"],
+                "question": q["question"],
+                "answerOK": q["answer"],  # Mantiene il contesto originale
+                "answerRAG": result["answer"],
+                "punteggio": q["punteggio"],
+                "sources": [
+                    {
+                        "content": doc.page_content[:50]
+                    } 
+                    for doc in result["context"]
+                ]
+            }
+            results.append(entry)
+            
+            print(f"Processata {q['id']}")
+            
+        except Exception as e:
+            print(f"Errore su {q['id']}: {str(e)}")
+            results.append({
+                "id": q["id"],
+                "punteggio": q["punteggio"],
+                "error": str(e),
+                "question": q["question"]
+            })
+    
+    return results
+
+\end{lstlisting}
+
+Questi file sono stati valutati da \textbf{DeepSeek}, il quale ha assegnato un punteggio specifico per ogni domanda confrontando le risposte \texttt{answerOK} e \texttt{answerRAG}. Sono state effettuate quattro elaborazioni differenti:
+
+\begin{itemize}[leftmargin=*, label={--}]
+    \item \textbf{CodeQwen con score threshold 1.0}
+    \begin{itemize}[leftmargin=*, label={$\bullet$}]
+        \item \textbf{Punteggio totale:} 109/124
+        \item \textbf{Punteggi per domanda:}
+        \texttt{[0,5,5,5,5, 5,4,4,4,4, 5,0,5,0,2, 2,3,2,2,2, 5,4,3,5,4, 5,4,5,5,5]}
+    \end{itemize}
+
+    \item \textbf{Llama3.2 score threshold 0.8}
+    \begin{itemize}[leftmargin=*, label={$\bullet$}]
+        \item \textbf{Punteggio totale:} 87/124
+        \item \textbf{Punteggi per domanda:}
+        \texttt{[0,5,0,5,5, 5,4,4,0,4, 5,4,5,0,2, 2,3,0,0,2, 0,4,3,5,0, 5,0,5,5,5]}
+    \end{itemize}
+
+    \item \textbf{Llama3.2 score threshold 1.0}
+    \begin{itemize}[leftmargin=*, label={$\bullet$}]
+        \item \textbf{Punteggio totale:} 97/124
+        \item \textbf{Punteggi per domanda:}
+        \texttt{[0,5,0,5,5, 5,4,4,0,4, 5,4,5,0,2, 2,3,0,2,2, 0,4,3,5,4, 5,4,5,5,5]}
+    \end{itemize}
+
+    \item \textbf{Llama3.2 score threshold 0.4}
+    \begin{itemize}[leftmargin=*, label={$\bullet$}]
+        \item \textbf{Punteggio totale:} 28/124
+        \item \textbf{Punteggi per domanda:}
+        \texttt{[0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2, 2,3,0,2,2, 5,0,3,5,4, 0,0,0,0,0]}
+    \end{itemize}
 \end{itemize}
-\begin{figure}[htbp]
+
+\paragraph{Nota:} È interessante notare che tutti i modelli hanno sbagliato la prima domanda,
+non per mancanza di Chunk forniti al prompt ma a causa di un errore nel calcolo del giorno della settimana.
+Questo errore non si sarebbe verificato con le versioni con più parametri degli stessi modelli.
+\newpage
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{confronto_modelli_corretto.png}
-    \caption{Confronto modelli RAG correttamente allineato}
+    \includegraphics[width=\textwidth]{confronto_valutazioni_modelli.png}
+    \caption{Confronto risposte modelli RAG}
     \label{fig:confronto-modelli}
 \end{figure}
-La configurazione migliore è stata quella di CodeQwen con score threshold 1.0 questo perchè i test effettuati hanno dimostrato che è meglio aumentare a volte il Prompt con Chunck non corretto che risciare di escluderne alcuni invece realmente validi.
-Lasciando comunque il limite a 5 Chunck il prompt non viene mai eccessivamente appesantito e il modello riescie ad elaborare buone risposte.
-Llma3.2 con score threshold 1.0 ha ottenuto una completezza media deell 80% mentre lo stesso modello ma con score threshold 0.8 ha ottenuto una completezza media del 70% questo a causa di esclusione di troppo Chunks validi.
-Ma in conclusione è possibile affermare che il sistema RAG funziona correttamente vedendo il risultato ottenuto da Llama3.2 con score threshold 0.4, questo punteggio esclude praticamente tutti i Chunck e per questo le risposte del modello sono solo il risultato delle conoscenze del LLM che danno un risultato estremamente basso.
-\begin{figure}[htbp]
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{completezza_per_domanda.png}
     \caption{Completezza per domanda}
     \label{fig:completezza-per-domanda}
 \end{figure}
-
-
+La configurazione migliore è stata quella del LLM \textbf{CodeQwen con score threshold 1.0},
+i test effettuati hanno dimostrato che è meglio aumentare la tolleranza di score dei Chunk estratti nella fase di Retriever.
+Questo score relativamente alto, come già analizzato nei capitoli precedenti, può causare l'inserimento di alcuni Chunk non coerenti ma allo stesso tempo evita di escluderne di validi e fondamentali per permettere al LLM di rispondere correttamente.
+Abbiamo visto che gli score avrebbero valori molto bassi solo se le query fossero scritte in maniera molto accurata ma questo solitamente non avviene.
+Questa minore rigidità può essere utile per ridurre una sorta di overfitting del modello RAG.
+In ogni caso per prevenire il plorifirarsi di Chunk non coerenti viene sempre impostato il limite a 5 Chunk in questo modo il prompt non viene mai eccessivamente appesantito e il modello riesce ad elaborare buone risposte.
+Per rinforzare queste considerazione testando Llma3.2 con score threshold 1.0 e con threshold 0.8 il risultato migliore è stato con threshold maggiore perchè non ha estromesso nella fase di Retriever Chunk validi e fondamentali per la risposta.
+I risultati sono stati ottimi e il sistema RAG funziona correttamente aumentando le conoscenze dei LLM in manera vincente,
+ne è ulteriore prova l'impostazione di uno score threshold 0.4 con il quale vengono esclusi praticamente tutti i Chunck e per questo le risposte sono date solo dalle conoscenze del LLM con risultati estremamente scarsi non conoscendo i contesti e le librerie specificate nelle domande.
 
 \chapter{Conclusioni}
-
-da completare
-%In questa tesi ho esplorato l'integrazione di RAG e LLM nello sviluppo del software, dimostrando come questi strumenti possano migliorare significativamente il processo di sviluppo. I risultati principali includono:
-%\begin{itemize}
-%    \item Implementazione di un sistema RAG per la generazione di codice contestualizzato
- %   \item Analisi delle prestazioni e dell'efficacia del sistema
- %   \item Identificazione di potenziali aree di miglioramento
-%\end{itemize}
-
-\section{Impatto sullo Sviluppo Software}
-L'integrazione di strumenti basati su AI nel processo di sviluppo software sta rivoluzionando il settore. Durante il periodo di sviluppo di questa tesi (Ottobre 2024 - Febbraio 2025), il mondo ha visto una continuata e rapida evoluzione degli strumenti di AI per lo sviluppo software
-Dove continua a stupire il miglioramento continuo nelle capacità di generazione e comprensione del codice
-
-\section{Sfide e Prospettive Future}
-%Nonostante i progressi significativi, rimangono diverse sfide da affrontare:
-%\begin{itemize}
-%    \item Bilanciamento tra automazione e controllo umano
-%    \item Gestione delle implicazioni etiche
-%    \item Necessità di mantenere competenze tecniche fondamentali
-%\end{itemize}
+\begin{quote}
+    “Let an ultraintelligent machine be defined as a machine that can far surpass all the intellectual activities of any man however clever.
+    Since the design of machines is one of these intellectual activities, an ultraintelligent machine could design even better machines; there would then unquestionably be an ‘intelligence explosion,’ and the intelligence of man would be left far behind.
+    Thus the first ultraintelligent machine is the last invention that man need ever make.”
+    
+    \hfill--- \textit{I.J. Good (1965)\cite{Good1965}}
+\end{quote}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/intelligence_explosion.png}
+    \caption{fig: tratta da situational-awareness.ai}
+\end{figure}
 
 
-%\lstinputlisting[float,language=Java,label={lst:random-code}]{listings/HelloWorld.java}
+Questi mesi di lavoro mi hanno portato a cercare di conosce e capire il più possibile come funzionano realmente questi modelli di Intelligenza Artificiale.
+Nella fase di ricerca ho sempre trovato nei vari articoli e analisi stupore e meraviglia nel commentare i risultati e le capacità dimostrate da questi modelli.
+Il saggio di Leopold Aschenbrenner \cite{Aschenbrenner2024} "SITUATIONAL AWARENESS: The Decade Ahead", da me conosciuto quasi al termine della scrittura di questa tesi, spiega e approfondisce lo stesso giudizio che oggi ho sul futuro dell'IA.
+Non voglio addentrarmi ora in ulteriori giudizi generali sul futuro dell'intelligenza Artificiale preferendo tornare nel contesto di questa tesi e affermere che \textbf{l'integrazione di RAG e LLM nello sviluppo del Software} è oggi già piena realtà.
+Il sistema RAG d'esempio implementato funziona correttamente nonostante i limiti dei modelli utilizzati e con un ulteriore implementazione delle tecniche Chunking potrebbe essere realmente utilizzato con buoni risultati.
+Implementazioni di sistemi RAG per le aziende oggi danno ottimi risultati,
+ma resta sempre il peso e la consapevolezza che in questo momento sono sempre un passo indietro rispetto ai miglioramenti globali che
+giornalmente vengono rilasciati.
+Come programmatore al momento userò questi strumenti nel mio lavoro marginalmente perchè è mio desiderio continuare ad avere il controllo dei progetti realizzati e allo stesso tempo continuare ad avere soddisfazione e orgoglio nel riuscirci da solo.
+Certo sono consapevole che permettendo di velocizzare e migliorare la qualità del mio codice facendomi conoscere e ragionare su nuove tecniche e soluzioni aumentando la mia base di conoscenza.
+Proprio per questo mi piace concludere pensando che noi programmatori 'semplicemente' stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e i LLM sono 'solo' dei trasmettitori di conoscenza.
+
+\begin{quote}
+    “De nihilo nihil”
+    \hfill--- \textit{Lucrezio (~55 a.c) }
+\end{quote}
+
+\chapter{Ringraziamenti}
+Ringrazio il mio relatore il Prof. Viroli Mirko e il Dott. Aguzzi Gianluca per l'interessantissimo argomento di tesi proposto e per la disponibilità e professionalità dimostrata.
+Ringrazio tutta lo comunità di ricercatori che forniscono materiale open source e documentazione per permettere a tutti di apprendere e migliorare questa incredibile tecnologia. In particolare Simone Rizzo che grazie ai suoi video estremamente chiari e tecnici mi ha permesso di comprendere moltissimi concetti.
+
+
+
 
 
 %----------------------------------------------------------------------------------------
