@@ -1,5 +1,6 @@
 \documentclass[12pt,a4paper,openright,twoside]{book}
 \usepackage[utf8]{inputenc}
+\usepackage[english, italian]{babel}
 \usepackage{disi-thesis}
 \usepackage{code-lstlistings}
 \usepackage{notes}
@@ -56,13 +57,14 @@
 
 \begin{document}
 
-\frontmatter \frontispiece
+\frontmatter\frontispiece
 
 \begin{abstract}	
 I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
 L'addestramento fatto sui modelli è però su fonti generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta utilizzando codice già creato dal programmatore o dalla propria azienda per casi simili.
-Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare ma
-il fine-tuning di un \ac{LLM} è un processo molto costoso e difficile da utilizzare per mantenere aggiornato frequentemente la base di conoscenza del modello.
+Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
+Servirebbe quindi una nuova fase di fine-tunig per adattare il modello alle proprie esigenze, ma questa soluzione è un processo molto costoso che richiede particolari competenze tecnica
+difficilmente presenti in molte aziende. Inoltre il fine-tuning non permette di aggiornare il modello in maniera rapida e dinamica, richiedendo un nuovo addestramento per ogni modifica.
 Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza, esterna al modello, come librerie specifiche di un azienda, arricchendo il prompt della query di input che sarà elaborata dal LLM.
 Il \ac{RAG}, ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, li inserirà per aumentare il prompt del LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
 Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} specifico per codice Java e un \ac{LLM} con lo scopo di ottenere risposte personalizzate
@@ -87,67 +89,53 @@ A Giulia e ai miei figli, il dono più incredibile di questa vita.
 \chapter{Introduzione}
 \label{chap:introduction}
 %----------------------------------------------------------------------------------------
-
-\section{Essere programmatori nel 2025}
-Per sviluppare codice sono disponibili tantissimi (IDE), uno di questi è \textbf{Visual Studio Code},
-mentre per condividere i progetti e lavorare in team lo strumento utilizzato potrebbe essere  \textbf{GitHub}.
-Se richiesta memoria GPU per piccoli progetti accademici è posssibile utilizzare \textbf{COLAB}, che permette di eseguire in remoto codice Python utilizzando GPU senza costi.
-Questi esempi sono parte di una panoramica di strumenti sempre più vasta, complessa e in rapita evoluzione, con un frequente cambio di software per realizzare un programma.
-Inoltre i possibili modi per realizzare i progetti è aumentanta, disponendo oggi di sempre più librerie e metodi per ottenere risultati finali simili.
-Un esempio d'utilizzo degli strumenti sopra elencati potrebbe seguire la seguente scaletta:
-\begin{itemize}
-    \item Realizzazione iniziale del progetto in locale utilizzado Visual Studio Code
-    \item Push del codice su GitHub per condividere il progetto con il team
-    \item Esecuzione del codice su Colab per testare il codice su GPU ed eventualmente eseguire modifiche concluse con nuovo Push su GitHub
-    \item Pull in locale per continuare a lavorare sul progetto
-\end{itemize}
-Questo modo dinamico di lavorare è recente ma non una novità, come invece lo sono alcuni specifici strumenti forniti da questi software.
-Questi strumenti sono tutti accumunati \textbf{dall'implementazione al loro interno di funzioni basate sull'IA}.
-Queste funzioni sono in grado di completare il codice, suggerire correzioni e creare documentazione pertinente.
-\textbf{GitHub} ha introdotto \textbf{Copilot}, un assistente IA per la scrittura del codice, questo strumento è integrabile con vari IDE tra cui proprio \textbf{Visual Studo Code}.
-Un esempio semplice ma che offre già un idea della vastità e della potenza di queste funzioni è l'utility di \textbf{Github Copilot}: \emph{'Generate Commit Message with Copilot'}
-che propone il testo da utilizzare come descrizione di un commit,
-ho provato a verificare quanto fosse contestualizzato e coerente 
-con le modifiche apportate al codice ed ho ottenuto il seguente risultato:
+Essere programmatori significa lavorare in un settore in continua evoluzione, sopratutto negli ultimi anni con l'introduzione dell'AI.
+Con l'avvento di questa nuova tecnologia è cambiato il modo di eseguire parte del lavoro, ora sono presenti software che assistono i programmatori nella scrittura del codice.
+Questi software sono in grado di completare il codice, suggerire correzioni e creare documentazione pertinente.
+Aiutano inoltre i programmatori nei compiti più ripetivi e meccanici, aumentando la produttività e riducendo i tempi di sviluppo.
+Un esempio della potenza di queste funzioni è l'utility di \textbf{Github Copilot}: \emph{'Generate Commit Message with Copilot'}
+che propone il testo da utilizzare come descrizione di un commit, basandosi sulle modifiche apportate al codice come mostrato in figura \cref{fig:Commit-Autogenerato}.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/commit.png}
+    \caption{Esempio di commit autogenerato da Copilot}
     \label{fig:Commit-Autogenerato}
 \end{figure}
-\newline
-Nel mio caso quanto proposto era corretto ed ho quindi eseguito il Commit con la descrizione proposta.
-Quanto è riuscito a fare Copilot è strabiliante, in pochi istanti ha analizzato il contesto ritornando come output una risposta semplice ma coerente rispetto a quanto cambiato.
-L'uso di questi strumenti sta rendendo il lavoro molto più dinamico e veloce, riducendo le interruzioni nel cercare soluzioni o per trovare le giuste parole per descrivere
-quanto fatto.
+
+Software come Copilot utilizzano LLM per riprodurre codice e testo, scansionando in pochi istanti il contesto nel codice che si sta costruendo.
+In progetti complessi questo non riduce il ruolo del programmatore che detiene la realizzazione di compiti complessi ad alto valore aggiunto delegando la generazione di parti del codice semplici e ripetitive a questi software.
+\`E quindi importante capire il funzionamento di questi strumenti, sapere come chiedere e formulare correttamente le domande, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice per indirizzarlo nell'elaborazione e ragionamento corretto.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/copilotsolutionSettimanaEnigmistica.png}
+    \caption{Questi software producono valide soluzioni}
     \label{fig:Copilot-Solution}
 \end{figure}
-\newline
-L'intelligenza artificiale sta rivoluzionando il modo in cui il software viene sviluppato, strumenti come Copilot utilizzando tutto il loro potenziale, possono creare la spina dorsale di un progetto
-in poco tempo lasciando al programmatore il compito di verificare e correggere solo in parte il codice proposto. 
-In progetti complessi questo non riduce il ruolo del programmatore, anzi lo eleva a compiti di precisione e ad alto valore aggiunto delegando la stesura di parti del codice semplici e ripetitive al software stesso.
-Per questi motivi capire come funzionano oggi questi strumenti è importante, sapere come chiedere e formulare correttamente le domande al LLM è fondamentale, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice per indirizzarlo nell'elaborazione e ragionamento corretto.
-Altro compito complesso per il programmatore è non farsi troppo ammaliare dalle soluzioni proposte perché non sempre necessarie per quanto richiesto oppure diverse da quanto già conosciuto
- per realizzare una determinata funzione.
-Questo nuovo modo di lavorare permette di conoscere nuove soluzioni ma comporta test e tempo non sempre disponibile,
-il programmatore deve sempre avere il controllo del progetto, accettando generazione del codice automatica solo dove consapevole di quanto proposto e del suo impatto anche in casi di revisione e manutenzione futuri.
-Il codice deve rimanere rapidamente leggibile e coerente in tutte le sue parti, far generare il codice in automatico può portare ad una perdità di coerenza e leggibilità. 
-Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte del LLM, per ottenere risposte rimanendo nel contesto e nello stile di quanto già realizzato e conosciuto, per fare questo entra in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che verrano ampiamente approfonditi.
+
+Questi software hanno una problematica importante, essendo addestrati su dataset generici e non personalizzati, sono validi nel fornire risposte standard e generiche, ma non sono in grado di fornire risposte personalizzate e specifiche per un'azienda o un programmatore.
+Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte, per fare in modo che il LLM impari lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
+Per fare questo entrano in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che verrano ampiamente approfonditi.
 
 \chapter{Addestrare un LLM per la Generazione del Codice}
 
 L'addestramento di LLM per la generazione del codice di programmazione richiede una serie di passaggi complessi e costi significativi.
 Conoscere questo processo è utile per poter poi comprendere al meglio la successiva implementazione con le tecniche di \textbf{RAG}.
 La procedura si divide nelle seguenti fasi:
+\begin{itemize}
+    \item Scelta del Modello
+    \item Raccolta e Preparazione dei Dataset
+    \item Pre-Addestramento
+    \item Fine-Tuning
+    \item Valutazione e Ottimizzazione
+\end{itemize}
+Analizziamo ora nel dettaglio ogni fase.
 \section{Scelta Modello}
-Gli LLM utilizzano tipicamente architetture basate su trasformatori, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
-I trasformatori utilizzano meccanismi di auto-attenzione per valutare l'importanza di diversi elementi in una sequenza,
+Gli LLM utilizzano tipicamente architetture basate su transformers, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
+I transformers utilizzano meccanismi di auto-attenzione per valutare l'importanza di diversi elementi in una sequenza,
 permettendo al modello di comprendere le relazioni tra parole o token.
 Questa capacità è fondamentale nella generazione del codice, poiché le dipendenze tra variabili e funzioni possono estendersi su ampie sezioni del codice, richiedendo al modello di considerare un ampio contesto per trovare le risposte corrette.
 L'architettura del modello scelto influenzerà in maniera decisiva tutte le successive fasi di addestramento.
-È utile notare che sebbene i trasformatori siano attualmente lo standard, esistono anche altri approcci come le reti neurali ricorrenti (RNN e LSTM) e nuove tecniche in continua evoluzione come i Large Concept Models \cite{code-llm-survey-2024}.
+È utile notare che sebbene i transformers siano attualmente lo standard, esistono anche altri approcci come le reti neurali ricorrenti (RNN e LSTM) e nuove tecniche in continua evoluzione come i Large Concept Models \cite{code-llm-survey-2024}.
 \section{Raccolta e Preparazione dei Dataset}
 La qualità e la quantità dei dati per l'addestramento è di primaria importanza per prepare un modello alla generazione di codice in maniera efficace.
 È quindi essenziale utilizzare per il training codice proveniente da molteplici fonti tra cui codice sorgente, file readme, documentazione tecnica, commenti nel codice,
@@ -184,73 +172,91 @@ Ad esempio, nel codice Java, i token potrebbero includere:
 \section{Pre-Addestramento}
 Il pre-addestramento di un LLM specializzato nella generazione di codice ha lo scopo di fornire al modello una conoscenza generale della sintassi e delle strutture logiche dei linguaggio di programmazione.
 Durante questa fase il modello impare a generare codice partendo da dati non etichettati utilizzando tecniche come il \emph{language modeling} autoregressivo per insegnare al modello di predire il token successivo in una sequenza.
-Questo approccio rende la generazione contestualmente e coerente di codice, sfruttando la capacità del modello di "ricordare" il contesto anche su ampie sequenze di dati.
+Questo approccio rende la generazione contestualmente e coerente di codice, sfruttando la capacità del modello di 'ricordare' il contesto anche su ampie sequenze di dati.
 \section{Fine-Tuning}
 Il fine-tuning è la fase in cui il modello già pre-addestrato viene ulteriormente specializzato per la generazione di codice adattando e migliorando il modello per specifici domini di applicazione.
 Durante questa fase, il modello affina le sue capacità attraverso dataset specializzati composti da coppie descrizione-codice, documentazione tecnica e commenti, esempi di bug-fixing e refactoring.
 \subsection{Tecniche di Apprendimento}
     \begin{itemize}
-        \item \textbf{Supervisionato}: Training su coppie input-output predefinite, il modello impara a mappare input di descrizione con linguaggio naturale a output di codice corrispondente.
-        \item \textbf{Per Rinforzo}: Ottimizzazione basata su feedback e metriche di qualità
-        \item \textbf{Few-shot Learning}: Adattamento a nuovi contesti con pochi esempi
+        \item \textbf{Supervisionato}: 
+            Addestramento basato su coppie input-output predefinite, dove il modello impara a mappare descrizioni in linguaggio naturale al codice corrispondente.
+            \begin{itemize}
+                \item \textit{Esempio}: Utilizzo di un dataset contenente descrizioni come 'Scrivi una funzione in Python che calcoli la media di una lista' abbinate al relativo codice Python. In questo modo, il modello impara a generare il codice corretto partendo dalla descrizione fornita.
+            \end{itemize}
+            
+        \item \textbf{Per Rinforzo}: 
+            Ottimizzazione basata su un sistema di feedback, dove il modello riceve una ricompensa in base alla qualità del codice generato, come correttezza, efficienza e aderenza a specifiche metriche.
+            \begin{itemize}
+                \item \textit{Esempio}: Un modello genera una funzione di ordinamento. Il codice viene eseguito e sottoposto a una serie di test (ad esempio, verificando l'ordinamento corretto e l'efficienza computazionale). Se il codice supera i test e rispetta i criteri di prestazione, il modello riceve una ricompensa che ne rafforza le scelte, migliorando così la qualità delle future generazioni.
+            \end{itemize}
+            
+        \item \textbf{Few-shot Learning}: 
+            Capacità di adattarsi a nuovi compiti o contesti con pochissimi esempi di addestramento.
+            \begin{itemize}
+                \item \textit{Esempio}: Dopo aver osservato solo alcuni esempi di come tradurre una descrizione in linguaggio naturale al codice in un nuovo linguaggio di programmazione (ad esempio, Rust), il modello è in grado di generare codice in Rust anche per nuove descrizioni simili, senza necessità di un vasto dataset specifico per quel linguaggio.
+            \end{itemize}
     \end{itemize}
 
-\subsection{Overfitting}
-Il processo di fine-tuning richiede un attento bilanciamento nell'apprendere dai dati di addestramento cercando di evitare di incorrere in overfitting.
-L'overfitting si verifica quando il modello si specializza troppo sui dati di addestramento, riducendo la sua capacità di generalizzazione producendo risposte errate o incoerenti su nuovi dati.
-Per evitare l'overfitting vengono utilizzati set di validazione, regolarizzazione e tecniche di dropout.
-\section{Pre-Addestramento vs Fine-Tuning}
+\section{Pre-Addestramento vs Fine-Tuning} 
 È importante comprendere la distinzione tra queste due fasi:
+   
 \subsubsection{Pre-Addestramento}
-Il pre-addestramento è la fase iniziale dove il modello:
+Il pre-addestramento è la fase iniziale in cui il modello:
 \begin{itemize}
     \item Acquisisce una comprensione \textbf{generale} del linguaggio di programmazione
+        \begin{itemize}
+            \item \textit{Esempio}: Il modello analizza milioni di righe di codice open-source, apprendendo le regole base e la struttura sintattica di linguaggi come Python, Java e C++.
+        \end{itemize}
     \item Viene addestrato su \textbf{grandi quantità} di codice sorgente generico
+        \begin{itemize}
+            \item \textit{Esempio}: Utilizzando un vasto corpus proveniente da repository pubblici (ad esempio, GitHub), il modello impara le convenzioni e le pratiche comuni adottate dalla comunità di sviluppo.
+        \end{itemize}
     \item Impara le strutture base e la sintassi del linguaggio
+        \begin{itemize}
+            \item \textit{Esempio}: Durante questa fase, il modello apprende come si definiscono funzioni, variabili, cicli e condizioni, senza però concentrarsi su particolari logiche applicative.
+        \end{itemize}
     \item Non è ancora specializzato per compiti specifici
+        \begin{itemize}
+            \item \textit{Esempio}: Pur essendo in grado di generare codice sintatticamente corretto, il modello non ha ancora imparato a ottimizzare o personalizzare il codice per particolari applicazioni, come la sicurezza o le performance.
+        \end{itemize}
 \end{itemize}
 
 \subsubsection{Fine-Tuning}
-Il fine-tuning è invece la fase di specializzazione dove il modello:
+Il fine-tuning è la fase di specializzazione in cui il modello:
 \begin{itemize}
     \item Si adatta a un \textbf{dominio specifico} o a compiti particolari
-    \item Utilizza dataset specifici e composti da dati strutturati 
+        \begin{itemize}
+            \item \textit{Esempio}: Un modello pre-addestrato può essere ulteriormente raffinato per generare codice dedicato allo sviluppo di applicazioni web, concentrandosi su framework come Django o Flask.
+        \end{itemize}
+    \item Utilizza dataset specifici e composti da dati strutturati
+        \begin{itemize}
+            \item \textit{Esempio}: Il fine-tuning può avvenire su un dataset che contiene esempi di codice per la gestione dell’autenticazione, la validazione degli input e la gestione degli errori, rendendo il modello più efficace nel risolvere problemi tipici di un dominio applicativo specifico.
+        \end{itemize}
 \end{itemize}
 \section{Valutazione e Ottimizzazione}
-Una volta addestrato, il modello deve essere rigorosamente valutato utilizzando metriche specifiche per la generazione di codice, come la correttezza sintattica, la funzionalità e l'efficienza del codice prodotto.
-I risultati della valutazione possono essere utilizzati per ulteriori ottimizzazioni, come aggiustamenti dei pesi del modello, modifiche all'architettura o includere dati di addestramento aggiuntivi per affrontare eventuali carenze.
+Dopo l'addestramento, è fondamentale sottoporre il modello a una fase di valutazione per verificare la qualità del codice generato. Questa valutazione non si limita a controllare la correttezza sintattica, ma si estende anche alla funzionalità e all'efficienza del codice. I risultati ottenuti offrono spunti preziosi per intervenire con ottimizzazioni mirate, come l'aggiustamento dei pesi, modifiche all'architettura o l'integrazione di ulteriori dati di addestramento.
 
 \subsection{Metriche di Valutazione}
+Per garantire che il modello produca codice di alta qualità, vengono utilizzate diverse metriche, tra cui:
 \begin{itemize}
-    \item \textbf{Correttezza Sintattica}: Verifica che il codice generato sia sintatticamente corretto.
-    \item \textbf{Funzionalità}: Verifica che il codice generato realizzi la funzionalità desiderata.
-    \item \textbf{Efficienza}: Valuta le prestazioni del codice in termini di tempo di esecuzione e utilizzo delle risorse.
+    \item \textbf{Correttezza Sintattica}: Verifica che il codice generato sia privo di errori di sintassi e possa essere compilato o interpretato senza problemi.
+    \item \textbf{Funzionalità}: Assicura che il codice realizzi effettivamente la funzionalità desiderata, testando se il comportamento del programma rispetti le specifiche iniziali.
+    \item \textbf{Efficienza}: Valuta le prestazioni del codice in termini di tempo di esecuzione e utilizzo delle risorse, garantendo un'operatività ottimale.
 \end{itemize}
 
 \subsection{Tecniche di Ottimizzazione}
+Una volta completata la valutazione, i risultati ottenuti possono guidare il processo di ottimizzazione del modello. Tra le tecniche adottabili troviamo:
 \begin{itemize}
-    \item \textbf{Aggiustamento dei Pesi}: Modifica dei pesi del modello per migliorare le prestazioni.
-    \item \textbf{Modifiche all'Architettura}: Introduzione di nuove componenti o modifiche a quelle esistenti.
-    \item \textbf{Integrazione di Dati Aggiuntivi}: Utilizzo di ulteriori dati di addestramento per migliorare le prestazioni.
+    \item \textbf{Aggiustamento dei Pesi}: Modifica dei parametri interni del modello per migliorare la precisione e l'affidabilità del codice generato.
+    \item \textbf{Modifiche all'Architettura}: Introduzione di nuove componenti o revisione di quelle esistenti per aumentare la capacità del modello di apprendere e generalizzare.
+    \item \textbf{Integrazione di Dati Aggiuntivi}: Ampliamento del dataset di addestramento con ulteriori esempi, mirati a colmare le lacune individuate durante la valutazione.
 \end{itemize}
 
-\chapter{RAG}
-\begin{figure}[h]
-    \raggedright
-    \includegraphics[width=0.8\linewidth]{figures/RAGDefinizione.png}
-    \label{fig:significa-RAG}
-\end{figure}
-\section{Introduzione}
-La sigla RAG rappresenta \textbf{Retrieval Augmented Generation}, (in italiano \textit{Generazione Aumentata tramite Recupero} )  è un sistema che permette di migliorare l'output di un LLM estendendo la sua conoscenza con nuove informazioni, al di fuori dai suoi dati di addestramento allo scopo di:
-\begin{itemize}
-    \item ottenere risposte mirate e personalizzate contenti knowledge relativa a librerie e codice custom
-    \item migliorare il codice generato rendendolo più specifico al dominio riducendo le allucinazioni
-    \item facilitare l'assistenza da parte del modello nella fase di debugging migliorando la sua comprensione di sistemi complessi
-    \item supportare la creazione di documentazione aggiornata
-    \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni
-    \item evitare risposte imprecise a causa della confusione terminologica, in cui diverse fonti utilizzano la stessa terminologia per parlare di cose diverse.
-\end{itemize}
-\newpage
+\chapter{Retrieval Augmented Generation}
+\section{Introduzione} 
+La sigla RAG, acronimo di \textbf{Retrieval Augmented Generation} (in italiano, \textit{Generazione Aumentata tramite Recupero}), indica un approccio innovativo volto a potenziare le capacità di un modello linguistico (LLM). Questo sistema amplia la base di conoscenza del modello integrando informazioni esterne, al di fuori dal dataset di addestramento originale.
+In pratica, il prompt in ingresso al LLM viene arricchito con contenuti aggiuntivi ('chunk'), ottenuti attraverso tecniche di recupero che identificano corrispondenze rilevanti in un database dedicato.
+Tale integrazione consente al modello di generare risposte più accurate, contestualizzate e aggiornate, migliorando significativamente la qualità complessiva dell’output.
 \section{Funzionamento}
 Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il prompt della richiesta.
 Il funzionamento si articola in diverse fasi qui sotto illustrate:
@@ -359,6 +365,16 @@ cosa che sarebbe molto più difficile da ottenere con il fine-tuning, che richie
 Avere un LLM addestrato fin da subito su misura per le proprie esigenze e sempre aggiornato sarebbe fantastico ma per quasi
 tutte le aziende richiederebbe risorse impossibili da sostenere ed è quindi molto più comune costruire un RAG
 che intervenire direttamente sulla conoscenza del LLM che restano solitamente proprietà di terzi.
+Riassumendo i vantaggi principali di un sistema RAG sono:
+\begin{itemize}
+    \item ottenere risposte mirate e personalizzate contenti knowledge relativa a librerie e codice custom
+    \item migliorare il codice generato rendendolo più specifico al dominio riducendo le allucinazioni
+    \item facilitare l'assistenza da parte del modello nella fase di debugging migliorando la sua comprensione di sistemi complessi
+    \item supportare la creazione di documentazione aggiornata
+    \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni
+    \item evitare risposte imprecise a causa della confusione terminologica, in cui diverse fonti utilizzano la stessa terminologia per parlare di cose diverse.
+    \item riuscire ad aggiornare il proprio database per l'embeddings in maniera rapida e dinamica
+\end{itemize}
 
 \chapter{Implementazione di un sistema RAG per lo sviluppo di codice per il linguaggio Java}
 \section{Obiettivo}
@@ -1316,7 +1332,7 @@ ma resta sempre il peso e la consapevolezza che in questo momento sono sempre un
 giornalmente vengono rilasciati.
 Come programmatore al momento userò questi strumenti nel mio lavoro marginalmente perchè è mio desiderio continuare ad avere il controllo dei progetti realizzati e allo stesso tempo continuare ad avere soddisfazione e orgoglio nel riuscirci da solo.
 Certo sono consapevole che permettendo di velocizzare e migliorare la qualità del mio codice facendomi conoscere e ragionare su nuove tecniche e soluzioni aumentando la mia base di conoscenza.
-Proprio per questo mi piace concludere pensando che noi programmatori 'semplicemente' stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e l'IA sia, in questo campo, 'solo' un grandissimo trasmettitore di conoscenza.
+Proprio per questo mi piace concludere pensando che noi programmatori 'semplicemente' stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e l'AI sia, in questo campo, 'solo' un grandissimo trasmettitore di conoscenza.
 
 \begin{quote}
     “De nihilo nihil”
