@@ -17,9 +17,9 @@ public class AdvancedBasketballStats extends BasketballStats {
     @Override
     public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {
         if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {
-            return "⭐ Tiro ad alto rendimento (85% successo) ⭐";
+            return "Tiro ad alto rendimento (85% successo)";
         } else if (distanzaCanestro >= 7.0 && pressioneDifensiva > 6) {
-            return "⚡ Tiro ad alto rischio (30% successo) ⚡";
+            return "Tiro ad alto rischio (30% successo)";
         }
         return super.valutaTiro(distanzaCanestro, pressioneDifensiva) + 
              " | Pressione: " + pressioneDifensiva;

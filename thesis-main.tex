@@ -343,20 +343,27 @@ la funzione RAG sempre.
 \subsection{Fase 2: Recupero delle Informazioni}
 Quando l'utente sottopone una query:
 \begin{itemize}
-    \item La domanda viene convertita in un vettore
-    \item Il sistema cerca nel database vettoriale le informazioni più pertinenti
-    \item Viene calcolata la rilevanza attraverso calcoli matematici vettoriali
-    \item Se trovate corrispondenze con uno score di similarità sufficiente, i chunk vengono recuperati
+    \item La domanda viene convertita in un vettore ad alta dimensionalità
+    \item Il sistema cerca nel database vettoriale i chunk più simili alla query, calcolando la distanza tra i vettori utilizzando tecniche di confronto come la similarità coseno o la distanza euclidea.
+    In \cref{fig:Esempio distanze chunk e query} è rappresentata, riducendo a due dimensioni lo spazio vettoriale, la distanza devi vettori più simili trovati nel database e la query.
+    \item Se trovate corrispondenze con uno score di similarità sufficiente, i chunk vengono recuperati.
 \end{itemize}
 
 \begin{figure}[h]
-    \raggedright
+    \centering
     \includegraphics[width=0.8\linewidth]{figures/plotSearch.png}
+    \caption{Esempio di distanze tra chunk e query}  
     \label{fig:Esempio distanze chunk e query}
 \end{figure}
 \subsection{Fase 3: Aumento del Prompt}
-Se trovate, il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
-
+Il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
+In questo modo, il LLM riceve un input informazioni relativa alla risposta che dovrà generare, unendo la sua conoscenza a questi dati riesce a rispondere in maniera più precisa e contestualizzata.
+Un prompt arricchito da chunk potrebbe esserre strutturato in questo modo:
+\begin{itemize}
+    \item \textbf{Query Utente}: 'Scrivi una funzione in Java che valuti la precisione dei tiri a Basket'
+    \item \textbf{Chunk Recuperato}: 'chunk contente una funzione che calcola la precisione dei tiri a Basket'
+\end{itemize}
+Inserendo all'interno del Prompt la risposta che dovrà generare si eviterà che il LLM la inventi totalmente partendo solo dai suoi dati di addestramento ma sarà fortamente condizionato nel suo processo di generazione della risposta ad utilizzare le informazioni aggiuntive inserite.
 \section{Perchè RAG}
 Il RAG permette di superare le limitazioni di conoscenza dei LLM, fornendo risposte accurate e contestualizzate 
 grazie all'integrazione di conoscenze interne e personalizzate.

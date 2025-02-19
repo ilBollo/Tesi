@@ -10,7 +10,7 @@
     },
     {
         "id": 2,
-        "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\n(pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }\n    \n    // Override con valutazione dettagliata\n    @Override\n    public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {\n            return \"⭐ Tiro ad alto rendimento (85% successo) ⭐\";\n        } else if (distanzaCanestro >= 7.0 && pressioneDifensiva > 6) {\n            return \"⚡ Tiro ad alto rischio (30% successo) ⚡\";\n        }",
+        "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\n(pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }\n    \n    // Override con valutazione dettagliata\n    @Override\n    public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {\n            return \"⭐ Tiro ad alto rendimento (85% successo) ⭐\";\n        } else if (distanzaCanestro >= 7.0 && pressioneDifensiva > 6) {\n            return \" Tiro ad alto rischio (30% successo) \";\n        }",
         "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
         "type": "code",
         "start_line": 14,
