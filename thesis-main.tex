@@ -114,7 +114,7 @@ In progetti complessi questo non riduce il ruolo del programmatore che detiene l
 
 Questi software hanno una problematica importante, essendo addestrati su dataset generici e non personalizzati, sono validi nel fornire risposte standard e generiche, ma non sono in grado di fornire risposte personalizzate e specifiche per un'azienda o un programmatore.
 Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte, per fare in modo che il LLM impari lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
-Per fare questo entrano in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che verrano ampiamente approfonditi.
+Per fare questo entrano in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che sono l'argomento principale di questa tesi.
 
 \chapter{Addestrare un LLM per la Generazione del Codice}
 
@@ -259,59 +259,13 @@ In pratica, il prompt in ingresso al LLM viene arricchito con contenuti aggiunti
 Tale integrazione consente al modello di generare risposte più accurate, contestualizzate e aggiornate, migliorando significativamente la qualità complessiva dell’output.
 \section{Funzionamento}
 Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il prompt della richiesta.
-Il funzionamento si articola in diverse fasi qui sotto illustrate:
-\newline
-\begin{tikzpicture}[node distance=2cm]
-    % Style definitions
-    \tikzstyle{block} = [rectangle, draw, fill=white, 
-        text width=3cm, text centered, rounded corners, minimum height=2.5em]
-    \tikzstyle{line} = [draw, -latex', thick]
-    \tikzstyle{data} = [text width=3cm, text centered]
-    
-    % Input nodes
-    \node [block] (input) {Input\\(Query utente)};
-    \node [block, right=of input] (docs) {Dataset locale\\(Es:File java)};
-    
-    % Processing nodes
-  %  \node [block, below=of input] (query) {Query\\Processor};
-    \node [block, below=of docs] (chunking) {chunking};
-    
-    % Embedding layer
-    \node [block, below=of input] (qembed) {Embedding};
-    \node [block, below=of chunking] (dembed) {Embedding};
-    
-    % Storage and retrieval
-    \node [block, below=2.5cm of qembed] (vector) {Vector database};
-    
-    % LLM components
-    \node [block, below=of vector] (context) {Top k similitary chunks};
-    \node [block, right=of context] (llm) {LLM Prompt};
-    \node [block, below=of context] (output) {LLM Answer};
-    
-    % Connections
-    \path [line] (input) -- (qembed);
-    \path [line] (docs) -- (chunking);
-   % \path [line] (query) -- (qembed);
-    \path [line] (chunking) -- (dembed);
-    \path [line] (qembed) -- (vector);
-    \path [line] (dembed) -- (vector);
-    \path [line] (vector) -- (context);
-    \path [line] (context) -- (llm);
-    \path [line] (llm) -- (output);
-    
-    % Box around everything
-    \node [draw, dashed, fit=(input) (docs) (chunking) (qembed) 
-        (dembed) (vector) (context) (llm) (output),
-        inner sep=1cm, label=above:Sistema RAG] {};
-        
-    % Add data flow labels
-    \node [data] at ($(input)!0.5!(qembed)$) {Vettorizzazione};
-    \node [data] at ($(chunking)!0.5!(dembed)$) {Vettorizzazione};
-    \node [data] at ($(dembed)!0.5!(vector)$) {Crea};
-    \node [data] at ($(vector)!0.5!(context)$) {Recupero};
-    \node [data] at ($(context)!0.5!(llm)$) {Integra};
-    \node [data] at ($(llm)!0.5!(output)$) {Genera};
-\end{tikzpicture}
+Il funzionamento si articola in diverse fasi illustrate in \cref{fig:SistemaRAG.png} che analizziamo ora nel dettaglio.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/SistemaRAG.png}
+    \caption{Funzionamento del sistema RAG}
+    \label{fig:SistemaRAG.png}
+\end{figure}
 
 \subsection{Creazione Vector Database}
 La propria \emph{knowledge base} deve essere salvata in un database vettoriale, in modo da poter essere interrogata in maniera efficiente dal sistema RAG.
@@ -321,7 +275,7 @@ Per creare questo database vengono utilizzati dati esterni al training set origi
     \item Archivi documentali
     \item File di testo e codice
 \end{itemize}
-La creazione di un database ben strutturato e \textbf{\underline{la parte più importante}} di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la sucessiva fase di interrogazione.
+La creazione di un database ben strutturato e \underline{la fase più importante} di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la sucessiva fase di interrogazione.
 Il processo di creazione del Vector Database segue la seguente pipeline:
 \begin{itemize}
     \item \textbf{Chunking}: Divisione del codice in chunk 
@@ -358,12 +312,13 @@ Quando l'utente sottopone una query:
 \subsection{Fase 3: Aumento del Prompt}
 Il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
 In questo modo, il LLM riceve un input informazioni relativa alla risposta che dovrà generare, unendo la sua conoscenza a questi dati riesce a rispondere in maniera più precisa e contestualizzata.
-Un prompt arricchito da chunk potrebbe esserre strutturato in questo modo:
+Un prompt arricchito da chunk potrebbe essere composto da i seguenti elementi:
 \begin{itemize}
     \item \textbf{Query Utente}: 'Scrivi una funzione in Java che valuti la precisione dei tiri a Basket'
     \item \textbf{Chunk Recuperato}: 'chunk contente una funzione che calcola la precisione dei tiri a Basket'
 \end{itemize}
-Inserendo all'interno del Prompt la risposta che dovrà generare si eviterà che il LLM la inventi totalmente partendo solo dai suoi dati di addestramento ma sarà fortamente condizionato nel suo processo di generazione della risposta ad utilizzare le informazioni aggiuntive inserite.
+Inserendo all'interno del Prompt i chunk contenenti le informazioni necessarie per generare la risposta è possibile guidare il LLM alla soluzione.
+In questo modo si riesce ad evitare che il LLM parta da zero per arrivare alla risposta, ma parte già da una base che gli permette di generare una risposta più precisa e coerente.
 \section{Perchè RAG}
 Il RAG permette di superare le limitazioni di conoscenza dei LLM, fornendo risposte accurate e contestualizzate 
 grazie all'integrazione di conoscenze interne e personalizzate.
@@ -388,8 +343,8 @@ Riassumendo i vantaggi principali di un sistema RAG sono:
 Questo caso studio si propone l'obiettivo di verificare il livello di personalizzazione e qualità delle risposte di un LLM integrato con un sistema RAG.
 Potenziando la query nel prompt di input del LLM attraverso la creazione di un sistema RAG di supporto,
 verranno costruite e analizzate singolarmente tutte le fasi che compongono il processo.
-Il sistema RAG è stato testato con della \textbf{classi JAVA uniche} create appositamente per il caso studio.
-\subsubsection{Problematica da affrontare:}
+Il sistema RAG è stato testato con della classi JAVA custom create appositamente per il caso studio.
+\subsubsection{Problema da affrontare:}
 Chiamate a più livelli di classi e metodi, dove il RAG potrebbe non essere in grado di estrapolare
 le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte coerenti con quanto richiesto.
 
@@ -460,16 +415,14 @@ Il sistema RAG implementa un'architettura modulare composta da cinque componenti
 Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM
 senza dover dipendere da servizi cloud esterni.
 Il software è stato scelto per la sua flessibilità, permettendo di integrare facilmente i modelli LLM nel sistema RAG.
-\subsubsection{LLM}
-Ogni LLM è specializzato per determinati scopi,
-per questo motivo per rendere più completa la ricerca sono stati utilizzati due modelli con caratteristiche differenti:
+
 \subsection{Llama 3.2}
-Llama 3.2 3B \cite{llama3-2}, un modello di linguaggio open source.
+Llama 3.2 3B \cite{llama3-2}, un language model open source.
 Il modello, con 3 miliardi di parametri, è ottimizzato per compiti di dialogo multilingue e si distingue per le sue capacità di recupero e sintesi delle informazioni.
 La scelta è ricaduta su questa versione per il suo equilibrio tra prestazioni e requisiti computazionali che permottono il suo utilizzo senza hardware troppo potente.
 
 \subsection{Codeqwen 1.5}
-Codeqwen \cite{codeqwen1.5} è un modello di linguaggio open source specializzato nella generazione di codice e documentazione tecnica.  
+Codeqwen \cite{codeqwen1.5} è un language model open source specializzato nella generazione di codice e documentazione tecnica.  
 Con 7 miliardi di parametri, il modello è stato addestrato su un ampio dataset di codice sorgente e documentazione tecnica, permettendo di generare codice coerente e ben strutturato.
 La scelta di questo modello è stata dettata, a differenza di llama3.2, dalla sua specializzazione nella programmazione e dalla sua capacità di generare codice di alta qualità. 
 %\subsubsection{qwen2.5-coder:3b}
@@ -491,8 +444,10 @@ FAISS (Facebook AI Similarity Search) \cite{faiss} è una libreria open source p
 Progettata per gestire dataset su larga scala, FAISS supporta operazioni di ricerca anche su insiemi di vettori che superano la capacità della RAM, grazie a tecniche di indicizzazione avanzate e ottimizzazioni computazionali.
 
 \section{Dataset}
-Il dataset è stato creato appositamente per testare il sistema RAG ed è composto da diciannove classi Java:
+Il dataset è stato creato appositamente per testare il sistema RAG ed è composto da diciannove classi Java.
+\'E possibile scaricare il dataset in \url{https://github.com/ilBollo/Tesi/tree/main/my_project/classi_java_custom}
 
+Il dataset è composto dalle seguenti classi Java: 
 \begin{description}
     \item[DateUtilCustom.java] Classe personalizzata per gestire le date
     \item[GiorniMagici.java] Classe per calcolare in maniera particolare dei giorni
@@ -1018,7 +973,7 @@ La domanda fatta al LLM è stata:
     che utilizza la funzione getMessaggioMagico() della libreria
     DateUtilCustom?''}
 \end{quote}
-Il risulta è stato il seguente:
+Il risulta è strutturato nel seguente modo:
 \begin{lstlisting}[language=json, caption={Domande/Risposte generate da NotebookLM}]
     {
         "question1": "Cosa ritorna il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` che utilizza la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`?",
@@ -1028,118 +983,7 @@ Il risulta è stato il seguente:
         "question2": "La classe `AnalizzatoreRilascio` contiene un metodo chiamato `stimaDataRilascio`. Quali sono i due parametri di input richiesti da questo metodo?",
         "answer": "Il metodo `stimaDataRilascio` richiede un array di interi (`int[] taskCompletati`) e un valore double (`double velocitaSviluppo`) come input."
     },
-    {
-        "question3": "Nella classe `AnalizzatoreRilascio`, come viene calcolato il numero di task rimanenti nel metodo `stimaDataRilascio`?",
-        "answer": "Il numero di task rimanenti viene calcolato sottraendo la somma dei task completati (assumendo un totale di 100 task)."
-      },
-    {
-        "question4": "Qual e' il valore di soglia critica per l'indice di rischio rilascio (IRR) nella classe `AnalizzatoreRilascio`?",
-        "answer": "La soglia critica per l'IRR e' **8.5**."
-      },
-    {
-        "question5": "Quali sono i parametri di input del metodo `calcolaProbabilitaSuccesso` nella classe `AnalizzatoreRilascio` e come viene calcolata la probabilita' di successo?",
-        "answer": "I parametri sono `numeroBugRisolti` e `numeroTestPassati`. La probabilita' di successo e' calcolata come `(numeroBugRisolti * 0.4) + (numeroTestPassati * 0.6)`."
-    },
-    {
-        "question6": "Qual e' lo scopo del metodo `stimaTempoRimanente` nella classe `AnalizzatoreRilascio` e quali parametri accetta?",
-        "answer": "Stima il tempo rimanente per il rilascio. Accetta `taskRimanenti` (numero di task rimanenti) e `velocitaSviluppo` come parametri."
-    },
-    {
-        "question7": "Nella classe `BasketballStats`, qual e' la formula utilizzata per calcolare l'efficienza di un giocatore nel metodo `calcolaEfficienzaGiocatore`?",
-        "answer": "La formula e' `(punti + rimbalzi + assist) - (pallePerse + tiriSbagliati)`."
-    },
-    {
-        "question8": "Quali sono i criteri utilizzati nel metodo `valutaTiro` della classe `BasketballStats` per valutare la qualita' di un tiro?",
-        "answer": "La **distanza dal canestro** (`distanzaCanestro`) e la **pressione difensiva** (`pressioneDifensiva`)."
-    },
-    {
-        "question9": "Cosa restituisce il metodo `analisiStatisticheSquadra` della classe `BasketballStats`?",
-        "answer": "Restituisce un report dettagliato delle prestazioni della squadra."
-    },
-    {
-        "question10": "Quali sono gli input del metodo `previsioneVincitore` nella classe `BasketballStats` e cosa rappresentano?",
-        "answer": "Gli input sono due array di double (`squadraCasa` e `squadraOspite`) che contengono `[puntiMedi, rimbalziMedi, assistMedi]`, e una `LocalDate dataPartita`."
-    },
-    {
-        "question11": "Come viene calcolato il margine nel metodo `previsioneVincitore` della classe `BasketballStats`?",
-        "answer": "Il margine e' calcolato come il valore assoluto della differenza tra la valutazione della squadra di casa e la valutazione della squadra ospite."
-    },
-    {
-        "question12": "Cosa rappresenta l'input del metodo `calcolaMomentum` nella classe `BasketballStats`?",
-        "answer": "Rappresenta gli ultimi punti segnati dalla squadra di casa (`ultimiPuntiCasa`) e dalla squadra ospite (`ultimiPuntiOspite`)."
-    },
-    {
-        "question13": "Qual e' il requisito per la lunghezza della chiave segreta nel metodo `cifraturaVortex` della classe `CifratoreAziendale`?",
-        "answer": "La chiave segreta deve essere di 12 caratteri."
-    },
-    {
-        "question14": "Cosa fa il metodo `mascheraDatiSensibili` nella classe `TrasformatoreDati`?",
-        "answer": "Il metodo maschera i dati sensibili sostituendo i caratteri originali con caratteri casuali."
-    },
-    {
-        "question15": "Nella classe `DateUtilCustom`, descrivi cosa fa il metodo `formatDate(Date date)` e fornisci un esempio del formato di output.",
-        "answer": "Formatta una data nel formato \"dd/MM/yyyy\". Ad esempio, se la data e' il 25 dicembre 2023, l'output sara' \"25/12/2023\"."
-    },
-    {
-        "question16": "Qual e' la differenza tra i metodi `formatDate(Date date)` e `formatDate(Date date, String format)` nella classe `DateUtilCustom`?",
-        "answer": "Il primo utilizza il formato predefinito \"dd/MM/yyyy\", mentre il secondo permette di specificare un formato personalizzato."
-    },
-    {
-        "question17": "Cosa puo' accadere se si utilizza il metodo `parseDate` della classe `DateUtilCustom` con una stringa che non corrisponde al formato specificato?",
-        "answer": "Verra' lanciata una `ParseException`."
-    },
-    {
-        "question18": "Nella classe `DateUtilCustom`, cosa calcola il metodo `getDifferenceInDays(Date startDate, Date endDate)`?",
-        "answer": "Calcola la differenza in giorni tra due date."
-    },
-    {
-        "question19": "Cosa fa il metodo `addDays(Date date, int days)` nella classe `DateUtilCustom`?",
-        "answer": "Aggiunge un numero specificato di giorni a una data."
-    },
-    {
-        "question20": "Come si verifica se una data e' nel passato usando la classe `DateUtilCustom`?",
-        "answer": "Utilizzando il metodo `isPastDate(Date date)`."
-    },
-    {
-        "question21": "Cosa fa il metodo `giorniAlmiocompleannoSpecial(Date dataNascita, String nome)` nella classe `DateUtilCustom`?",
-        "answer": "Calcola i giorni che mancano al compleanno di una persona e restituisce un messaggio personalizzato."
-    },
-    {
-        "question22": "In `ElaboratoreLinguaggio`, come viene calcolato il punteggio di sentimento di un testo?",
-        "answer": "Il punteggio di sentimento e' calcolato come `(punteggioPositivo - punteggioNegativo) / (double) (punteggioPositivo + punteggioNegativo + 1)`."
-    },
-    {
-        "question23": "Qual e' lo scopo del metodo `estraiEntitaNominate` nella classe `ElaboratoreLinguaggio`?",
-        "answer": "Estrae entita' nominate dal testo."
-    },
-    {
-        "question24": "Cosa fa il metodo `applicaTemplate` nella classe `GestoreConfigurazioni`?",
-        "answer": "Sostituisce i placeholder in un template con i valori corrispondenti forniti in una mappa di configurazioni."
-    },
-    {
-        "question25": "In `GestoreConoscenza`, cosa fa il metodo `estraiMetadati`?",
-        "answer": "Estrae metadati da un documento, inclusi autore, data e parole chiave."
-    },
-    {
-        "question26": "Qual e' lo scopo del metodo `generaIdentitaDigitale` nella classe `GestoreIdentita` e cosa prende come input?",
-        "answer": "Genera un'identita' digitale sotto forma di token JWT firmato digitalmente. Prende come input dati biometrici codificati (`byte[] parametriBiometrici`)."
-    },
-    {
-        "question27": "Cosa verifica il metodo `verificaIdentita` nella classe `GestoreIdentita`?",
-        "answer": "Verifica l'identita' confrontando un token JWT con un'impronta hash attesa."
-    },
-    {
-        "question28": "Quali controlli vengono eseguiti all'interno del metodo `generaChiaveAttivazione` della classe `GestoreLicenze`?",
-        "answer": "Verifica che il codice cliente sia di 8 cifre e che la data di scadenza sia nel formato corretto (AAAAMMGG)."
-    },
-    {
-        "question29": "Cosa calcola il metodo `calcolaIndiceManutenibilita` della classe `IspezionatoreCodice`?",
-        "answer": "Calcola un valore MI (Maintainability Index) basato su metriche interne come la lunghezza delle righe, il numero di commenti e la complessita' ciclomatica."
-    },
-    {
-        "question30": "In `MetricheAgili`, cosa rappresenta il `fattoreComplessita'` nel metodo `calcolaVelocityScore` e qual e' il suo range?",
-        "answer": "Rappresenta un fattore di complessita' e il suo range e' da 1 a 5."
-    }
+ 
 \end{lstlisting}
 \subsection{Metrica del punteggio}
 Per valutare le domande generate da \textbf{LMNotebook}, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
@@ -1151,45 +995,7 @@ I modelli hanno valutato le domande generate da LMNotebook con punteggi diversi:
     \item \textbf{Mistral}: 145 su 150
     \item \textbf{GPT4o}: 121 su 150
 \end{itemize}
-GPT4o mi ha fornito anche una tabella riepilogativa con i punteggi di ogni domanda:
-\begin{longtable}{c L{6cm} c L{6cm}}
-    \toprule
-    \textbf{ID} & \textbf{Domanda} & \textbf{Punteggio (1-5)} & \textbf{Motivazione} \\
-    \midrule
-    \endhead
-    1  & Metodo \texttt{segnaleWow} e \texttt{getMessaggioMagico()} & 5 & Impossibile senza accesso al codice specifico. \\
-    2  & Parametri di \texttt{stimaDataRilascio} & 5 & I parametri sono arbitrari e non deducibili senza documentazione. \\
-    3  & Calcolo task rimanenti in \texttt{stimaDataRilascio} & 5 & La logica interna non \`e prevedibile senza codice. \\
-    4  & Soglia critica dell'IRR & 5 & Questo valore \`e arbitrario e definito solo nel codice/documentazione specifica. \\
-    5  & Parametri e calcolo di \texttt{calcolaProbabilitaSuccesso} & 5 & La formula \`e sconosciuta senza accesso diretto. \\
-    6  & Scopo e parametri di \texttt{stimaTempoRimanente} & 5 & Dipende dalla logica implementata. \\
-    7  & Formula di \texttt{calcolaEfficienzaGiocatore} & 4 & Se usa metriche standard NBA, potrebbe essere ipotizzabile, altrimenti no. \\
-    8  & Criteri di \texttt{valutaTiro} & 4 & Se segue principi di analisi statistica sportiva, si pu\`o ipotizzare, ma senza certezza. \\
-    9  & Output di \texttt{analisiStatisticheSquadra} & 4 & Pu\`o essere stimato, ma la struttura esatta non \`e nota. \\
-    10 & Input e significato di \texttt{previsioneVincitore} & 4 & Alcuni parametri sono prevedibili, ma i dettagli precisi no. \\
-    11 & Calcolo del margine in \texttt{previsioneVincitore} & 5 & La formula specifica \`e ignota. \\
-    12 & Input di \texttt{calcolaMomentum} & 4 & Se segue definizioni standard, potrebbe essere deducibile. \\
-    13 & Lunghezza chiave in \texttt{cifraturaVortex} & 5 & \`E una regola arbitraria del software specifico. \\
-    14 & Scopo di \texttt{mascheraDatiSensibili} & 3 & Il concetto \`e generico, ma l'implementazione varia. \\
-    15 & Scopo e output di \texttt{formatDate} & 2 & \`E un metodo comune, altamente prevedibile. \\
-    16 & Differenza tra i due \texttt{formatDate} & 2 & Differenza standard tra metodi di formattazione con/senza specifica del formato. \\
-    17 & Comportamento di \texttt{parseDate} con input errato & 3 & Tipicamente lancia un'eccezione, ma la gestione pu\`o variare. \\
-    18 & Funzione \texttt{getDifferenceInDays} & 2 & Metodo comune, implementazione prevedibile. \\
-    19 & Funzione \texttt{addDays} & 2 & Standard in qualsiasi utility di date. \\
-    20 & Verifica se una data \`e nel passato & 2 & Operazione semplice con \texttt{isBefore()}. \\
-    21 & Scopo di \texttt{giorniAlmiocompleannoSpecial} & 5 & Nome ambiguo, logica ignota. \\
-    22 & Calcolo punteggio di sentimento & 4 & Se segue NLP standard, potrebbe essere ipotizzabile. \\
-    23 & Scopo di \texttt{estraiEntitaNominate} & 3 & NLP standard, facile da descrivere. \\
-    24 & Funzione \texttt{applicaTemplate} & 5 & Nome troppo generico, pu\`o fare qualsiasi cosa. \\
-    25 & Funzione \texttt{estraiMetadati} & 4 & Dipende da cosa si intende per metadati nel contesto specifico. \\
-    26 & Scopo e input di \texttt{generaIdentitaDigitale} & 5 & Implementazione sconosciuta, input indefiniti. \\
-    27 & Verifica di \texttt{verificaIdentita} & 4 & Probabilmente autenticazione, ma non si pu\`o sapere esattamente come. \\
-    28 & Controlli in \texttt{generaChiaveAttivazione} & 5 & Dipende dalle policy aziendali specifiche. \\
-    29 & Calcolo di \texttt{calcolaIndiceManutenibilita} & 5 & Nessuno standard universale, dipende dalla formula interna. \\
-    30 & \texttt{fattoreComplessita} in \texttt{calcolaVelocityScore} & 5 & Senza definizione esatta, non si pu\`o dedurre. \\
-    \bottomrule
-\end{longtable}
-Verranno usati come riferimento i punteggi dati da \textbf{GPT4o}, nel dettaglio hanno questa corrispondenza:
+GPT4o ha fornito anche una tabella riepilogativa con i punteggi di ogni domanda nel dettaglio hanno questa corrispondenza:
 \begin{itemize}
     \item Domande con punteggio 5: Non risolvibili senza accesso al codice/documentazione.
     \item Domande con punteggio 4: Difficili, ma in alcuni casi il modello può ipotizzare una risposta sensata.
