@@ -61,12 +61,12 @@
 
 \begin{abstract}	
 I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
-L'addestramento fatto sui modelli è però su fonti generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta utilizzando codice già creato dal programmatore o dalla propria azienda per casi simili.
+Ma l'addestramento fatto sui modelli è su fonti generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta partendo da codice già creato dal programmatore o dalla propria azienda per casi simili.
 Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
 Servirebbe quindi una nuova fase di fine-tunig per adattare il modello alle proprie esigenze, ma questa soluzione è un processo molto costoso che richiede particolari competenze tecnica
 difficilmente presenti in molte aziende. Inoltre il fine-tuning non permette di aggiornare il modello in maniera rapida e dinamica, richiedendo un nuovo addestramento per ogni modifica.
-Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza, esterna al modello, come librerie specifiche di un azienda, arricchendo il prompt della query di input che sarà elaborata dal LLM.
-Il \ac{RAG}, ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, li inserirà per aumentare il prompt del LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
+Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza arricchendo il prompt della query di input che sarà elaborata dal \ac{LLM}.
+Il \ac{RAG}, ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, li inserirà per aumentare il Prompt del LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
 Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} specifico per codice Java e un \ac{LLM} con lo scopo di ottenere risposte personalizzate
 che solo con la conoscenza del LLM, anche se estremamente performante e completo, sarebbe stato impossibile ottenere.
 \end{abstract}
@@ -89,11 +89,11 @@ A Giulia e ai miei figli, il dono più incredibile di questa vita.
 \chapter{Introduzione}
 \label{chap:introduction}
 %----------------------------------------------------------------------------------------
-Essere programmatori significa lavorare in un settore in continua evoluzione, sopratutto negli ultimi anni con l'introduzione dell'AI.
-Con l'avvento di questa nuova tecnologia è cambiato il modo di eseguire parte del lavoro, ora sono presenti software che assistono i programmatori nella scrittura del codice.
-Questi software sono in grado di completare il codice, suggerire correzioni e creare documentazione pertinente.
+Il mondo della programmazione è un settore in continua evoluzione e negli ultimi anni ha visto un esplosione nel campo dell'\ac{AI}.
+Con l'avvento di questa nuova tecnologia per molti programmatori è cambiato il modo di lavorare, utilizzando come assistenti durante la produzione del codice software basati sull'\ac{AI}.
+Questi software sono in grado di completare il codice, debugging, suggerire correzioni e creare documentazione pertinente.
 Aiutano inoltre i programmatori nei compiti più ripetivi e meccanici, aumentando la produttività e riducendo i tempi di sviluppo.
-Un esempio della potenza di queste funzioni è l'utility di \textbf{Github Copilot}: \emph{'Generate Commit Message with Copilot'}
+Ad esempio in \textbf{Github Copilot} che è un assistente per la scrittura del codice, basato su \ac{LLM}, è presenta il comando: \emph{'Generate Commit Message with Copilot'}
 che propone il testo da utilizzare come descrizione di un commit, basandosi sulle modifiche apportate al codice come mostrato in figura \cref{fig:Commit-Autogenerato}.
 \begin{figure}[h]
     \centering
@@ -104,15 +104,14 @@ che propone il testo da utilizzare come descrizione di un commit, basandosi sull
 
 Software come Copilot utilizzano LLM per riprodurre codice e testo, scansionando in pochi istanti il contesto nel codice che si sta costruendo.
 In progetti complessi questo non riduce il ruolo del programmatore che detiene la realizzazione di compiti complessi ad alto valore aggiunto delegando la generazione di parti del codice semplici e ripetitive a questi software.
-\`E quindi importante capire il funzionamento di questi strumenti, sapere come chiedere e formulare correttamente le domande, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice per indirizzarlo nell'elaborazione e ragionamento corretto.
+\`E quindi importante capire il funzionamento di questi strumenti, sapere come chiedere e formulare correttamente le domande, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice per indizzare il \ac{LLM} nell'elaborazione e ragionamento corretto.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/copilotsolutionSettimanaEnigmistica.png}
-    \caption{Questi software producono valide soluzioni}
+    \caption{Copilot scansionando il codice spesso trova valide soluzioni}
     \label{fig:Copilot-Solution}
 \end{figure}
-
-Questi software hanno una problematica importante, essendo addestrati su dataset generici e non personalizzati, sono validi nel fornire risposte standard e generiche, ma non sono in grado di fornire risposte personalizzate e specifiche per un'azienda o un programmatore.
+Questi software hanno un problema importante, essendo addestrati su dataset generici e non personalizzati, sono validi nel fornire risposte standard e generiche, ma non sono in grado di fornire risposte personalizzate e specifiche per un'azienda o un programmatore.
 Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte, per fare in modo che il LLM impari lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
 Per fare questo entrano in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che sono l'argomento principale di questa tesi.
 
@@ -176,7 +175,9 @@ Questo approccio rende la generazione contestualmente e coerente di codice, sfru
 \section{Fine-Tuning}
 Il fine-tuning è la fase in cui il modello già pre-addestrato viene ulteriormente specializzato per la generazione di codice adattando e migliorando il modello per specifici domini di applicazione.
 Durante questa fase, il modello affina le sue capacità attraverso dataset specializzati composti da coppie descrizione-codice, documentazione tecnica e commenti, esempi di bug-fixing e refactoring.
-\subsection{Tecniche di Apprendimento}
+\subsection{Tecniche di Apprendimento nel Fine-Tuning}
+Nella fase di fine-tuning, il modello può utilizzare diverse tecniche di apprendimento per migliorare le sue capacità di generazione del codice.
+Le tecniche di apprendimento più comuni sono le seguenti.
     \begin{itemize}
         \item \textbf{Supervisionato}: 
             Addestramento basato su coppie input-output predefinite, dove il modello impara a mappare descrizioni in linguaggio naturale al codice corrispondente.
@@ -193,7 +194,7 @@ Durante questa fase, il modello affina le sue capacità attraverso dataset speci
         \item \textbf{Few-shot Learning}: 
             Capacità di adattarsi a nuovi compiti o contesti con pochissimi esempi di addestramento.
             \begin{itemize}
-                \item \textit{Esempio}: Dopo aver osservato solo alcuni esempi di come tradurre una descrizione in linguaggio naturale al codice in un nuovo linguaggio di programmazione (ad esempio, Rust), il modello è in grado di generare codice in Rust anche per nuove descrizioni simili, senza necessità di un vasto dataset specifico per quel linguaggio.
+                \item \textit{Esempio}: Dopo aver osservato solo alcuni esempi di come tradurre una descrizione in linguaggio naturale al codice in un nuovo linguaggio di programmazione (ad esempio, Python), il modello è in grado di generare codice in Python anche per nuove descrizioni simili, senza necessità di un vasto dataset specifico per quel linguaggio.
             \end{itemize}
     \end{itemize}
 
@@ -209,7 +210,7 @@ Il pre-addestramento è la fase iniziale in cui il modello:
         \end{itemize}
     \item Viene addestrato su \textbf{grandi quantità} di codice sorgente generico
         \begin{itemize}
-            \item \textit{Esempio}: Utilizzando un vasto corpus proveniente da repository pubblici (ad esempio, GitHub), il modello impara le convenzioni e le pratiche comuni adottate dalla comunità di sviluppo.
+            \item \textit{Esempio}: Utilizzando un vasto insieme di dati proveniente da repository pubblici (ad esempio, GitHub), il modello impara le convenzioni e le pratiche comuni adottate dalla comunità di sviluppo.
         \end{itemize}
     \item Impara le strutture base e la sintassi del linguaggio
         \begin{itemize}
@@ -237,7 +238,7 @@ Il fine-tuning è la fase di specializzazione in cui il modello:
 Dopo l'addestramento, è fondamentale sottoporre il modello a una fase di valutazione per verificare la qualità del codice generato. Questa valutazione non si limita a controllare la correttezza sintattica, ma si estende anche alla funzionalità e all'efficienza del codice. I risultati ottenuti offrono spunti preziosi per intervenire con ottimizzazioni mirate, come l'aggiustamento dei pesi, modifiche all'architettura o l'integrazione di ulteriori dati di addestramento.
 
 \subsection{Metriche di Valutazione}
-Per garantire che il modello produca codice di alta qualità, vengono utilizzate diverse metriche, tra cui:
+Per garantire che il modello produca codice di qualità, vengono utilizzate diverse metriche, tra cui:
 \begin{itemize}
     \item \textbf{Correttezza Sintattica}: Verifica che il codice generato sia privo di errori di sintassi e possa essere compilato o interpretato senza problemi.
     \item \textbf{Funzionalità}: Assicura che il codice realizzi effettivamente la funzionalità desiderata, testando se il comportamento del programma rispetti le specifiche iniziali.
@@ -254,11 +255,12 @@ Una volta completata la valutazione, i risultati ottenuti possono guidare il pro
 
 \chapter{Retrieval Augmented Generation}
 \section{Introduzione} 
-La sigla RAG, acronimo di \textbf{Retrieval Augmented Generation} (in italiano, \textit{Generazione Aumentata tramite Recupero}), indica un approccio innovativo volto a potenziare le capacità di un modello linguistico (LLM). Questo sistema amplia la base di conoscenza del modello integrando informazioni esterne, al di fuori dal dataset di addestramento originale.
-In pratica, il prompt in ingresso al LLM viene arricchito con contenuti aggiuntivi ('chunk'), ottenuti attraverso tecniche di recupero che identificano corrispondenze rilevanti in un database dedicato.
+La sigla RAG, acronimo di \textbf{Retrieval Augmented Generation} (in italiano, \textit{Generazione Aumentata tramite Recupero}), indica un approccio innovativo volto a potenziare le capacità di un \ac{LLM}.
+Questo sistema amplia la base di conoscenza del modello arricchendola con informazioni esterne, al di fuori dal dataset di addestramento originale.
+Il prompt del \ac{LLM} contente la query di input dell'utente, prima di essere elaborato, viene arricchito con contenuti aggiuntivi chiamati 'chunk', ottenuti attraverso tecniche di recupero che identificano le corrispondenze rilevanti rispetto ad un proprio database vettoriale.
 Tale integrazione consente al modello di generare risposte più accurate, contestualizzate e aggiornate, migliorando significativamente la qualità complessiva dell’output.
 \section{Funzionamento}
-Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il prompt della richiesta.
+Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il Prompt della richiesta.
 Il funzionamento si articola in diverse fasi illustrate in \cref{fig:SistemaRAG.png} che analizziamo ora nel dettaglio.
 \begin{figure}[h]
     \centering
@@ -310,43 +312,46 @@ Quando l'utente sottopone una query:
     \label{fig:Esempio distanze chunk e query}
 \end{figure}
 \subsection{Fase 3: Aumento del Prompt}
-Il sistema RAG arricchisce il prompt dell'utente con le informazioni recuperate, fornendo al LLM un contesto più ampio e dettagliato per generare una risposta coerente.
-In questo modo, il LLM riceve un input informazioni relativa alla risposta che dovrà generare, unendo la sua conoscenza a questi dati riesce a rispondere in maniera più precisa e contestualizzata.
-Un prompt arricchito da chunk potrebbe essere composto da i seguenti elementi:
+Il sistema \ac{RAG} arricchisce il Prompt dell'utente con le informazioni recuperate, fornendo al \ac{LLM} un contesto più ampio e dettagliato per generare una risposta coerente. In questo modo, il \ac{LLM} riceve un input contenente le informazioni relative alla risposta che dovrà generare. Unendo la sua base di conoscenza a queste informazioni esterne, riesce a rispondere in maniera molto più accurata e contestualizzata. Un Prompt aumentato con l'inserimento di Chunk è formato dai seguenti elementi:
 \begin{itemize}
     \item \textbf{Query Utente}: 'Scrivi una funzione in Java che valuti la precisione dei tiri a Basket'
-    \item \textbf{Chunk Recuperato}: 'chunk contente una funzione che calcola la precisione dei tiri a Basket'
+    \item \textbf{Chunk Recuperato}: 'chunk contenente una funzione che calcola la precisione dei tiri a Basket'
 \end{itemize}
-Inserendo all'interno del Prompt i chunk contenenti le informazioni necessarie per generare la risposta è possibile guidare il LLM alla soluzione.
-In questo modo si riesce ad evitare che il LLM parta da zero per arrivare alla risposta, ma parte già da una base che gli permette di generare una risposta più precisa e coerente.
+Inserendo all'interno del Prompt i chunk contenenti le informazioni necessarie per generare la risposta, è possibile guidare il LLM verso la soluzione. In questo modo si evita che il LLM parta da zero per arrivare alla risposta, ma parta già da una base che gli permette di generare una risposta più precisa e coerente.
+
+\subsubsection{Aggiunta di informazioni di sistema}
+In aggiunta ai chunk recuperati, è possibile inserire nel prompt delle informazioni di sistema, finalizzate a indirizzare le risposte del \ac{LLM}. Queste informazioni diventano parte integrante del flusso standard del RAG e sono sempre uguali, non dipendendo dalla query inserita, e hanno lo scopo di fornire al modello ulteriori dettagli, migliorando e personalizzando la qualità dell'output. Un esempio potrebbe essere la richiesta al \ac{LLM} di rispondere sempre utilizzando la valuta Dollaro. Scrivendo le query in italiano, il \ac{LLM} avrebbe proposto come valuta l'Euro, essendo la moneta utilizzata in Italia; ma con l'aggiunta di questa informazione, il modello risponderà sempre utilizzando come valuta il Dollaro.
 \section{Perchè RAG}
-Il RAG permette di superare le limitazioni di conoscenza dei LLM, fornendo risposte accurate e contestualizzate 
-grazie all'integrazione di conoscenze interne e personalizzate.
-Dopo aver costruito un sistema RAG è possibile eseguire rapidamente aggiornamenti al \textbf{Vector database},
-cosa che sarebbe molto più difficile da ottenere con il fine-tuning, che richiede tempo e risorse significative.
-Avere un LLM addestrato fin da subito su misura per le proprie esigenze e sempre aggiornato sarebbe fantastico ma per quasi
-tutte le aziende richiederebbe risorse impossibili da sostenere ed è quindi molto più comune costruire un RAG
-che intervenire direttamente sulla conoscenza del LLM che restano solitamente proprietà di terzi.
+Il più grande vantaggio dato dalla creazione di un sistema RAG è la possibilità di personalizzare le risposte del \ac{LLM} senza dover intervenire direttamente sulla sua conoscenza.
+Questo permette di eseguire rapidamente aggiornamenti al Vector database del \ac{RAG}, in modo da mantenere sempre aggiornata la base di conoscenza del modello.
+
+Numerose applicazioni moderne dimostrano l'efficacia di questo approccio:
+\begin{itemize}
+    \item I \textbf{GPTs} personalizzati di ChatGPT, che integrano documenti specifici per creare assistenti specializzati
+    \item \textbf{Bing Chat} utilizza l'integrazione di risultati di ricerca in tempo reale per fornire risposte aggiornate e contestualizzate.
+    \item \textbf{Framework come LangChain} permettono agli sviluppatori di costruire applicazioni basate su RAG, combinando LLM e sistemi di recupero delle informazioni per creare soluzioni personalizzate.
+\end{itemize}
+Le performance di un LLM addestrato su misura per le proprie esigenze sono migliori dei risultati ottenuti da un sistema RAG ma per quasi
+tutte le aziende questo è impossibile perchè richiede costi difficilmente sostenibili ed è per questo che i RAG sono un ottimo compromesso tra costi e benefici.
+Il \ac{RAG} non modifica il LLM ma lo integra, permettendo di ottenere risposte personalizzate e contestualizzate senza dover intervenire direttamente sul modello.
 Riassumendo i vantaggi principali di un sistema RAG sono:
 \begin{itemize}
-    \item ottenere risposte mirate e personalizzate contenti knowledge relativa a librerie e codice custom
-    \item migliorare il codice generato rendendolo più specifico al dominio riducendo le allucinazioni
-    \item facilitare l'assistenza da parte del modello nella fase di debugging migliorando la sua comprensione di sistemi complessi
-    \item supportare la creazione di documentazione aggiornata
-    \item permettere all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni
-    \item evitare risposte imprecise a causa della confusione terminologica, in cui diverse fonti utilizzano la stessa terminologia per parlare di cose diverse.
-    \item riuscire ad aggiornare il proprio database per l'embeddings in maniera rapida e dinamica
+    \item permette di ottenere risposte mirate e personalizzate contenti knowledge relativa a librerie e codice custom senza dover intervenire direttamente sul \ac{LLM}
+    \item possibiltà di aggiornare rapidamente il Database con la base di conoscenza interna
+    \item facilita l'assistenza da parte del modello nella fase di debugging migliorando la sua comprensione di sistemi complessi
+    \item supporta la creazione di documentazione aggiornata
+    \item permette all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni
 \end{itemize}
 
 \chapter{Implementazione di un sistema RAG per lo sviluppo di codice per il linguaggio Java}
 \section{Obiettivo}
-Questo caso studio si propone l'obiettivo di verificare il livello di personalizzazione e qualità delle risposte di un LLM integrato con un sistema RAG.
-Potenziando la query nel prompt di input del LLM attraverso la creazione di un sistema RAG di supporto,
+Questo caso studio si propone l'obiettivo di verificare il livello di personalizzazione e qualità delle risposte di un \ac{LLM} integrato con un sistema \ac{RAG} specializzato per lo sviluppo di codice Java.
+Potenziando la query nel Prompt di input del LLM attraverso la creazione di un sistema RAG di supporto,
 verranno costruite e analizzate singolarmente tutte le fasi che compongono il processo.
 Il sistema RAG è stato testato con della classi JAVA custom create appositamente per il caso studio.
 \subsubsection{Problema da affrontare:}
 Chiamate a più livelli di classi e metodi, dove il RAG potrebbe non essere in grado di estrapolare
-le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte coerenti con quanto richiesto.
+le informazione necessarie da inserire nel Prompt per ottenere dal LLM risposte coerenti con quanto richiesto.
 
 \section{Architettura del Sistema}
 \begin{figure}[H]
@@ -372,43 +377,21 @@ le informazione necessarie da inserire nel prompt per ottenere dal LLM risposte 
     \caption{Architettura del sistema RAG}
     \label{fig:rag-architecture}
 \end{figure}
-Il sistema RAG implementa un'architettura modulare composta da cinque componenti principali:
-
-\begin{enumerate}
-    \item \textbf{Text Processor (Chunking)}:
-    \begin{itemize}
-        \item Suddivide i file Java in chunk di un numero definito appositamente di token
-        \item Gestisce sovrapposizione di token tra chunk
-        \item Preserva il contesto del codice
-    \end{itemize}
-
-    \item \textbf{Embedder (BGE-M3)}:
-    \begin{itemize}
-        \item Converte i chunk in vettori numerici
-        \item Utilizza il modello BGE-M3 per la generazione degli embedding
-        \item Normalizza i vettori per ottimizzare la ricerca
-    \end{itemize}
-
-    \item \textbf{Vector DB (FAISS)}:
-    \begin{itemize}
-        \item Memorizza gli embedding in un database vettoriale
-        \item Ottimizza la ricerca per similarità
-        \item Garantisce recupero efficiente dei chunk rilevanti
-    \end{itemize}
-
-    \item \textbf{Retriever}:
-    \begin{itemize}
-        \item Esegue query semantiche sul database
-        \item Recupera i k chunk più rilevanti
-        \item Prepara il contesto per il LLM
-    \end{itemize}
-
-    \item \textbf{LLM Interface (CodeQwen e Llama 3.2)}:
-    \begin{itemize}
-        \item Interfaccia tramite Ollama con i LLM CodeQwen e Llama 3.2
-        \item Genera risposte basate sul contesto recuperato
-    \end{itemize}
-\end{enumerate}
+Il sistema RAG è stato progettato con un'architettura modulare che si compone di cinque componenti principali,
+ognuna delle quali svolge un ruolo fondamentale nel trasformare dati grezzi in risposte coerenti e contestualizzate.
+\subsection{Text Processor (Chunking)}
+Il primo modulo, il \textbf{Text Processor (Chunking)}, si occupa di suddividere i file Java in chunk costituiti da un numero definito di token. Questa operazione non si limita a dividere il testo in parti uguali, ma è studiata per mantenere intatto il contesto del codice. Infatti, il sistema gestisce con attenzione la sovrapposizione dei token tra i chunk adiacenti, assicurandosi che nessuna informazione rilevante venga persa durante il processo di frammentazione.
+\subsection{Embedder (BGE-M3)}
+La fase successiva coinvolge l'\textbf{Embedder} basato sul modello BGE-M3. Questo componente trasforma i frammenti testuali in rappresentazioni vettoriali dense attraverso un processo di embedding multivettoriale.
+Questi vettori vengono poi normalizzati, una procedura essenziale per ottimizzare le future ricerche di similarità nel database vettoriale.
+\subsection{Vector DB (FAISS)}
+L'archiviazione e la ricerca efficiente sono delegate al \textbf{Vector DB FAISS} (Facebook AI Similarity Search). 
+Questo modulo memorizza gli embedding generati, organizzandoli in un database vettoriale che permette di eseguire ricerche basate sulla similarità. Grazie a questa struttura, il sistema può recuperare in modo rapido ed efficiente i chunk più rilevanti in risposta a specifiche query, garantendo prestazioni elevate anche in presenza di grandi quantità di dati.
+\subsection{Retriever}
+A completare il flusso operativo, il modulo \textbf{Retriever} esegue query semantiche sul database vettoriale. Analizzando i vettori e individuando quelli che meglio rispondono ai criteri di rilevanza, il Retriever estrae i k chunk più pertinenti e li organizza per creare un contesto ricco e strutturato. Questo contesto viene poi fornito al modello di linguaggio per permettergli di generare risposte il più possibile accurate e specifiche.
+\subsection{LLM Interface}
+Infine, l'\textbf{LLM Interface (CodeQwen e Llama 3.2)} rappresenta il punto di interazione diretto con l'utente. Attraverso un'interfaccia gestita da Ollama, questo modulo comunica con i modelli di linguaggio CodeQwen e Llama 3.2, utilizzando il contesto prelevato dal Retriever per generare risposte personalizzate e contestualizzate. In questo modo, il sistema RAG integra e potenzia le capacità del LLM senza modificare direttamente la sua base di conoscenza.
+Nel complesso, l'architettura modulare del sistema RAG permette di combinare la flessibilità della generazione basata su LLM con la precisione e la rapidità dei sistemi di recupero delle informazioni, offrendo così una soluzione altamente efficace per la personalizzazione e l'aggiornamento continuo delle risposte generate.
 
 \section{Software Utilizzati}
 \subsection{Ollama\hspace{0.3cm}\protect\includegraphics[width=0.03\linewidth]{figures/ollama.png}}
@@ -767,10 +750,10 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
         \end{itemize}
 
     \paragraph{Conclusione:}
-    Sono state riscontrate due problematiche molto rilevanti, la prima riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
+    Sono state riscontrate due problemi molto rilevanti, la prima riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
     Mentre la seconda guarda i chunk estratti, lo score ottenuto non è particolarmente alto e questo con un database più ampio relativo a funzioni con terminologie e meccanismi simili potrebbe portare a risultati non coerenti.
     Per il secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
-    questa piccola correzione risolve in parte la problematica o almeno evita di propagarla ulteriormente preferendo non ottenere risultati piuttosto che ricevere risposte non coerenti.
+    questa piccola correzione risolve in parte il problema o almeno evita di propagarla ulteriormente preferendo non ottenere risultati piuttosto che ricevere risposte non coerenti.
     
 \subsection{Creazione della Pipeline RAG}
 \begin{lstlisting}[language=Python, caption={Pipeline RAG}, label={lst:rag}]
@@ -890,7 +873,7 @@ chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e 
  Questa funzione esegue la catena RAG creata tramite il metodo \emph{create\_retrieval\_chain()} che prende come parametri il retriever e il document chain.
  \begin{itemize}
     \item la funzione \textbf{create\_stuff\_documents\_chain()} carica una catena di documenti prendendo in input il modello LLM e il template del prompt.
-    \item \textbf{load\_model()} carica il modello LLM e il template del prompt in base al modello scelto sfruttando OllamaLLM e PromptTemplate.
+    \item \textbf{load\_model()} carica il modello LLM e il template del Prompt in base al modello scelto sfruttando OllamaLLM e PromptTemplate.
  \end{itemize}
  \subsubsection{Temperature}
 Per i due LLM è stata data una temperature molto bassa \textbf{0.3} in modo da garantire da parte dei LLM risposte coerenti e precise senza provi ad inventarle.
@@ -907,7 +890,7 @@ Ricordiamo che il risultato atteso è: \textbf{``il tuo segnale Wow è: Attenzio
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?''}
 \end{quote}
-\subsubsection{Fonti aggiunte al prompt}
+\subsubsection{Fonti aggiunte al Prompt}
 Il RAG aggiunge solo il chunk dove è presente la funzione \texttt{segnaleWow} e non il chunk con la funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom
 per questo le risposte dei due modelli sono incomplete:
 \subsubsection{Output con LLM Llama3.2}
@@ -941,7 +924,7 @@ Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
 \end{quote}
-\subsubsection{Fonti aggiunte dal RAG al prompt}
+\subsubsection{Fonti aggiunte dal RAG al Prompt}
 In questo caso il RAG aggiunge 5 chunk, ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
 Ne consegue che \textbf{le risposte date dai due modelli sono coerenti con quanto atteso}.
 \subsubsection{Output con LLM Llama3.2}
@@ -1094,7 +1077,7 @@ Questi file sono stati valutati da \textbf{DeepSeek}, il quale ha assegnato un p
 \end{itemize}
 
 \paragraph{Nota:} È interessante notare che tutti i modelli hanno sbagliato la prima domanda,
-non per mancanza di Chunk forniti al prompt ma a causa di un errore nel calcolo del giorno della settimana.
+non per mancanza di Chunk forniti al Prompt ma a causa di un errore nel calcolo del giorno della settimana.
 Questo errore non si sarebbe verificato con le versioni con più parametri degli stessi modelli.
 \newpage
 \begin{figure}[h]
@@ -1115,7 +1098,7 @@ i test effettuati hanno dimostrato che è meglio aumentare la tolleranza di scor
 Questo score relativamente alto, come già analizzato nei capitoli precedenti, può causare l'inserimento di alcuni Chunk non coerenti ma allo stesso tempo evita di escluderne di validi e fondamentali per permettere al LLM di rispondere correttamente.
 Abbiamo visto che gli score avrebbero valori molto bassi solo se le query fossero scritte in maniera molto accurata ma questo solitamente non avviene.
 Questa minore rigidità può essere utile per ridurre una sorta di overfitting del modello RAG.
-In ogni caso per prevenire il plorifirarsi di Chunk non coerenti viene sempre impostato il limite a 5 Chunk in questo modo il prompt non viene mai eccessivamente appesantito e il modello riesce ad elaborare buone risposte.
+In ogni caso per prevenire il plorifirarsi di Chunk non coerenti viene sempre impostato il limite a 5 Chunk in questo modo il Prompt non viene mai eccessivamente appesantito e il modello riesce ad elaborare buone risposte.
 Per rinforzare queste considerazione testando Llma3.2 con score threshold 1.0 e con threshold 0.8 il risultato migliore è stato con threshold maggiore perchè non ha estromesso nella fase di Retriever Chunk validi e fondamentali per la risposta.
 I risultati sono stati ottimi e il sistema RAG funziona correttamente aumentando le conoscenze dei LLM in manera vincente,
 ne è ulteriore prova l'impostazione di uno score threshold 0.4 con il quale vengono esclusi praticamente tutti i Chunck e per questo le risposte sono date solo dalle conoscenze del LLM con risultati estremamente scarsi non conoscendo i contesti e le librerie specificate nelle domande.
