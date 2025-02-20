@@ -16,7 +16,8 @@ vector_store = FAISS.load_local(
 )
 
 # 3. Query di esempio
-query = "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?"
+query = ("Scrivimi una funzione per calcolare le statistiche di una squadra di basket")
+#"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?"
 #"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?"
 
 # 4. Cerca i chunk più simili

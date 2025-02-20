@@ -1,0 +1,120 @@
+DOMANDA: Scrivimi una funzione per calcolare le statistiche di una squadra di basket
+RISPOSTA:
+Ecco un esempio di come potresti implementare una classe `SquadraBasketball` con metodi per calcolare le statistiche di una squadra:
+
+```java
+public class SquadraBasketball {
+
+    private int puntiSegnati;
+    private int rimbalziTotali;
+    private int assistTotale;
+    private int pallePerseTotale;
+    private int tiriTentati;
+    private int tiriSegnati;
+
+    public SquadraBasketball() {}
+
+    // Metodi per aggiornare le statistiche
+    public void aggiornaPunti(int punti) {
+        this.puntiSegnati += punti;
+    }
+
+    public void aggiornaRimbalzi(int rimbalzi) {
+        this.rimbalziTotali += rimbalzi;
+    }
+
+    public void aggiornaAssist(int assist) {
+        this.assistTotale += assist;
+    }
+
+    public void aggiornaPallePerse(int pallePerse) {
+        this.pallePerseTotale += pallePerse;
+    }
+
+    public void aggiornaTiriTentati(int tiri) {
+        this.tiriTentati += tiri;
+    }
+
+    public void aggiornaTiriSegnati(int tiri) {
+        this.tiriSegnati += tiri;
+    }
+
+    // Metodi per calcolare le statistiche
+    public double calcolaEfficienza() {
+        return (double) puntiSegnati / tiriTentati * 100;
+    }
+
+    public String valutaTiro() {
+        if (tiriTentati == 0) {
+            return "Non ci sono dati disponibili";
+        }
+        double percentuale = (double) tiriSegnati / tiriTentati * 100;
+        return String.format("Base: %.1f%% successo, %d rimbalzi", calcolaEfficienza(), rimbalziTotali);
+    }
+
+    public String analisiStatisticheSquadra() {
+        if (tiriTentati == 0) {
+            return "Non ci sono dati disponibili";
+        }
+        double percentualePunti = (double) puntiSegnati / tiriTentati * 100;
+        double percentualeRimbalzi = (double) rimbalziTotali / tiriTentati;
+        double percentualeAssist = (double) assistTotale / tiriTentati;
+        return String.format("Punti: %.1f%%, Rimbalzi: %.1f%%, Assist: %.1f%%",
+                percentualePunti, percentualeRimbalzi, percentualeAssist);
+    }
+
+    public double previsioneVincitore(double[] squadraCasa, double[] squadraOspite) {
+        // Implementazione della previsione (es. utilizzare una formula matematica)
+        return Math.random();
+    }
+}
+```
+
+Ecco un esempio di come potresti utilizzare questa classe:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        SquadraBasketball squadra = new SquadraBasketball();
+
+        // Aggiornare le statistiche
+        squadra.aggiornaPunti(100);
+        squadra.aggiornaRimbalzi(20);
+        squadra.aggiornaAssist(10);
+        squadra.aggiornaTiriTentati(50);
+        squadra.aggiornaTiriSegnati(30);
+
+        // Calcolare le statistiche
+        System.out.println("Efficienza: " + squadra.calcolaEfficienza());
+        System.out.println(squadra.valutaTiro());
+        System.out.println(squadra.analisiStatisticheSquadra());
+
+        // Previsione
+        double[] squadraCasa = {88.5, 42.1, 23.8};
+        double[] squadraOspite = {85.2, 38.7, 25.4};
+        System.out.println("Previsione: " + squadra.previsioneVincitore(squadraCasa, squadraOspite));
+    }
+}
+```
+
+Nota che la previsione è solo un esempio e potresti implementare una formula matematica più complessa per calcolarla.
+FONTI:
+1. // File: my_project/classi_java_custom\BasketballStats.java
+Classe: BasketballStats
+package classi_java_custom;
+
+import java.time.LocalDate;
+import ja...
+--------------------------------------------------------------------------------
+2. // File: my_project/classi_java_custom\BasketballStats.java
+int rimbalziOffensivi, int rimbalziDifensivi) {
+        double percentuale = (double) punt...
+--------------------------------------------------------------------------------
+3. // File: my_project/classi_java_custom\BasketballTest.java
+// Test valutazione tiro
+        System.out.println("Valutazione tiro: " +
+            sta...
+--------------------------------------------------------------------------------
+4. // File: my_project/classi_java_custom\AdvancedBasketballStats.java
+Classe: AdvancedBasketballStats extends BasketballStats
+package classi_java_custom...

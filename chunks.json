@@ -10,7 +10,7 @@
     },
     {
         "id": 2,
-        "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\n(pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }\n    \n    // Override con valutazione dettagliata\n    @Override\n    public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {\n            return \"⭐ Tiro ad alto rendimento (85% successo) ⭐\";\n        } else if (distanzaCanestro >= 7.0 && pressioneDifensiva > 6) {\n            return \" Tiro ad alto rischio (30% successo) \";\n        }",
+        "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\n(pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }\n    \n    // Override con valutazione dettagliata\n    @Override\n    public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {\n            return \"Tiro ad alto rendimento (85% successo)\";\n        } else if (distanzaCanestro >= 7.0 && pressioneDifensiva > 6) {\n            return \"Tiro ad alto rischio (30% successo)\";\n        }",
         "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
         "type": "code",
         "start_line": 14,
@@ -19,7 +19,7 @@
     },
     {
         "id": 3,
-        "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\nreturn \"⚡ Tiro ad alto rischio (30% successo) ⚡\";\n        }\n        return super.valutaTiro(distanzaCanestro, pressioneDifensiva) + \n             \" | Pressione: \" + pressioneDifensiva;\n    }\n    \n    // Override con analisi migliorata\n    @Override\n    public String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, \n                                           int rimbalziOffensivi, int rimbalziDifensivi) {\n        double effOffensiva = (double) puntiSegnati / tiriTentati;",
+        "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\nreturn \"Tiro ad alto rischio (30% successo)\";\n        }\n        return super.valutaTiro(distanzaCanestro, pressioneDifensiva) + \n             \" | Pressione: \" + pressioneDifensiva;\n    }\n    \n    // Override con analisi migliorata\n    @Override\n    public String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, \n                                           int rimbalziOffensivi, int rimbalziDifensivi) {\n        double effOffensiva = (double) puntiSegnati / tiriTentati;",
         "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
         "type": "code",
         "start_line": 24,
@@ -32,7 +32,7 @@
         "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
         "type": "code",
         "start_line": 34,
-        "end_line": 46,
+        "end_line": 45,
         "class": ""
     },
     {
@@ -40,7 +40,7 @@
         "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\n}\n    \n    // Override con algoritmo predittivo avanzato\n    @Override\n    public String previsioneVincitore(double[] squadraCasa, double[] squadraOspite, \n                                    LocalDate dataPartita) {\n        double pesoData = dataPartita.getDayOfWeek().getValue() < 5 ? 1.1 : 0.95;\n        \n        double valoreCasa = (squadraCasa[0] * 0.45 + squadraCasa[1] * 0.35 + squadraCasa[2] * 0.2) * pesoData;",
         "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
         "type": "code",
-        "start_line": 46,
+        "start_line": 45,
         "end_line": 53,
         "class": ""
     },
@@ -559,7 +559,7 @@
     },
     {
         "id": 63,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nClasse: GestoreConoscenza\npackage classi_java_custom;\n\nimport java.util.List;\nimport java.util.Map;\nimport java.util.HashMap;\nimport java.util.ArrayList;\nimport java.util.stream.Collectors;\n\npublic class GestoreConoscenza {\n\n    /**\n     * Indicizza documenti tecnici nel formato interno\n     * @param documento Contenuto da indicizzare\n     * @return Metadati arricchiti\n     */\n    public static Map<String, Object> indicizzaDocumento(String documento) {\n        Map<String, Object> metadati = new HashMap<>();",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nClasse: GestoreConoscenza\npackage classi_java_custom;\n\nimport java.util.*;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\npublic class GestoreConoscenza {\n    \n    // Classe dedicata per i metadati\n    public static class Metadati {\n        private String titolo;\n        private String autore;\n        private String data;\n        private List<String> paroleChiave;\n\n        public Metadati(String titolo, String autore, String data, List<String> paroleChiave) {\n            this.titolo = titolo;",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
         "start_line": 1,
@@ -568,7 +568,7 @@
     },
     {
         "id": 64,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nMap<String, Object> metadati = new HashMap<>();\n\n        // Esempio di arricchimento dei metadati\n        metadati.put(\"titolo\", estraiTitolo(documento));\n        metadati.put(\"autore\", estraiAutore(documento));\n        metadati.put(\"data\", estraiData(documento));\n        metadati.put(\"paroleChiave\", estraiParoleChiave(documento));\n\n        return metadati;\n    }\n\n    /**\n     * Cerca nella knowledge base con query semantica\n     * @param query Domanda naturale",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nthis.titolo = titolo;\n            this.autore = autore;\n            this.data = data;\n            this.paroleChiave = Collections.unmodifiableList(paroleChiave);\n        }\n\n        // Getter e metodi utili\n        public String getTitolo() { return titolo; }\n        public String getAutore() { return autore; }\n        public String getData() { return data; }\n        public List<String> getParoleChiave() { return paroleChiave; }\n    }\n\n    private final Map<String, String> documentIndex;",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
         "start_line": 17,
@@ -577,60 +577,96 @@
     },
     {
         "id": 65,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\n}\n\n    /**\n     * Cerca nella knowledge base con query semantica\n     * @param query Domanda naturale\n     * @return Risultati contestualizzati\n     */\n    public static List<String> ricercaSemantica(String query) {\n        List<String> risultati = new ArrayList<>();\n\n        // Esempio di ricerca semantica (simulato)\n        if (query.toLowerCase().contains(\"algoritmo\")) {\n            risultati.add(\"Documento sugli algoritmi di ordinamento\");\n        }",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\n}\n\n    private final Map<String, String> documentIndex;\n\n    public GestoreConoscenza() {\n        this.documentIndex = new HashMap<>();\n        initializeIndex();\n    }\n\n    private void initializeIndex() {\n        documentIndex.put(\"algoritmo\", \"Documento sugli algoritmi di ordinamento\");\n        documentIndex.put(\"machine learning\", \"Documento sui modelli di machine learning\");\n        documentIndex.put(\"sicurezza\", \"Documento sulle best practice di sicurezza informatica\");\n    }\n\n    /**",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
         "start_line": 32,
-        "end_line": 43,
+        "end_line": 45,
         "class": ""
     },
     {
         "id": 66,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nrisultati.add(\"Documento sugli algoritmi di ordinamento\");\n        }\n        if (query.toLowerCase().contains(\"machine learning\")) {\n            risultati.add(\"Documento sui modelli di machine learning\");\n        }\n        if (query.toLowerCase().contains(\"sicurezza\")) {\n            risultati.add(\"Documento sulle best practice di sicurezza informatica\");\n        }\n\n        return risultati;\n    }\n\n    /**\n     * Estrae entità nominate dal documento",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\ndocumentIndex.put(\"sicurezza\", \"Documento sulle best practice di sicurezza informatica\");\n    }\n\n    /**\n     * Indicizza documenti tecnici estraendo metadati strutturati\n     * @param documento Contenuto da analizzare (non nullo)\n     * @return Oggetto Metadati con informazioni estratte\n     * @throws IllegalArgumentException se il documento è nullo o vuoto\n     */\n    public Metadati indicizzaDocumento(String documento) {\n        if (documento == null || documento.trim().isEmpty()) {",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
-        "start_line": 43,
+        "start_line": 45,
         "end_line": 56,
         "class": ""
     },
     {
         "id": 67,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\n}\n\n        return risultati;\n    }\n\n    /**\n     * Estrae entità nominate dal documento\n     * @param documento Contenuto da analizzare\n     * @return Lista di entità nominate\n     */\n    public static List<String> estraiEntitaNominate(String documento) {\n        List<String> entita = new ArrayList<>();\n\n        // Esempio di estrazione di entità nominate (simulato)\n        if (documento.contains(\"algoritmo\")) {\n            entita.add(\"algoritmo\");\n        }",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\npublic Metadati indicizzaDocumento(String documento) {\n        if (documento == null || documento.trim().isEmpty()) {\n            throw new IllegalArgumentException(\"Documento non valido\");\n        }\n\n        return new Metadati(\n            estraiTitolo(documento),\n            estraiAutore(documento),\n            estraiData(documento),\n            estraiParoleChiave(documento)\n        );\n    }\n\n    /**\n     * Cerca nella knowledge base utilizzando una query semantica",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
         "start_line": 56,
-        "end_line": 74,
+        "end_line": 70,
         "class": ""
     },
     {
         "id": 68,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nif (documento.contains(\"algoritmo\")) {\n            entita.add(\"algoritmo\");\n        }\n        if (documento.contains(\"machine learning\")) {\n            entita.add(\"machine learning\");\n        }\n        if (documento.contains(\"sicurezza\")) {\n            entita.add(\"sicurezza\");\n        }\n\n        return entita;\n    }\n\n    /**\n     * Genera un riassunto contestualizzato del documento\n     * @param documento Contenuto da riassumere\n     * @return Riassunto contestualizzato\n     */",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\n);\n    }\n\n    /**\n     * Cerca nella knowledge base utilizzando una query semantica\n     * @param query Domanda naturale in input\n     * @return Lista di risultati rilevanti ordinati per pertinenza\n     */\n    public List<String> ricercaSemantica(String query) {\n        String queryNormalizzata = query.toLowerCase();\n        return documentIndex.entrySet().stream()\n            .filter(entry -> queryNormalizzata.contains(entry.getKey()))\n            .map(Map.Entry::getValue)",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
-        "start_line": 74,
-        "end_line": 87,
+        "start_line": 70,
+        "end_line": 82,
         "class": ""
     },
     {
         "id": 69,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\n* @param documento Contenuto da riassumere\n     * @return Riassunto contestualizzato\n     */\n    public static String generaRiassunto(String documento) {\n        // Esempio di generazione di un riassunto (simulato)\n        return documento.substring(0, Math.min(documento.length(), 100)) + \"...\";\n    }\n\n    // Metodi ausiliari per l'estrazione di metadati (simulati)\n    private static String estraiTitolo(String documento) {\n        return \"Titolo del documento\";\n    }",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\n.filter(entry -> queryNormalizzata.contains(entry.getKey()))\n            .map(Map.Entry::getValue)\n            .collect(Collectors.toList());\n    }\n\n    /**\n     * Estrae entità nominate dal documento\n     * @param documento Contenuto da analizzare\n     * @return Set di entità uniche ordinate alfabeticamente\n     */\n    public Set<String> estraiEntitaNominate(String documento) {\n        return documentIndex.keySet().stream()\n            .filter(key -> documento.toLowerCase().contains(key))",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
-        "start_line": 87,
-        "end_line": 99,
+        "start_line": 82,
+        "end_line": 94,
         "class": ""
     },
     {
         "id": 70,
-        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nprivate static String estraiTitolo(String documento) {\n        return \"Titolo del documento\";\n    }\n\n    private static String estraiAutore(String documento) {\n        return \"Autore del documento\";\n    }\n\n    private static String estraiData(String documento) {\n        return \"2023-10-01\";\n    }\n\n    private static List<String> estraiParoleChiave(String documento) {\n        return List.of(\"parolaChiave1\", \"parolaChiave2\", \"parolaChiave3\");\n    }\n}",
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nreturn documentIndex.keySet().stream()\n            .filter(key -> documento.toLowerCase().contains(key))\n            .collect(Collectors.toCollection(TreeSet::new));\n    }\n\n    /**\n     * Genera un riassunto intelligente del documento\n     * @param documento Contenuto da riassumere\n     * @return Stringa con i primi 100 caratteri significativi\n     */\n    public String generaRiassunto(String documento) {\n        String cleanedDoc = documento.replaceAll(\"\\\\s+\", \").trim();",
         "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
         "type": "code",
-        "start_line": 99,
-        "end_line": 99,
+        "start_line": 94,
+        "end_line": 105,
         "class": ""
     },
     {
         "id": 71,
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\npublic String generaRiassunto(String documento) {\n        String cleanedDoc = documento.replaceAll(\"\\\\s+\", \").trim();\n        return cleanedDoc.substring(0, Math.min(cleanedDoc.length(), 100)) + \n            (cleanedDoc.length() > 100 ? \"...\" : \"\");\n    }\n\n    // Metodi di estrazione migliorati con regex\n    private String estraiTitolo(String documento) {\n        Pattern pattern = Pattern.compile(\"^#\\\\s*(.+)$\", Pattern.MULTILINE);\n        Matcher matcher = pattern.matcher(documento);",
+        "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
+        "type": "code",
+        "start_line": 105,
+        "end_line": 117,
+        "class": ""
+    },
+    {
+        "id": 72,
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nMatcher matcher = pattern.matcher(documento);\n        return matcher.find() ? matcher.group(1) : \"Nessun titolo rilevato\";\n    }\n\n    private String estraiAutore(String documento) {\n        Pattern pattern = Pattern.compile(\"Autore:\\\\s*(.+)$\", Pattern.MULTILINE);\n        Matcher matcher = pattern.matcher(documento);\n        return matcher.find() ? matcher.group(1) : \"Autore sconosciuto\";\n    }\n\n    private String estraiData(String documento) {",
+        "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
+        "type": "code",
+        "start_line": 117,
+        "end_line": 125,
+        "class": ""
+    },
+    {
+        "id": 73,
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\n}\n\n    private String estraiData(String documento) {\n        Pattern pattern = Pattern.compile(\"\\\\d{4}-\\\\d{2}-\\\\d{2}\");\n        Matcher matcher = pattern.matcher(documento);\n        return matcher.find() ? matcher.group() : \"Data non disponibile\";\n    }\n\n    private List<String> estraiParoleChiave(String documento) {\n        Pattern pattern = Pattern.compile(\"#keyword:\\\\s*(.+)$\", Pattern.MULTILINE);\n        Matcher matcher = pattern.matcher(documento);\n        List<String> keywords = new ArrayList<>();",
+        "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
+        "type": "code",
+        "start_line": 125,
+        "end_line": 125,
+        "class": ""
+    },
+    {
+        "id": 74,
+        "text": "// File: my_project/classi_java_custom\\GestoreConoscenza.java\nMatcher matcher = pattern.matcher(documento);\n        List<String> keywords = new ArrayList<>();\n        while (matcher.find()) {\n            keywords.add(matcher.group(1));\n        }\n        return !keywords.isEmpty() ? keywords : List.of(\"Tecnologia\", \"Informatica\");\n    }\n}",
+        "source": "my_project/classi_java_custom\\GestoreConoscenza.java",
+        "type": "code",
+        "start_line": 125,
+        "end_line": 125,
+        "class": ""
+    },
+    {
+        "id": 75,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\nClasse: GestoreIdentita\npackage classi_java_custom;\n\nimport io.jsonwebtoken.Jwts;\nimport io.jsonwebtoken.SignatureAlgorithm;\nimport io.jsonwebtoken.security.Keys;\nimport javax.crypto.SecretKey;\nimport java.nio.charset.StandardCharsets;\nimport java.security.MessageDigest;\nimport java.security.NoSuchAlgorithmException;\nimport java.util.Base64;\n\npublic class GestoreIdentita {\n\n    private static final SecretKey CHIAVE_FIRMA = Keys.secretKeyFor(SignatureAlgorithm.HS256);\n\n    /**",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -639,7 +675,7 @@
         "class": "GestoreIdentita\n"
     },
     {
-        "id": 72,
+        "id": 76,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\nprivate static final SecretKey CHIAVE_FIRMA = Keys.secretKeyFor(SignatureAlgorithm.HS256);\n\n    /**\n     * Genera un'identità digitale secondo lo standard ZeroTrust\n     * @param parametriBiometrici Dati biometrici codificati\n     * @return Token JWT firmato digitalmente\n     */\n    public static String generaIdentitaDigitale(byte[] parametriBiometrici) {\n        try {\n            // Calcola l'hash SHA-256 dei dati biometrici\n            MessageDigest digest = MessageDigest.getInstance(\"SHA-256\");",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -648,7 +684,7 @@
         "class": ""
     },
     {
-        "id": 73,
+        "id": 77,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\nMessageDigest digest = MessageDigest.getInstance(\"SHA-256\");\n            byte[] hash = digest.digest(parametriBiometrici);\n\n            // Codifica l'hash in Base64\n            String hashBase64 = Base64.getEncoder().encodeToString(hash);\n\n            // Genera il token JWT\n            String token = Jwts.builder()\n                    .setSubject(hashBase64)\n                    .signWith(CHIAVE_FIRMA)\n                    .compact();\n\n            return token;",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -657,7 +693,7 @@
         "class": ""
     },
     {
-        "id": 74,
+        "id": 78,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\n.signWith(CHIAVE_FIRMA)\n                    .compact();\n\n            return token;\n        } catch (NoSuchAlgorithmException e) {\n            throw new RuntimeException(\"Errore durante la generazione dell'identità digitale\", e);\n        }\n    }\n\n    /**\n     * Verifica l'identità contro il registro decentralizzato\n     * @param token Token JWT\n     * @param improntaHash Hash atteso\n     * @return Esito verifica con livello di confidenza\n     */",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -666,7 +702,7 @@
         "class": ""
     },
     {
-        "id": 75,
+        "id": 79,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\n* @param improntaHash Hash atteso\n     * @return Esito verifica con livello di confidenza\n     */\n    public static boolean verificaIdentita(String token, String improntaHash) {\n        try {\n            // Decodifica il token JWT\n            String hashBase64 = Jwts.parserBuilder()\n                    .setSigningKey(CHIAVE_FIRMA)\n                    .build()\n                    .parseClaimsJws(token)\n                    .getBody()\n                    .getSubject();",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -675,7 +711,7 @@
         "class": ""
     },
     {
-        "id": 76,
+        "id": 80,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\n.parseClaimsJws(token)\n                    .getBody()\n                    .getSubject();\n\n            // Confronta l'hash decodificato con l'hash atteso\n            return hashBase64.equals(improntaHash);\n        } catch (Exception e) {\n            throw new RuntimeException(\"Errore durante la verifica dell'identità\", e);\n        }\n    }\n\n    /**\n     * Aggiorna i dati biometrici associati all'identità\n     * @param token Token JWT esistente",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -684,7 +720,7 @@
         "class": ""
     },
     {
-        "id": 77,
+        "id": 81,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\n}\n    }\n\n    /**\n     * Aggiorna i dati biometrici associati all'identità\n     * @param token Token JWT esistente\n     * @param nuoviParametriBiometrici Nuovi dati biometrici codificati\n     * @return Nuovo token JWT aggiornato\n     */\n    public static String aggiornaIdentita(String token, byte[] nuoviParametriBiometrici) {\n        // Genera un nuovo token con i nuovi dati biometrici\n        return generaIdentitaDigitale(nuoviParametriBiometrici);\n    }\n\n    /**",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -693,7 +729,7 @@
         "class": ""
     },
     {
-        "id": 78,
+        "id": 82,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\nreturn generaIdentitaDigitale(nuoviParametriBiometrici);\n    }\n\n    /**\n     * Ottieni informazioni dettagliate sull'identità\n     * @param token Token JWT\n     * @return Informazioni dettagliate sull'identità\n     */\n    public static String ottieniDettagliIdentita(String token) {\n        try {\n            // Decodifica il token JWT\n            String hashBase64 = Jwts.parserBuilder()\n                    .setSigningKey(CHIAVE_FIRMA)\n                    .build()",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -702,7 +738,7 @@
         "class": ""
     },
     {
-        "id": 79,
+        "id": 83,
         "text": "// File: my_project/classi_java_custom\\GestoreIdentita.java\n.setSigningKey(CHIAVE_FIRMA)\n                    .build()\n                    .parseClaimsJws(token)\n                    .getBody()\n                    .getSubject();\n\n            // Restituisce l'hash dei dati biometrici\n            return \"Dettagli identità: \" + hashBase64;\n        } catch (Exception e) {\n            throw new RuntimeException(\"Errore durante il recupero dei dettagli dell'identità\", e);\n        }\n    }",
         "source": "my_project/classi_java_custom\\GestoreIdentita.java",
         "type": "code",
@@ -711,7 +747,7 @@
         "class": ""
     },
     {
-        "id": 80,
+        "id": 84,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\nClasse: GestoreLicenze\npackage classi_java_custom;\n\nimport java.nio.charset.StandardCharsets;\nimport java.security.MessageDigest;\nimport java.security.NoSuchAlgorithmException;\nimport java.time.LocalDate;\nimport java.time.format.DateTimeFormatter;\nimport java.util.Base64;\n\npublic class GestoreLicenze {\n\n    /**\n     * Genera una chiave di attivazione secondo il nuovo formato 2024\n     * @param codiceCliente Codice a 8 cifre\n     * @param dataScadenza Formato AAAAMMGG\n     * @return Chiave di attivazione criptata\n     */",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -720,7 +756,7 @@
         "class": "GestoreLicenze\n"
     },
     {
-        "id": 81,
+        "id": 85,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n* @param dataScadenza Formato AAAAMMGG\n     * @return Chiave di attivazione criptata\n     */\n    public static String generaChiaveAttivazione(String codiceCliente, String dataScadenza) {\n        try {\n            // Verifica che il codice cliente sia di 8 cifre\n            if (codiceCliente.length() != 8) {\n                throw new IllegalArgumentException(\"Il codice cliente deve essere di 8 cifre.\");\n            }\n\n            // Verifica che la data di scadenza sia nel formato corretto",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -729,7 +765,7 @@
         "class": ""
     },
     {
-        "id": 82,
+        "id": 86,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n}\n\n            // Verifica che la data di scadenza sia nel formato corretto\n            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"yyyyMMdd\");\n            LocalDate scadenza = LocalDate.parse(dataScadenza, formatter);\n\n            // Combinazione di codice cliente e data di scadenza\n            String combinazione = codiceCliente + dataScadenza;\n\n            // Generazione dell'hash SHA-256\n            MessageDigest digest = MessageDigest.getInstance(\"SHA-256\");",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -738,7 +774,7 @@
         "class": ""
     },
     {
-        "id": 83,
+        "id": 87,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n// Generazione dell'hash SHA-256\n            MessageDigest digest = MessageDigest.getInstance(\"SHA-256\");\n            byte[] hash = digest.digest(combinazione.getBytes(StandardCharsets.UTF_8));\n\n            // Codifica in Base64\n            return Base64.getEncoder().encodeToString(hash);\n        } catch (NoSuchAlgorithmException e) {\n            throw new RuntimeException(\"Errore durante la generazione della chiave di attivazione\", e);\n        } catch (Exception e) {",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -747,7 +783,7 @@
         "class": ""
     },
     {
-        "id": 84,
+        "id": 88,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n} catch (Exception e) {\n            throw new IllegalArgumentException(\"Formato della data di scadenza non valido\", e);\n        }\n    }\n\n    /**\n     * Verifica la validità di una licenza enterprise\n     * @param chiave Chiave da verificare\n     * @param improntaDigitale Impronta unica del sistema\n     * @return Stato della licenza con codici speciali\n     */\n    public static int verificaLicenza(String chiave, String improntaDigitale) {",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -756,7 +792,7 @@
         "class": ""
     },
     {
-        "id": 85,
+        "id": 89,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n*/\n    public static int verificaLicenza(String chiave, String improntaDigitale) {\n        // Esempio di controllo: verifica che la chiave sia valida e corrisponda all'impronta digitale\n        try {\n            // Decodifica la chiave\n            byte[] decodedKey = Base64.getDecoder().decode(chiave);\n\n            // Genera l'hash dell'impronta digitale\n            MessageDigest digest = MessageDigest.getInstance(\"SHA-256\");",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -765,7 +801,7 @@
         "class": ""
     },
     {
-        "id": 86,
+        "id": 90,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n// Genera l'hash dell'impronta digitale\n            MessageDigest digest = MessageDigest.getInstance(\"SHA-256\");\n            byte[] hashImpronta = digest.digest(improntaDigitale.getBytes(StandardCharsets.UTF_8));\n\n            // Confronta l'hash della chiave con l'hash dell'impronta digitale\n            if (MessageDigest.isEqual(decodedKey, hashImpronta)) {\n                return 1; // Licenza valida\n            } else {\n                return 0; // Licenza non valida\n            }",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -774,7 +810,7 @@
         "class": ""
     },
     {
-        "id": 87,
+        "id": 91,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\nreturn 1; // Licenza valida\n            } else {\n                return 0; // Licenza non valida\n            }\n        } catch (NoSuchAlgorithmException e) {\n            throw new RuntimeException(\"Errore durante la verifica della licenza\", e);\n        }\n    }\n\n    /**\n     * Rinnova una licenza esistente\n     * @param chiave Chiave attuale\n     * @param nuovaDataScadenza Nuova data di scadenza formato AAAAMMGG\n     * @return Nuova chiave di attivazione\n     */",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -783,7 +819,7 @@
         "class": ""
     },
     {
-        "id": 88,
+        "id": 92,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n* @param nuovaDataScadenza Nuova data di scadenza formato AAAAMMGG\n     * @return Nuova chiave di attivazione\n     */\n    public static String rinnovaLicenza(String chiave, String nuovaDataScadenza) {\n        // Decodifica la chiave esistente\n        byte[] decodedKey = Base64.getDecoder().decode(chiave);\n\n        // Genera una nuova chiave con la nuova data di scadenza\n        return generaChiaveAttivazione(new String(decodedKey, StandardCharsets.UTF_8).substring(0, 8), nuovaDataScadenza);\n    }",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -792,7 +828,7 @@
         "class": ""
     },
     {
-        "id": 89,
+        "id": 93,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n}\n\n    /**\n     * Ottieni informazioni dettagliate su una licenza\n     * @param chiave Chiave da analizzare\n     * @return Informazioni dettagliate sulla licenza\n     */\n    public static String ottieniDettagliLicenza(String chiave) {\n        // Decodifica la chiave\n        byte[] decodedKey = Base64.getDecoder().decode(chiave);\n\n        // Esempio di informazioni dettagliate (da implementare in base alle esigenze)",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -801,7 +837,7 @@
         "class": ""
     },
     {
-        "id": 90,
+        "id": 94,
         "text": "// File: my_project/classi_java_custom\\GestoreLicenze.java\n// Esempio di informazioni dettagliate (da implementare in base alle esigenze)\n        return \"Dettagli licenza per la chiave: \" + new String(decodedKey, StandardCharsets.UTF_8);\n    }\n}",
         "source": "my_project/classi_java_custom\\GestoreLicenze.java",
         "type": "code",
@@ -810,7 +846,7 @@
         "class": ""
     },
     {
-        "id": 91,
+        "id": 95,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\nClasse: GiorniMagici\npackage classi_java_custom;\nimport java.time.LocalDate;\n\npublic class GiorniMagici {\n    /**\n     * Verifica se una data è magica (giorno * mese = ultime due cifre dell'anno)\n     * @param giorno Il giorno della data.\n     * @param mese Il mese della data.\n     * @param anno L'anno della data.\n     * @return true se la data è magica, false altrimenti.\n     */\n    public static boolean isDataMagica(int giorno, int mese, int anno) {\n        int ultimeDueCifreAnno = anno % 100;",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -819,7 +855,7 @@
         "class": "GiorniMagici\n"
     },
     {
-        "id": 92,
+        "id": 96,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\n*/\n    public static boolean isDataMagica(int giorno, int mese, int anno) {\n        int ultimeDueCifreAnno = anno % 100;\n        return (giorno * mese) == ultimeDueCifreAnno;\n    }\n    \n    /**\n     * Genera un numero magico a partire da una data.\n     * @param giorno\n     * @param mese\n     * @param anno\n     * @return Il numero magico generato.\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -828,7 +864,7 @@
         "class": ""
     },
     {
-        "id": 93,
+        "id": 97,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\n* @return Il numero magico generato.\n     */\n    public static int generaNumeroMagico(int giorno, int mese, int anno) {\n        int somma = sommaCifre(giorno) + sommaCifre(mese) + sommaCifre(anno);\n        return somma * somma;\n    }\n    \n    \n\n    \n    /**\n     * Verifica se un numero è magico.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -837,7 +873,7 @@
         "class": ""
     },
     {
-        "id": 94,
+        "id": 98,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\n* @return true se il numero è magico, false altrimenti.\n     */\n    public static boolean isNumeroMagico(int numero) {\n        return isPrime(numero) && isFibonacci(numero);\n    }\n    \n\n    /**\n     * Somma le cifre di un numero.\n     * @param numero Il numero di cui sommare le cifre.\n     * @return La somma delle cifre.\n     */\n    private static int sommaCifre(int numero) {\n        int somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -846,7 +882,7 @@
         "class": ""
     },
     {
-        "id": 95,
+        "id": 99,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\nint somma = 0;\n        numero = Math.abs(numero);\n        while (numero != 0) {\n            somma += numero % 10;\n            numero /= 10;\n        }\n        return somma;\n    }\n    \n    /**\n     * Verifica se un numero è primo.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è primo, false altrimenti.\n     */\n    private static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -855,7 +891,7 @@
         "class": ""
     },
     {
-        "id": 96,
+        "id": 100,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\nprivate static boolean isPrime(int numero) {\n        if (numero <= 1) return false;\n        if (numero <= 3) return true;\n        if (numero % 2 == 0 || numero % 3 == 0) return false;\n        for (int i = 5; i * i <= numero; i += 6) {\n            if (numero % i == 0 || numero % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -864,7 +900,7 @@
         "class": ""
     },
     {
-        "id": 97,
+        "id": 101,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\n}\n    \n    /**\n     * Verifica se è un numero di Fibonacci.\n     * @param numero Il numero da verificare.\n     * @return true se il numero è di Fibonacci, false altrimenti.\n     */\n    private static boolean isFibonacci(int numero) {\n        int test1 = 5 * numero * numero + 4;\n        int test2 = 5 * numero * numero - 4;\n        return isPerfectSquare(test1) || isPerfectSquare(test2);\n    }\n    \n    /**\n     * Verifica se è un quadrato perfetto.\n     * @param n Il numero da verificare.",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -873,7 +909,7 @@
         "class": ""
     },
     {
-        "id": 98,
+        "id": 102,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\n}\n    \n    /**\n     * Verifica se è un quadrato perfetto.\n     * @param n Il numero da verificare.\n     * @return true se il numero è un quadrato perfetto, false altrimenti.\n     */\n    private static boolean isPerfectSquare(int n) {\n        int sqrt = (int) Math.sqrt(n);\n        return sqrt * sqrt == n;\n    }\n\n        /**\n     * Restituisce un segnale Wow specifico in base al giorno indicato\n     * @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -882,7 +918,7 @@
         "class": ""
     },
     {
-        "id": 99,
+        "id": 103,
         "text": "// File: my_project/classi_java_custom\\GiorniMagici.java\n* @param date\n     * @return Il segnale Wow.\n     */\n    public static String segnaleWow (LocalDate date){\n        String wow = \"il tuo segnale Wow è :\" + DateUtilCustom.getMessaggioMagico(date) ;\n        return wow;\n    }\n}",
         "source": "my_project/classi_java_custom\\GiorniMagici.java",
         "type": "code",
@@ -891,7 +927,7 @@
         "class": ""
     },
     {
-        "id": 100,
+        "id": 104,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\nClasse: IspezionatoreCodice\npackage classi_java_custom;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\npublic class IspezionatoreCodice {\n\n    /**\n     * Calcola l'indice di manutenibilità (MI) secondo metriche interne\n     * @param codice Sorgente da analizzare\n     * @return Valore MI con soglie personalizzate\n     */\n    public static double calcolaIndiceManutenibilita(String codice) {",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -900,7 +936,7 @@
         "class": "IspezionatoreCodice\n"
     },
     {
-        "id": 101,
+        "id": 105,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\n*/\n    public static double calcolaIndiceManutenibilita(String codice) {\n        // Esempio di metriche interne: lunghezza delle righe, numero di commenti, complessità ciclomatica\n        int lunghezzaMediaRighe = calcolaLunghezzaMediaRighe(codice);\n        int numeroCommenti = contaCommenti(codice);\n        int complessitaCiclomatica = calcolaComplessitaCiclomatica(codice);\n\n        // Calcolo dell'indice di manutenibilità (MI)",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -909,7 +945,7 @@
         "class": ""
     },
     {
-        "id": 102,
+        "id": 106,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\n// Calcolo dell'indice di manutenibilità (MI)\n        double mi = 100.0 - (lunghezzaMediaRighe * 0.1) + (numeroCommenti * 0.5) - (complessitaCiclomatica * 0.2);\n        return Math.max(0, Math.min(100, mi));\n    }\n\n    /**\n     * Rileva pattern di codice proibiti dal coding standard\n     * @param codice Blocco di codice da controllare\n     * @return Lista di violazioni con codici errore\n     */\n    public static List<String> rilevaViolazioniStandard(String codice) {",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -918,7 +954,7 @@
         "class": ""
     },
     {
-        "id": 103,
+        "id": 107,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\n*/\n    public static List<String> rilevaViolazioniStandard(String codice) {\n        List<String> violazioni = new ArrayList<>();\n\n        // Esempio di pattern proibiti\n        Pattern patternMagicNumber = Pattern.compile(\"\\\\b[0-9]+\\\\b\");\n        Matcher matcher = patternMagicNumber.matcher(codice);\n        while (matcher.find()) {\n            violazioni.add(\"Magic number trovato: \" + matcher.group());\n        }\n\n        // Aggiungi ulteriori pattern proibiti qui\n\n        return violazioni;\n    }",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -927,7 +963,7 @@
         "class": ""
     },
     {
-        "id": 104,
+        "id": 108,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\n}\n\n        // Aggiungi ulteriori pattern proibiti qui\n\n        return violazioni;\n    }\n\n    /**\n     * Calcola la lunghezza media delle righe di codice\n     * @param codice Sorgente da analizzare\n     * @return Lunghezza media delle righe\n     */\n    private static int calcolaLunghezzaMediaRighe(String codice) {\n        String[] righe = codice.split(\"\\n\");\n        int totaleLunghezza = 0;\n        for (String riga : righe) {\n            totaleLunghezza += riga.length();\n        }",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -936,7 +972,7 @@
         "class": ""
     },
     {
-        "id": 105,
+        "id": 109,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\nint totaleLunghezza = 0;\n        for (String riga : righe) {\n            totaleLunghezza += riga.length();\n        }\n        return righe.length > 0 ? totaleLunghezza / righe.length : 0;\n    }\n\n    /**\n     * Conta il numero di commenti nel codice\n     * @param codice Sorgente da analizzare\n     * @return Numero di commenti\n     */\n    private static int contaCommenti(String codice) {\n        Pattern patternCommenti = Pattern.compile(\"//.*|/\\\\*[^*]*\\\\*+(?:[^/*][^*]*\\\\*+)*/\");",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -945,7 +981,7 @@
         "class": ""
     },
     {
-        "id": 106,
+        "id": 110,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\nPattern patternCommenti = Pattern.compile(\"//.*|/\\\\*[^*]*\\\\*+(?:[^/*][^*]*\\\\*+)*/\");\n        Matcher matcher = patternCommenti.matcher(codice);\n        int count = 0;\n        while (matcher.find()) {\n            count++;\n        }\n        return count;\n    }\n\n    /**\n     * Calcola la complessità ciclomatica del codice\n     * @param codice Sorgente da analizzare\n     * @return Complessità ciclomatica\n     */\n    private static int calcolaComplessitaCiclomatica(String codice) {",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -954,7 +990,7 @@
         "class": ""
     },
     {
-        "id": 107,
+        "id": 111,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\n* @return Complessità ciclomatica\n     */\n    private static int calcolaComplessitaCiclomatica(String codice) {\n        // Esempio semplificato: conta il numero di if, for, while, switch\n        Pattern pattern = Pattern.compile(\"\\\\b(if|for|while|switch)\\\\b\");\n        Matcher matcher = pattern.matcher(codice);\n        int count = 0;\n        while (matcher.find()) {\n            count++;\n        }\n        return count;\n    }\n\n    /**\n     * Suggerisce miglioramenti del codice basati sull'analisi",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -963,7 +999,7 @@
         "class": ""
     },
     {
-        "id": 108,
+        "id": 112,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\n}\n        return count;\n    }\n\n    /**\n     * Suggerisce miglioramenti del codice basati sull'analisi\n     * @param codice Sorgente da analizzare\n     * @return Suggerimenti per migliorare il codice\n     */\n    public static List<String> suggerisciMiglioramenti(String codice) {\n        List<String> suggerimenti = new ArrayList<>();\n\n        // Esempio di suggerimenti\n        if (calcolaLunghezzaMediaRighe(codice) > 80) {",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -972,7 +1008,7 @@
         "class": ""
     },
     {
-        "id": 109,
+        "id": 113,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\n// Esempio di suggerimenti\n        if (calcolaLunghezzaMediaRighe(codice) > 80) {\n            suggerimenti.add(\"Considera di ridurre la lunghezza media delle righe.\");\n        }\n        if (contaCommenti(codice) < 5) {\n            suggerimenti.add(\"Aggiungi più commenti per migliorare la leggibilità.\");\n        }\n        if (calcolaComplessitaCiclomatica(codice) > 10) {\n            suggerimenti.add(\"Riduci la complessità ciclomatica suddividendo il codice in metodi più piccoli.\");\n        }",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -981,7 +1017,7 @@
         "class": ""
     },
     {
-        "id": 110,
+        "id": 114,
         "text": "// File: my_project/classi_java_custom\\IspezionatoreCodice.java\nsuggerimenti.add(\"Riduci la complessità ciclomatica suddividendo il codice in metodi più piccoli.\");\n        }\n\n        return suggerimenti;\n    }",
         "source": "my_project/classi_java_custom\\IspezionatoreCodice.java",
         "type": "code",
@@ -990,7 +1026,7 @@
         "class": ""
     },
     {
-        "id": 111,
+        "id": 115,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\nClasse: MetricheAgili\npackage classi_java_custom;\n\nimport javax.xml.transform.dom.DOMSource;\nimport javax.xml.transform.stream.StreamResult;\nimport org.w3c.dom.Document;\nimport org.w3c.dom.Element;\n\npublic class MetricheAgili {\n\n    /**\n     * Calcola il Velocity Score adattivo\n     * @param sprintData Dati storici degli sprint\n     * @param fattoreComplessità [1-5]\n     * @return Velocity predittivo con deviazione standard\n     */\n    public static double calcolaVelocityScore(List<Double> sprintData, int fattoreComplessità) {",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -999,7 +1035,7 @@
         "class": "MetricheAgili\n"
     },
     {
-        "id": 112,
+        "id": 116,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\n*/\n    public static double calcolaVelocityScore(List<Double> sprintData, int fattoreComplessità) {\n        if (sprintData == null || sprintData.isEmpty()) {\n            throw new IllegalArgumentException(\"I dati degli sprint non possono essere nulli o vuoti.\");\n        }\n\n        // Calcola la media dei dati storici degli sprint\n        double mediaVelocity = sprintData.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);\n\n        // Calcola la deviazione standard",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1008,7 +1044,7 @@
         "class": ""
     },
     {
-        "id": 113,
+        "id": 117,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\n// Calcola la deviazione standard\n        double deviazioneStandard = Math.sqrt(sprintData.stream()\n                .mapToDouble(value -> Math.pow(value - mediaVelocity, 2))\n                .sum() / sprintData.size());\n\n        // Adatta il Velocity Score in base al fattore di complessità\n        double velocityScore = mediaVelocity * (1 + (fattoreComplessità - 3) * 0.1);\n\n        System.out.println(\"Velocity Score: \" + velocityScore);",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1017,7 +1053,7 @@
         "class": ""
     },
     {
-        "id": 114,
+        "id": 118,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\nSystem.out.println(\"Velocity Score: \" + velocityScore);\n        System.out.println(\"Deviazione Standard: \" + deviazioneStandard);\n\n        return velocityScore;\n    }\n\n    /**\n     * Genera il rapporto di maturità agile\n     * @param metriche Mappa di metriche chiave\n     * @return Rapporto strutturato in XML\n     */\n    public static String generaRapportoMaturita(Map<String, Double> metriche) {\n        try {\n            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1026,7 +1062,7 @@
         "class": ""
     },
     {
-        "id": 115,
+        "id": 119,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\ntry {\n            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();\n            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();\n\n            // Creazione del documento XML\n            Document doc = docBuilder.newDocument();\n            Element rootElement = doc.createElement(\"RapportoMaturitaAgile\");\n            doc.appendChild(rootElement);\n\n            // Aggiunta delle metriche al rapporto",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1035,7 +1071,7 @@
         "class": ""
     },
     {
-        "id": 116,
+        "id": 120,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\ndoc.appendChild(rootElement);\n\n            // Aggiunta delle metriche al rapporto\n            for (Map.Entry<String, Double> entry : metriche.entrySet()) {\n                Element metricaElement = doc.createElement(\"Metrica\");\n                metricaElement.setAttribute(\"nome\", entry.getKey());\n                metricaElement.setAttribute(\"valore\", entry.getValue().toString());\n                rootElement.appendChild(metricaElement);\n            }",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1044,7 +1080,7 @@
         "class": ""
     },
     {
-        "id": 117,
+        "id": 121,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\nrootElement.appendChild(metricaElement);\n            }\n\n            // Trasformazione del documento XML in stringa\n            TransformerFactory transformerFactory = TransformerFactory.newInstance();\n            Transformer transformer = transformerFactory.newTransformer();\n            transformer.setOutputProperty(OutputKeys.INDENT, \"yes\");\n            DOMSource source = new DOMSource(doc);\n            StreamResult result = new StreamResult(new StringWriter());",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1053,7 +1089,7 @@
         "class": ""
     },
     {
-        "id": 118,
+        "id": 122,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\nDOMSource source = new DOMSource(doc);\n            StreamResult result = new StreamResult(new StringWriter());\n            transformer.transform(source, result);\n\n            return result.getWriter().toString();\n        } catch (Exception e) {\n            throw new RuntimeException(\"Errore durante la generazione del rapporto di maturità agile\", e);\n        }\n    }\n\n    /**\n     * Calcola il Lead Time medio\n     * @param leadTimes Lista dei tempi di lead\n     * @return Lead Time medio\n     */",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1062,7 +1098,7 @@
         "class": ""
     },
     {
-        "id": 119,
+        "id": 123,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\n* Calcola il Lead Time medio\n     * @param leadTimes Lista dei tempi di lead\n     * @return Lead Time medio\n     */\n    public static double calcolaLeadTimeMedio(List<Double> leadTimes) {\n        if (leadTimes == null || leadTimes.isEmpty()) {\n            throw new IllegalArgumentException(\"I tempi di lead non possono essere nulli o vuoti.\");\n        }\n\n        return leadTimes.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);\n    }\n\n    /**",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1071,7 +1107,7 @@
         "class": ""
     },
     {
-        "id": 120,
+        "id": 124,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\n}\n\n        return leadTimes.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);\n    }\n\n    /**\n     * Analizza la qualità del codice basata su metriche chiave\n     * @param metriche Mappa di metriche chiave\n     * @return Analisi della qualità del codice\n     */\n    public static String analizzaQualitaCodice(Map<String, Double> metriche) {\n        // Esempio di analisi basata su metriche chiave\n        double codeCoverage = metriche.getOrDefault(\"CodeCoverage\", 0.0);",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1080,7 +1116,7 @@
         "class": ""
     },
     {
-        "id": 121,
+        "id": 125,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\ndouble codeCoverage = metriche.getOrDefault(\"CodeCoverage\", 0.0);\n        double codeComplexity = metriche.getOrDefault(\"CodeComplexity\", 0.0);\n        double bugDensity = metriche.getOrDefault(\"BugDensity\", 0.0);\n\n        StringBuilder analisi = new StringBuilder();\n        analisi.append(\"Analisi della qualità del codice:\\n\");\n        analisi.append(\"Copertura del codice: \").append(codeCoverage).append(\"%\\n\");\n        analisi.append(\"Complessità del codice: \").append(codeComplexity).append(\"\\n\");",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1089,7 +1125,7 @@
         "class": ""
     },
     {
-        "id": 122,
+        "id": 126,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\nanalisi.append(\"Complessità del codice: \").append(codeComplexity).append(\"\\n\");\n        analisi.append(\"Densità di bug: \").append(bugDensity).append(\" bug/KLOC\\n\");\n\n        if (codeCoverage < 80) {\n            analisi.append(\"Suggerimento: Aumentare la copertura del codice.\\n\");\n        }\n        if (codeComplexity > 10) {\n            analisi.append(\"Suggerimento: Ridurre la complessità del codice.\\n\");\n        }\n        if (bugDensity > 0.5) {",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1098,7 +1134,7 @@
         "class": ""
     },
     {
-        "id": 123,
+        "id": 127,
         "text": "// File: my_project/classi_java_custom\\MetricheAgili.java\nanalisi.append(\"Suggerimento: Ridurre la complessità del codice.\\n\");\n        }\n        if (bugDensity > 0.5) {\n            analisi.append(\"Suggerimento: Ridurre la densità di bug.\\n\");\n        }\n\n        return analisi.toString();\n    }",
         "source": "my_project/classi_java_custom\\MetricheAgili.java",
         "type": "code",
@@ -1107,7 +1143,7 @@
         "class": ""
     },
     {
-        "id": 124,
+        "id": 128,
         "text": "// File: my_project/classi_java_custom\\MetricheProgettoSegrete.java\nClasse: MetricheProgettoSegrete\n// 2. Classe per il calcolo delle metriche di progetto riservate\npackage classi_java_custom;\npublic class MetricheProgettoSegrete {\n    /**\n     * Calcola l'indice di maturità tecnologica (IMT) secondo i parametri aziendali\n     * @param complessita Valori [1-5] da matrice di valutazione interna\n     * @param technicalDebt Ore di debito tecnico\n     * @param coperturaTest Percentuale di test automatizzati\n     * @return Valore IMT normalizzato\n     */",
         "source": "my_project/classi_java_custom\\MetricheProgettoSegrete.java",
         "type": "code",
@@ -1116,7 +1152,7 @@
         "class": "MetricheProgettoSegrete\n"
     },
     {
-        "id": 125,
+        "id": 129,
         "text": "// File: my_project/classi_java_custom\\MetricheProgettoSegrete.java\n* @param coperturaTest Percentuale di test automatizzati\n     * @return Valore IMT normalizzato\n     */\n    public static double calcolaIMT(int[] complessita, int technicalDebt, double coperturaTest) {\n        if (complessita == null || complessita.length == 0) return 0.0;\n        \n        double complessitaMedia = 0;\n        for (int val : complessita) {\n            complessitaMedia += val;\n        }\n        complessitaMedia /= complessita.length;",
         "source": "my_project/classi_java_custom\\MetricheProgettoSegrete.java",
         "type": "code",
@@ -1125,7 +1161,7 @@
         "class": ""
     },
     {
-        "id": 126,
+        "id": 130,
         "text": "// File: my_project/classi_java_custom\\MetricheProgettoSegrete.java\ncomplessitaMedia += val;\n        }\n        complessitaMedia /= complessita.length;\n        \n        double normalizzatoDebitoTecnico = Math.max(0, 100 - technicalDebt) / 100.0;\n        double normalizzatoCopertura = coperturaTest / 100.0;\n        \n        return (0.5 * complessitaMedia + 0.3 * normalizzatoDebitoTecnico + 0.2 * normalizzatoCopertura);\n    }\n\n    /**\n     * Genera il codice di stato progetto secondo il formato aziendale\n     * @param imt Valore IMT calcolato",
         "source": "my_project/classi_java_custom\\MetricheProgettoSegrete.java",
         "type": "code",
@@ -1134,7 +1170,7 @@
         "class": ""
     },
     {
-        "id": 127,
+        "id": 131,
         "text": "// File: my_project/classi_java_custom\\MetricheProgettoSegrete.java\n}\n\n    /**\n     * Genera il codice di stato progetto secondo il formato aziendale\n     * @param imt Valore IMT calcolato\n     * @param rischi Valutazione rischi da 1 a 10\n     * @return Codice di stato criptico (es: \"AX3-R9\")\n     */\n    public static String generaCodiceStato(double imt, int rischi) {\n        String[] prefissi = {\"AX\", \"BX\", \"CX\", \"DX\", \"EX\"};\n        int indicePrefisso = Math.min((int) (imt * prefissi.length), prefissi.length - 1);",
         "source": "my_project/classi_java_custom\\MetricheProgettoSegrete.java",
         "type": "code",
@@ -1143,7 +1179,7 @@
         "class": ""
     },
     {
-        "id": 128,
+        "id": 132,
         "text": "// File: my_project/classi_java_custom\\MetricheProgettoSegrete.java\nint indicePrefisso = Math.min((int) (imt * prefissi.length), prefissi.length - 1);\n        \n        return String.format(\"%s%d-R%d\", prefissi[indicePrefisso], (int) (imt * 10), rischi);\n    }\n}",
         "source": "my_project/classi_java_custom\\MetricheProgettoSegrete.java",
         "type": "code",
@@ -1152,7 +1188,7 @@
         "class": ""
     },
     {
-        "id": 129,
+        "id": 133,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\nClasse: OrchestratoreTest\npackage classi_java_custom;\n\nimport java.util.List;\nimport java.util.Map;\nimport java.util.ArrayList;\nimport java.util.Comparator;\nimport java.util.stream.Collectors;\n\npublic class OrchestratoreTest {\n\n    /**\n     * Pianifica esecuzione test in base alla criticalità\n     * @param suiteTest Lista dei test disponibili\n     * @param priorita Mappa delle priorità\n     * @return Sequenza ottimizzata di esecuzione\n     */",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1161,7 +1197,7 @@
         "class": "OrchestratoreTest\n"
     },
     {
-        "id": 130,
+        "id": 134,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\n* @param priorita Mappa delle priorità\n     * @return Sequenza ottimizzata di esecuzione\n     */\n    public static List<String> pianificaEsecuzioneTest(List<String> suiteTest, Map<String, Integer> priorita) {\n        // Ordina i test in base alla priorità\n        return suiteTest.stream()\n                .sorted(Comparator.comparingInt(test -> priorita.getOrDefault(test, 0)))\n                .collect(Collectors.toList());\n    }\n\n    /**\n     * Analizza la copertura del codice post-test",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1170,7 +1206,7 @@
         "class": ""
     },
     {
-        "id": 131,
+        "id": 135,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\n.collect(Collectors.toList());\n    }\n\n    /**\n     * Analizza la copertura del codice post-test\n     * @param risultatiTest Dettaglio esecuzione\n     * @param codiceSorgente Codice analizzato\n     * @return Report di copertura avanzato\n     */\n    public static String analizzaCopertura(List<TestResult> risultatiTest, String codiceSorgente) {\n        // Esempio di strumentazione code avanzato (simulato)\n        StringBuilder report = new StringBuilder();",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1179,7 +1215,7 @@
         "class": ""
     },
     {
-        "id": 132,
+        "id": 136,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\n// Esempio di strumentazione code avanzato (simulato)\n        StringBuilder report = new StringBuilder();\n        report.append(\"Report di copertura avanzato:\\n\");\n\n        // Calcola la copertura del codice\n        int lineeTotali = codiceSorgente.split(\"\\n\").length;\n        int lineeCoperte = risultatiTest.stream()\n                .mapToInt(TestResult::getLineeCoperte)\n                .sum();\n\n        double coperturaPercentuale = (double) lineeCoperte / lineeTotali * 100;",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1188,7 +1224,7 @@
         "class": ""
     },
     {
-        "id": 133,
+        "id": 137,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\n.sum();\n\n        double coperturaPercentuale = (double) lineeCoperte / lineeTotali * 100;\n        report.append(\"Copertura del codice: \").append(coperturaPercentuale).append(\"%\\n\");\n\n        // Aggiungi dettagli sui test falliti\n        List<TestResult> testFalliti = risultatiTest.stream()\n                .filter(TestResult::isFailed)\n                .collect(Collectors.toList());\n\n        if (!testFalliti.isEmpty()) {\n            report.append(\"Test falliti:\\n\");",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1197,7 +1233,7 @@
         "class": ""
     },
     {
-        "id": 134,
+        "id": 138,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\nif (!testFalliti.isEmpty()) {\n            report.append(\"Test falliti:\\n\");\n            for (TestResult test : testFalliti) {\n                report.append(\"Test: \").append(test.getNomeTest()).append(\" - Motivo: \").append(test.getMotivoFallimento()).append(\"\\n\");\n            }\n        } else {\n            report.append(\"Tutti i test sono passati con successo.\\n\");\n        }\n\n        return report.toString();\n    }\n\n    /**\n     * Genera un report dettagliato dei test",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1206,7 +1242,7 @@
         "class": ""
     },
     {
-        "id": 135,
+        "id": 139,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\n}\n\n        return report.toString();\n    }\n\n    /**\n     * Genera un report dettagliato dei test\n     * @param risultatiTest Dettaglio esecuzione\n     * @return Report dettagliato dei test\n     */\n    public static String generaReportTest(List<TestResult> risultatiTest) {\n        StringBuilder report = new StringBuilder();\n        report.append(\"Report dettagliato dei test:\\n\");\n\n        for (TestResult test : risultatiTest) {\n            report.append(\"Test: \").append(test.getNomeTest())",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1215,7 +1251,7 @@
         "class": ""
     },
     {
-        "id": 136,
+        "id": 140,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\nfor (TestResult test : risultatiTest) {\n            report.append(\"Test: \").append(test.getNomeTest())\n                    .append(\" - Stato: \").append(test.isFailed() ? \"Fallito\" : \"Passato\")\n                    .append(\" - Linee coperte: \").append(test.getLineeCoperte())\n                    .append(\"\\n\");\n        }\n\n        return report.toString();\n    }\n\n    /**\n     * Identifica i test falliti\n     * @param risultatiTest Dettaglio esecuzione\n     * @return Lista dei test falliti\n     */",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1224,7 +1260,7 @@
         "class": ""
     },
     {
-        "id": 137,
+        "id": 141,
         "text": "// File: my_project/classi_java_custom\\OrchestratoreTest.java\n* Identifica i test falliti\n     * @param risultatiTest Dettaglio esecuzione\n     * @return Lista dei test falliti\n     */\n    public static List<String> identificaTestFalliti(List<TestResult> risultatiTest) {\n        return risultatiTest.stream()\n                .filter(TestResult::isFailed)\n                .map(TestResult::getNomeTest)\n                .collect(Collectors.toList());\n    }\n}",
         "source": "my_project/classi_java_custom\\OrchestratoreTest.java",
         "type": "code",
@@ -1233,7 +1269,7 @@
         "class": ""
     },
     {
-        "id": 138,
+        "id": 142,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\nClasse: OttimizzatoreQuery\npackage classi_java_custom;\n\n\npublic class OttimizzatoreQuery {\n\n   /**\n     * Applica le regole di ottimizzazione del motore \"TurboSQL\"\n     * @param query Query SQL originale\n     * @param schema Struttura del database\n     * @return Query ottimizzata con hint speciali\n     */\n    public static String ottimizzaQuery(String query, String schema) {\n        // Esempio di ottimizzazione: aggiungere hint per l'uso di indici\n        String ottimizzata = query;",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1242,7 +1278,7 @@
         "class": "OttimizzatoreQuery\n"
     },
     {
-        "id": 139,
+        "id": 143,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\n// Esempio di ottimizzazione: aggiungere hint per l'uso di indici\n        String ottimizzata = query;\n\n        // Riconoscimento di pattern per ottimizzare le query\n        Pattern selectPattern = Pattern.compile(\"(?i)SELECT\\\\s+.*?\\\\s+FROM\\\\s+(\\\\w+)\", Pattern.MULTILINE);\n        Matcher matcher = selectPattern.matcher(query);\n\n        while (matcher.find()) {\n            String tableName = matcher.group(1);\n            // Aggiungi hint per l'uso di indici",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1251,7 +1287,7 @@
         "class": ""
     },
     {
-        "id": 140,
+        "id": 144,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\nString tableName = matcher.group(1);\n            // Aggiungi hint per l'uso di indici\n            String hint = \"/*+ INDEX(\" + tableName + \"_idx) */ \";\n            ottimizzata = ottimizzata.replaceFirst(\"FROM\\\\s+\" + tableName, \"FROM \" + hint + tableName);\n        }\n\n        // Altre ottimizzazioni possono essere aggiunte qui\n        return ottimizzata;\n    }\n\n    /**\n     * Calcola il punteggio di efficienza della query\n     * @param query Plan di esecuzione",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1260,7 +1296,7 @@
         "class": ""
     },
     {
-        "id": 141,
+        "id": 145,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\n}\n\n    /**\n     * Calcola il punteggio di efficienza della query\n     * @param query Plan di esecuzione\n     * @return Punteggio TQE (Total Query Efficiency)\n     */\n    public static double calcolaTQE(String query) {\n        // Esempio di calcolo del punteggio TQE basato su un modello di machine learning interno\n        // Supponiamo che il modello restituisca un punteggio tra 0 e 100\n        // Questo è un esempio semplificato; in pratica, si potrebbe usare un modello ML reale",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1269,7 +1305,7 @@
         "class": ""
     },
     {
-        "id": 142,
+        "id": 146,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\n// Questo è un esempio semplificato; in pratica, si potrebbe usare un modello ML reale\n\n        // Analisi del piano di esecuzione (simulato)\n        int numJoins = countOccurrences(query, \"JOIN\");\n        int numSubqueries = countOccurrences(query, \"SELECT\");\n        int numIndexHints = countOccurrences(query, \"INDEX\");\n\n        // Calcolo del punteggio TQE\n        double tqe = 100.0 - (numJoins * 5) - (numSubqueries * 3) + (numIndexHints * 7);\n        return Math.max(0, Math.min(100, tqe));\n    }",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1278,7 +1314,7 @@
         "class": ""
     },
     {
-        "id": 143,
+        "id": 147,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\nreturn Math.max(0, Math.min(100, tqe));\n    }\n\n    /**\n     * Conta le occorrenze di una parola chiave nella query\n     * @param query Query SQL\n     * @param keyword Parola chiave da contare\n     * @return Numero di occorrenze\n     */\n    private static int countOccurrences(String query, String keyword) {\n        Pattern pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);\n        Matcher matcher = pattern.matcher(query);\n        int count = 0;\n        while (matcher.find()) {",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1287,7 +1323,7 @@
         "class": ""
     },
     {
-        "id": 144,
+        "id": 148,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\nMatcher matcher = pattern.matcher(query);\n        int count = 0;\n        while (matcher.find()) {\n            count++;\n        }\n        return count;\n    }\n\n    /**\n     * Suggerisce indici basati sull'analisi della query\n     * @param query Query SQL\n     * @return Suggerimenti per indici\n     */\n    public static String suggerisciIndici(String query) {\n        // Esempio di suggerimento di indici basato su pattern riconosciuti",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1296,7 +1332,7 @@
         "class": ""
     },
     {
-        "id": 145,
+        "id": 149,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\n// Esempio di suggerimento di indici basato su pattern riconosciuti\n        Pattern selectPattern = Pattern.compile(\"(?i)SELECT\\\\s+.*?\\\\s+FROM\\\\s+(\\\\w+)\", Pattern.MULTILINE);\n        Matcher matcher = selectPattern.matcher(query);\n\n        StringBuilder suggerimenti = new StringBuilder();\n        while (matcher.find()) {\n            String tableName = matcher.group(1);\n            suggerimenti.append(\"Considera di aggiungere un indice su \").append(tableName).append(\".\\n\");\n        }",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1305,7 +1341,7 @@
         "class": ""
     },
     {
-        "id": 146,
+        "id": 150,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\nsuggerimenti.append(\"Considera di aggiungere un indice su \").append(tableName).append(\".\\n\");\n        }\n\n        return suggerimenti.toString();\n    }\n\n    /**\n     * Analizza la complessità della query\n     * @param query Query SQL\n     * @return Livello di complessità\n     */\n    public static String analizzaComplessita(String query) {\n        int numJoins = countOccurrences(query, \"JOIN\");\n        int numSubqueries = countOccurrences(query, \"SELECT\");",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1314,7 +1350,7 @@
         "class": ""
     },
     {
-        "id": 147,
+        "id": 151,
         "text": "// File: my_project/classi_java_custom\\OttimizzatoreQuery.java\nint numJoins = countOccurrences(query, \"JOIN\");\n        int numSubqueries = countOccurrences(query, \"SELECT\");\n\n        if (numJoins > 5 || numSubqueries > 3) {\n            return \"Complessità elevata\";\n        } else if (numJoins > 2 || numSubqueries > 1) {\n            return \"Complessità media\";\n        } else {\n            return \"Complessità bassa\";\n        }\n    }\n}",
         "source": "my_project/classi_java_custom\\OttimizzatoreQuery.java",
         "type": "code",
@@ -1323,7 +1359,7 @@
         "class": ""
     },
     {
-        "id": 148,
+        "id": 152,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\nClasse: SupervisorePerformance\npackage classi_java_custom;\n\nimport java.util.List;\nimport java.util.Map;\nimport java.util.ArrayList;\nimport java.util.stream.Collectors;\n\npublic class SupervisorePerformance {\n\n    /**\n     * Calcola l'indice di salute del sistema (SHI)\n     * @param metriche Dati in tempo reale\n     * @return Valore SHI con trend\n     */\n    public static double calcolaSHI(Map<String, Double> metriche) {\n        // Esempio di calcolo dell'indice di salute del sistema (SHI)",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1332,7 +1368,7 @@
         "class": "SupervisorePerformance\n"
     },
     {
-        "id": 149,
+        "id": 153,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\n// Esempio di calcolo dell'indice di salute del sistema (SHI)\n        double cpuUsage = metriche.getOrDefault(\"cpuUsage\", 0.0);\n        double memoryUsage = metriche.getOrDefault(\"memoryUsage\", 0.0);\n        double responseTime = metriche.getOrDefault(\"responseTime\", 0.0);\n        double errorRate = metriche.getOrDefault(\"errorRate\", 0.0);\n\n        // Formula pesata con coefficienti dinamici\n        double weightCpu = 0.4;\n        double weightMemory = 0.3;\n        double weightResponse = 0.2;",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1341,7 +1377,7 @@
         "class": ""
     },
     {
-        "id": 150,
+        "id": 154,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\ndouble weightCpu = 0.4;\n        double weightMemory = 0.3;\n        double weightResponse = 0.2;\n        double weightError = 0.1;\n\n        double shi = (cpuUsage * weightCpu) + (memoryUsage * weightMemory) +\n                     (responseTime * weightResponse) + (errorRate * weightError);\n\n        // Normalizza il valore SHI tra 0 e 100\n        shi = Math.max(0, Math.min(100, shi));\n\n        System.out.println(\"SHI: \" + shi);\n        return shi;\n    }\n\n    /**",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1350,7 +1386,7 @@
         "class": ""
     },
     {
-        "id": 151,
+        "id": 155,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\nshi = Math.max(0, Math.min(100, shi));\n\n        System.out.println(\"SHI: \" + shi);\n        return shi;\n    }\n\n    /**\n     * Genera allarmi predittivi basati su machine learning\n     * @param datiStorici Serie temporale di metriche\n     * @return Lista di allarmi con priorità\n     */\n    public static List<String> generaAllarmiPredittivi(List<Double> datiStorici) {\n        // Esempio di generazione di allarmi predittivi utilizzando un modello LSTM (simulato)",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1359,7 +1395,7 @@
         "class": ""
     },
     {
-        "id": 152,
+        "id": 156,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\n// Esempio di generazione di allarmi predittivi utilizzando un modello LSTM (simulato)\n        List<String> allarmi = new ArrayList<>();\n\n        // Simulazione di un modello LSTM che prevede anomalie\n        for (int i = 0; i < datiStorici.size(); i++) {\n            double valore = datiStorici.get(i);\n            if (valore > 80) { // Soglia di allarme simulata\n                allarmi.add(\"Allarme: Valore anomalo rilevato al tempo \" + i);\n            }\n        }\n\n        return allarmi;\n    }",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1368,7 +1404,7 @@
         "class": ""
     },
     {
-        "id": 153,
+        "id": 157,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\n}\n        }\n\n        return allarmi;\n    }\n\n    /**\n     * Analizza le anomalie nelle metriche\n     * @param metriche Dati in tempo reale\n     * @return Report delle anomalie rilevate\n     */\n    public static String analizzaAnomalie(Map<String, Double> metriche) {\n        StringBuilder report = new StringBuilder();\n        report.append(\"Report delle anomalie rilevate:\\n\");\n\n        if (metriche.getOrDefault(\"cpuUsage\", 0.0) > 90) {\n            report.append(\"Anomalia: CPU usage elevato.\\n\");",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1377,7 +1413,7 @@
         "class": ""
     },
     {
-        "id": 154,
+        "id": 158,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\nif (metriche.getOrDefault(\"cpuUsage\", 0.0) > 90) {\n            report.append(\"Anomalia: CPU usage elevato.\\n\");\n        }\n        if (metriche.getOrDefault(\"memoryUsage\", 0.0) > 85) {\n            report.append(\"Anomalia: Memory usage elevato.\\n\");\n        }\n        if (metriche.getOrDefault(\"responseTime\", 0.0) > 500) {\n            report.append(\"Anomalia: Response time elevato.\\n\");\n        }\n        if (metriche.getOrDefault(\"errorRate\", 0.0) > 5) {",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1386,7 +1422,7 @@
         "class": ""
     },
     {
-        "id": 155,
+        "id": 159,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\n}\n        if (metriche.getOrDefault(\"errorRate\", 0.0) > 5) {\n            report.append(\"Anomalia: Error rate elevato.\\n\");\n        }\n\n        return report.toString();\n    }\n\n    /**\n     * Visualizza i trend delle metriche\n     * @param datiStorici Serie temporale di metriche\n     * @return Visualizzazione dei trend\n     */\n    public static String visualizzaTrend(List<Double> datiStorici) {\n        StringBuilder trendReport = new StringBuilder();",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1395,7 +1431,7 @@
         "class": ""
     },
     {
-        "id": 156,
+        "id": 160,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\npublic static String visualizzaTrend(List<Double> datiStorici) {\n        StringBuilder trendReport = new StringBuilder();\n        trendReport.append(\"Trend delle metriche:\\n\");\n\n        // Esempio di visualizzazione dei trend (semplificato)\n        double media = datiStorici.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);\n        trendReport.append(\"Media: \").append(media).append(\"\\n\");\n\n        double varianza = datiStorici.stream()",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1404,7 +1440,7 @@
         "class": ""
     },
     {
-        "id": 157,
+        "id": 161,
         "text": "// File: my_project/classi_java_custom\\SupervisorePerformance.java\ntrendReport.append(\"Media: \").append(media).append(\"\\n\");\n\n        double varianza = datiStorici.stream()\n                .mapToDouble(value -> Math.pow(value - media, 2))\n                .sum() / datiStorici.size();\n        trendReport.append(\"Varianza: \").append(varianza).append(\"\\n\");\n\n        return trendReport.toString();\n    }\n}",
         "source": "my_project/classi_java_custom\\SupervisorePerformance.java",
         "type": "code",
@@ -1413,7 +1449,7 @@
         "class": ""
     },
     {
-        "id": 158,
+        "id": 162,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\nClasse: TrasformatoreDati\npackage classi_java_custom;\n\nimport org.json.JSONObject;\nimport javax.crypto.Cipher;\nimport javax.crypto.KeyGenerator;\nimport javax.crypto.SecretKey;\nimport javax.crypto.spec.SecretKeySpec;\nimport java.nio.charset.StandardCharsets;\nimport java.util.Base64;\n\npublic class TrasformatoreDati {\n\n    private static final String ALGORITMO = \"AES\";\n\n    /**\n     * Applica la trasformazione \"ShadowMask\" ai dati sensibili\n     * @param dati Originali in formato JSON",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1422,7 +1458,7 @@
         "class": "TrasformatoreDati\n"
     },
     {
-        "id": 159,
+        "id": 163,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\n/**\n     * Applica la trasformazione \"ShadowMask\" ai dati sensibili\n     * @param dati Originali in formato JSON\n     * @return Dati anonimizzati con preservazione formati\n     */\n    public static String applicaShadowMask(String dati) {\n        try {\n            // Genera una chiave segreta\n            KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITMO);\n            keyGen.init(128);\n            SecretKey chiaveSegreta = keyGen.generateKey();",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1431,7 +1467,7 @@
         "class": ""
     },
     {
-        "id": 160,
+        "id": 164,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\nkeyGen.init(128);\n            SecretKey chiaveSegreta = keyGen.generateKey();\n            String chiaveBase64 = Base64.getEncoder().encodeToString(chiaveSegreta.getEncoded());\n\n            // Cifra i dati\n            Cipher cipher = Cipher.getInstance(ALGORITMO);\n            cipher.init(Cipher.ENCRYPT_MODE, chiaveSegreta);\n            byte[] datiCifrati = cipher.doFinal(dati.getBytes(StandardCharsets.UTF_8));",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1440,7 +1476,7 @@
         "class": ""
     },
     {
-        "id": 161,
+        "id": 165,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\nbyte[] datiCifrati = cipher.doFinal(dati.getBytes(StandardCharsets.UTF_8));\n            String datiCifratiBase64 = Base64.getEncoder().encodeToString(datiCifrati);\n\n            // Crea un JSON con i dati cifrati e la chiave\n            JSONObject json = new JSONObject();\n            json.put(\"dati\", datiCifratiBase64);\n            json.put(\"chiave\", chiaveBase64);\n\n            return json.toString();\n        } catch (Exception e) {",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1449,7 +1485,7 @@
         "class": ""
     },
     {
-        "id": 162,
+        "id": 166,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\njson.put(\"chiave\", chiaveBase64);\n\n            return json.toString();\n        } catch (Exception e) {\n            throw new RuntimeException(\"Errore durante l'applicazione della trasformazione ShadowMask\", e);\n        }\n    }\n\n    /**\n     * Inverte la trasformazione ShadowMask\n     * @param datiTrasformati Dati mascherati\n     * @param chiavePrivata Chiave di ri-identificazione\n     * @return Dati originali\n     */",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1458,7 +1494,7 @@
         "class": ""
     },
     {
-        "id": 163,
+        "id": 167,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\n* @param chiavePrivata Chiave di ri-identificazione\n     * @return Dati originali\n     */\n    public static String rimuoviShadowMask(String datiTrasformati, String chiavePrivata) {\n        try {\n            // Decodifica il JSON\n            JSONObject json = new JSONObject(datiTrasformati);\n            String datiCifratiBase64 = json.getString(\"dati\");\n            String chiaveBase64 = json.getString(\"chiave\");\n\n            // Decodifica la chiave",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1467,7 +1503,7 @@
         "class": ""
     },
     {
-        "id": 164,
+        "id": 168,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\nString chiaveBase64 = json.getString(\"chiave\");\n\n            // Decodifica la chiave\n            byte[] chiaveDecodificata = Base64.getDecoder().decode(chiaveBase64);\n            SecretKey chiaveSegreta = new SecretKeySpec(chiaveDecodificata, 0, chiaveDecodificata.length, ALGORITMO);\n\n            // Decifra i dati\n            Cipher cipher = Cipher.getInstance(ALGORITMO);\n            cipher.init(Cipher.DECRYPT_MODE, chiaveSegreta);",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1476,7 +1512,7 @@
         "class": ""
     },
     {
-        "id": 165,
+        "id": 169,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\nCipher cipher = Cipher.getInstance(ALGORITMO);\n            cipher.init(Cipher.DECRYPT_MODE, chiaveSegreta);\n            byte[] datiDecifrati = cipher.doFinal(Base64.getDecoder().decode(datiCifratiBase64));\n\n            return new String(datiDecifrati, StandardCharsets.UTF_8);\n        } catch (Exception e) {\n            throw new RuntimeException(\"Errore durante l'inversione della trasformazione ShadowMask\", e);\n        }\n    }\n\n    /**",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1485,7 +1521,7 @@
         "class": ""
     },
     {
-        "id": 166,
+        "id": 170,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\n}\n    }\n\n    /**\n     * Genera una chiave privata per la trasformazione ShadowMask\n     * @return Chiave privata in formato Base64\n     */\n    public static String generaChiavePrivata() {\n        try {\n            KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITMO);\n            keyGen.init(128);\n            SecretKey chiaveSegreta = keyGen.generateKey();\n            return Base64.getEncoder().encodeToString(chiaveSegreta.getEncoded());\n        } catch (Exception e) {",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1494,7 +1530,7 @@
         "class": ""
     },
     {
-        "id": 167,
+        "id": 171,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\nreturn Base64.getEncoder().encodeToString(chiaveSegreta.getEncoded());\n        } catch (Exception e) {\n            throw new RuntimeException(\"Errore durante la generazione della chiave privata\", e);\n        }\n    }\n\n    /**\n     * Verifica l'integrità dei dati trasformati\n     * @param datiTrasformati Dati mascherati\n     * @param chiavePrivata Chiave di ri-identificazione\n     * @return True se i dati sono integri, altrimenti false\n     */",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
@@ -1503,7 +1539,7 @@
         "class": ""
     },
     {
-        "id": 168,
+        "id": 172,
         "text": "// File: my_project/classi_java_custom\\TrasformatoreDati.java\n* @param chiavePrivata Chiave di ri-identificazione\n     * @return True se i dati sono integri, altrimenti false\n     */\n    public static boolean verificaIntegrita(String datiTrasformati, String chiavePrivata) {\n        try {\n            // Prova a decifrare i dati\n            rimuoviShadowMask(datiTrasformati, chiavePrivata);\n            return true;\n        } catch (Exception e) {\n            return false;\n        }\n    }",
         "source": "my_project/classi_java_custom\\TrasformatoreDati.java",
         "type": "code",
