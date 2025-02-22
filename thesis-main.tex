@@ -306,7 +306,7 @@ Quando l'utente sottopone una query:
     \item La domanda viene convertita in un vettore ad alta dimensionalità
     \item Il sistema cerca nel database vettoriale i chunk più simili alla query, calcolando la distanza tra i vettori utilizzando tecniche di confronto come la similarità coseno o la distanza euclidea.
     In \cref{fig:Esempio distanze chunk e query} è rappresentata, riducendo a due dimensioni lo spazio vettoriale, la distanza devi vettori più simili trovati nel database e la query.
-    \item Se trovate corrispondenze con uno score di similarità sufficiente, i chunk vengono recuperati.
+    \item Se trovate corrispondenze con un determinato \emph{score\_threshold}, i chunk vengono recuperati.
 \end{itemize}
 
 \begin{figure}[h]
@@ -315,6 +315,13 @@ Quando l'utente sottopone una query:
     \caption{Esempio di distanze tra chunk e query}  
     \label{fig:Esempio distanze chunk e query}
 \end{figure}
+
+\subsubsection{Calcolo dello \emph{score\_threshold}}
+In questo contesto, il parametro \texttt{score\_threshold} \cite{langchain-retriever-score-threshold} viene utilizzato per filtrare i chunk restituiti in base alla loro somiglianza con la query.
+La somiglianza viene tipicamente calcolata mediante la \emph{cosine similarity} tra le embedding della query e quelle dei documenti presenti nel database.
+Ogni chunk viene associato a un punteggio che rappresenta il grado di somiglianza con la query, e solo i chunk con un determinato \texttt{score\_threshold} vengono restituiti.
+Per leggere questo parametro va prestata particolare attenzione al tipo di somiglianza calcolata,
+nella \emph{cosine similarity} il valore va da 0 è 1.
 \subsection{Fase 3: Aumento del Prompt}
 Il sistema \ac{RAG} arricchisce il Prompt dell'utente con le informazioni recuperate, fornendo al \ac{LLM} un contesto più ampio e dettagliato per generare una risposta coerente. In questo modo, il \ac{LLM} riceve un input contenente le informazioni relative alla risposta che dovrà generare. Unendo la sua base di conoscenza a queste informazioni esterne, riesce a rispondere in maniera molto più accurata e contestualizzata. Un Prompt aumentato con l'inserimento di Chunk è formato dai seguenti elementi:
 \begin{itemize}
@@ -356,7 +363,6 @@ Il sistema RAG è stato testato con della classi JAVA custom create appositament
 \subsubsection{Problema da affrontare:}
 Chiamate a più livelli di classi e metodi, dove il RAG potrebbe non essere in grado di estrapolare
 le informazione necessarie da inserire nel Prompt per ottenere dal LLM risposte coerenti con quanto richiesto.
-
 \section{Architettura del Sistema}
 \begin{figure}[H]
     \centering
@@ -443,7 +449,7 @@ Il dataset è composto dalle seguenti classi Java:
     \item[Altre classi java] Non strettamente correlate con le prime due utili per aumentare la base dati sul quale effettuare le ricerche e per testare la capacità di generalizzazione del sistema.
 \end{description}
 
-\section{Obiettivo base funzionamento RAG}
+\section{Risultato atteso caso d'uso RAG}
 DateUtilCustom.java e GiorniMagici.java sono strettamente correlate infatti GiorniMagici.java richiama metodi definiti in DateUtilCustom.java.
 Inizialmente andremo a testare il sistema RAG impostando come primo input la seguente query: 
 \begin{itemize}
@@ -476,7 +482,7 @@ public static String getMessaggioMagico(LocalDate datamagica) throws DateTimePar
 }
 \end{lstlisting}
 
-\subsection{Risultato Atteso}
+\subsection{Output Atteso}
 Il sistema RAG dovrebbe essere in grado di recuperare i chunk relativi ai metodi \texttt{segnaleWow} e \texttt{getMessaggioMagico} e di integrarli nel Prompt del LLM.
 Il modello, basandosi su queste informazioni, dovrebbe generare una risposta coerente e contestualizzata alla query iniziale.
 Nel caso specifico essendo il 14 Febbraio 2025 un venerdì,  la risposta corretta è:
@@ -599,7 +605,7 @@ Questa funzione identifica i nomi dei metodi e delle classi all'interno dei chun
     return "unknown_method"
 \end{lstlisting}
 
-\subsubsection{Aggiornamento Contesto Classe}
+\subsubsection{Metadato Class}
 Durante l'elaborazione dei file, è importante mantenere traccia del contesto delle classi.
 Questo viene fatto aggiornando dinamicamente il nome della classe corrente mentre si processano i chunk.
 In questo modo, ogni chunk può essere associato alla classe corretta.
@@ -615,8 +621,8 @@ for file_path in files:
         all_chunks.append({..., "class": current_class})
 \end{lstlisting}
 
-\subsubsection{Creazione file JSON}
-Il risultato finale del processo di chunking viene salvato in un file JSON chiamato \texttt{chunks.json}.
+\subsubsection{Creazione file json}
+Il risultato finale del processo di chunking viene salvato in un file json chiamato \texttt{chunks.json}.
 Questo file contiene la lista dei chunk, ognuno dei quali comprende i metadati come il percorso del file originale, la relativa classe, i metodi identificati e le linee di codice di inizio e fine.
 \'E stato inserito di default il campo \texttt{type} per identificare il tipo di chunk, in questo caso \texttt{code}.
 Questo dato apre la possibilità di estendere il sistema per supportare altri tipi di chunk, come testo libero o documentazione.
@@ -707,47 +713,72 @@ Questi embedding vengono poi utilizzati per creare un database FAISS, che permet
         search_type="similarity",  # Piu' efficace per il codice
         lambda_mult=0.5       # Bilancia diversita'/rilevanza
     )
-
     # 5. Stampa i risultati con relativo score
     for i, (doc, score) in enumerate(docs):
         print(f"Risultato {i+1} (Score: {score:.4f}):")
         print(doc.page_content)
         print("-" * 40)
     \end{lstlisting}
+LangChain fornisce un'interfaccia semplice per eseguire query semantiche sul database FAISS.
+\subsubsection{Parametri di ricerca}
+\begin{itemize}
+    \item \textbf{k}: Questo parametro definisce il numero di chunk da restituire in risposta a una query. In questo caso, \texttt{k=5} restituisce, se trovati, i 5 chunk più rilevanti.
+    \item \textbf{score\_threshold}: Questo parametro definisce il valore minimo di similarità richiesto per considerare un chunk come rilevante. Il parametro \texttt{score\_threshold} ripartisce i valori con una scala inversa rispetto alla cosine similarity. In questo esempio, filtrando chunk con un valore minore o uguale a 0.90 si ottengono chunk con un grado di somiglianza medio-bassa.
+    \item \textbf{search\_type}: Questo parametro definisce il tipo di ricerca da eseguire sul database FAISS. La scelta \texttt{search\_type="similarity"} (similarità del coseno) è efficace per il codice per tre motivi chiave:
+    \begin{itemize}
+        \item \textbf{Cerca somiglianze nella logica}, non nella forma: Ignora differenze come:
+        \begin{itemize}
+            \item Nomi variabili diversi (es. \texttt{data} vs \texttt{date})
+            \item Commenti o spaziature extra
+            \item Lunghezza del codice
+        \end{itemize}
+        \item \textbf{Trova funzioni equivalenti}: Riconosce che due metodi sono simili anche se:
+        \begin{itemize}
+            \item Usano librerie diverse ma fanno la stessa cosa
+            \item Hanno parametri leggermente diversi
+            \item Sono scritti in stili differenti
+        \end{itemize}
+        \item \textbf{Migliora la ricerca semantica}: Capisce che:
+        \begin{itemize}
+            \item \texttt{calcolaMedia()} e \texttt{getAverage()} possono essere equivalenti
+            \item Un costruttore e un metodo factory sono correlati
+            \item Un loop \texttt{for} e un loop \texttt{while} implementano la stessa logica
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
 
-    \subsubsection{Risultati con query base (senza alcun riferimento al metodo utilizzato all'interno di segnale Wow)}
+    \subsubsection{Chunk estratti con query base}
+    Testiamo il risultato con una query sintetica, senza alcun riferimento esplicito al metodo utilizzato all'interno di segnale Wow.
     \begin{itemize}
         \item \textbf{Query:} 
-            \newline
-                \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?''}
-            \newline
+            `Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?'
         \item \textbf{Output:}
-        viene restituito il chunk corretto con uno score di similarità di \textbf{0.7014}. Questo valore, basato sulla cosine similarity, non è particolarmente alto ma sufficiente per identificare il chunk corretto.
+        viene restituito il chunk corretto con uno score di similarità di \textbf{0.6457}. Questo valore non è particolarmente basso ma sufficiente per identificare il chunk corretto.
     \end{itemize}
     \paragraph{Nota:}
     È importante riscontrare che viene restituito un solo chunk nonostante \texttt{k=5}.
     Questo accade perché nessun altro chunk supera la soglia di similarità impostata.
     Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow()} richiama un metodo presente nella libreria \texttt{DateUtilCustom} che non viene estratto dal Dataset.
 
-    \subsubsection{Riformulazione query (aggiungendo riferimento al metodo utilizzato all'interno di segnale Wow)}
+    \subsubsection{Query sintatticamente più complessa}
+    Alla query iniziale vien aggiunto il riferimento al metodo utilizzato all'interno di segnale Wow.
         \begin{itemize}
-            \item \textbf{Per risolvere questo problema, la query è stata riformulata:}
-            \begin{quote}
-                \textbf{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
-            \end{quote}
-            \item \textbf{L'output fornisce 5 risultati:}
+            \item \textbf{Query:}
+                `Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?'
+            \item \textbf{Output:}
+            Fornisce i seguenti cinque chunk.
             \begin{itemize}
-                \item Primo chunk \textbf{(score: 0.5441)}: contiene la funzione \texttt{segnaleWow}
-                \item Secondo, terzo e quarto chunk \textbf{(scores: 0.7325, 0.7466, 0.7989)}: contengono la funzione \texttt{getMessaggioMagico}
-                \item Quinto chunk \textbf{(score: 0.8301)}: funzione non rilevante relativa alle date
+                \item Primo chunk \textbf{(score: 0.5082)}: contiene la funzione \texttt{segnaleWow}
+                \item Secondo, terzo e quarto chunk \textbf{(scores: 0.7132, 0.7611, 0.8084)}: contengono la funzione \texttt{getMessaggioMagico}
+                \item Quinto chunk \textbf{(score: 0.8239)}: funzione non rilevante relativa alle date
             \end{itemize}
         \end{itemize}
 
-    \paragraph{Conclusione:}
-    Sono state riscontrate due problemi molto rilevanti, la prima riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
-    Mentre la seconda guarda i chunk estratti, lo score ottenuto non è particolarmente alto e questo con un database più ampio relativo a funzioni con terminologie e meccanismi simili potrebbe portare a risultati non coerenti.
-    Per il secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
-    questa piccola correzione risolve in parte il problema o almeno evita di propagarla ulteriormente preferendo non ottenere risultati piuttosto che ricevere risposte non coerenti.
+    \subsubsection{Conclusione}
+    Sono stati riscontrati due problemi molto rilevanti, il primo riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
+    Mentre il secondo è causato da i chunk estratti, lo score impostato non è particolarmente basso e questo può causare l'estrazione di chunck relativi a funzioni con terminologie e meccanismi simili ma non coerenti con il contesto cercato.
+    Per questo secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
+    questa piccola correzione risolve in parte il problema o almeno evita di propagarla ulteriormente, preferendo non ottenere in certi casi risultati dal \def{RAG} piuttosto che ricevere risposte non coerenti.
     
 \subsection{Creazione della Pipeline RAG}
 \begin{lstlisting}[language=Python, caption={Pipeline RAG}, label={lst:rag}]
