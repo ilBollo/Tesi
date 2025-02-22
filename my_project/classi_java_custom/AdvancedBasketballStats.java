@@ -1,11 +1,11 @@
 package classi_java_custom;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 
 public class AdvancedBasketballStats extends BasketballStats {
     
-    // Override con formula avanzata PER
+    /** Override con calcolo avanzato
+     */
     @Override
     public double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist, 
                                            int pallePerse, int tiriSbagliati) {
@@ -13,7 +13,8 @@ public class AdvancedBasketballStats extends BasketballStats {
               (pallePerse * 0.9 + tiriSbagliati * 0.7);
     }
     
-    // Override con valutazione dettagliata
+    /**  Override con valutazione avanzata
+     */
     @Override
     public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {
         if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {
@@ -25,7 +26,8 @@ public class AdvancedBasketballStats extends BasketballStats {
              " | Pressione: " + pressioneDifensiva;
     }
     
-    // Override con analisi migliorata
+    /**  Override con analisi avanzata
+     */
     @Override
     public String analisiStatisticheSquadra(int puntiSegnati, int tiriTentati, 
                                            int rimbalziOffensivi, int rimbalziDifensivi) {
@@ -39,7 +41,8 @@ public class AdvancedBasketballStats extends BasketballStats {
             effOffensiva, effDifensiva, (double) rimbalziOffensivi / rimbalziDifensivi);
     }
     
-    // Override con algoritmo predittivo avanzato
+    /** Override con algoritmo predittivo avanzato
+     */
     @Override
     public String previsioneVincitore(double[] squadraCasa, double[] squadraOspite, 
                                     LocalDate dataPartita) {
@@ -58,7 +61,9 @@ public class AdvancedBasketballStats extends BasketballStats {
             "Vittoria ospite prevista (" + String.format("%.1f", Math.abs(differenza)) + ")";
     }
     
-    // Nuovo metodo esclusivo della classe avanzata
+    /*
+     * Metodo aggiuntivo per analisi andamento
+     */
     public String analisiAndamento(int[] puntiUltimePartite) {
         double media = Arrays.stream(puntiUltimePartite).average().orElse(0);
         double deviazione = Arrays.stream(puntiUltimePartite)

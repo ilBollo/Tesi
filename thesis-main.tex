@@ -280,9 +280,13 @@ Per creare questo database vengono utilizzati dati esterni al training set origi
 La creazione di un database ben strutturato e \underline{la fase più importante} di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la sucessiva fase di interrogazione.
 Il processo di creazione del Vector Database segue la seguente pipeline:
 \begin{itemize}
-    \item \textbf{Chunking}: Divisione del codice in chunk 
-    \item \textbf{Embedding}: Conversione dei chunk in vettori numerici
-    \item \textbf{Vector Store}: Memorizzazione degli embedding in un database vettoriale
+    \item \textbf{Chunking}: Per garantire che i modelli di embedding possano lavorare efficacemente, è necessario suddividere il dataset in chunk di dimensioni controllate.
+    Questi chunk devono essere abbastanza piccoli da mantenere la focalizzazione semantica, ma sufficientemente grandi da fornire un contesto utile.
+    Tipicamente, i chunk variano tra 512 e 4096 token.
+    \item \textbf{Embedding}: Conversione dei chunk in vettori numerici ad alta dimensionalità, utilizzando tecniche di embedding come Word2Vec, GloVe o BERT.
+    Questi vettori rappresentano il contenuto semantico dei chunk, consentendo al sistema di confrontare e recuperare le informazioni in base alla similarità tra i vettori.
+    \item \textbf{Vector Store}: Memorizzazione degli embedding in un database vettoriale per consentire una rapida interrogazione e recupero delle informazioni.
+    Questo database deve essere progettato per garantire un'efficienza computazionale ottimale, in modo da ridurre i tempi di risposta del sistema.
 \end{itemize}
 %Creazione degli Embedding
 
@@ -429,7 +433,6 @@ Progettata per gestire dataset su larga scala, FAISS supporta operazioni di rice
 \section{Dataset}
 Il dataset è stato creato appositamente per testare il sistema RAG ed è composto da diciannove classi Java.
 \'E possibile scaricare il dataset in \url{https://github.com/ilBollo/Tesi/tree/main/my_project/classi_java_custom}
-
 Il dataset è composto dalle seguenti classi Java: 
 \begin{description}
     \item[DateUtilCustom.java] Classe personalizzata per gestire le date
@@ -440,9 +443,9 @@ Il dataset è composto dalle seguenti classi Java:
     \item[Altre classi java] Non strettamente correlate con le prime due utili per aumentare la base dati sul quale effettuare le ricerche e per testare la capacità di generalizzazione del sistema.
 \end{description}
 
-\section{Scenario base del Caso Studio}
+\section{Obiettivo base funzionamento RAG}
 DateUtilCustom.java e GiorniMagici.java sono strettamente correlate infatti GiorniMagici.java richiama metodi definiti in DateUtilCustom.java.
-Andremo a testare il sistema RAG con la seguente query: 
+Inizialmente andremo a testare il sistema RAG impostando come primo input la seguente query: 
 \begin{itemize}
     \item \textbf{Cosa ritorna il metodo \texttt{segnaleWow(LocalDate.of(2025, 2, 14))}?}
 \end{itemize}
@@ -451,7 +454,7 @@ Andremo a testare il sistema RAG con la seguente query:
 In GiorniMagici.java è presente la seguente funzione:
 \begin{lstlisting}[language=Java, caption={Metodo segnaleWow in GiorniMagici.java}, label={lst:segnaleWow}]
 public static String segnaleWow(LocalDate data) {
-    String wow = "il tuo segnale Wow e': " + DateUtilCustom.getMessaggioMagico(date);
+    String wow = "il tuo segnale Wow e': " + DateUtilCustom.getMessaggioMagico(data);
     return wow;
 }
 \end{lstlisting}
@@ -474,196 +477,187 @@ public static String getMessaggioMagico(LocalDate datamagica) throws DateTimePar
 \end{lstlisting}
 
 \subsection{Risultato Atteso}
-Essendo il 14 Febbraio 2025 un venerdì, ci aspettiamo come risposta:
+Il sistema RAG dovrebbe essere in grado di recuperare i chunk relativi ai metodi \texttt{segnaleWow} e \texttt{getMessaggioMagico} e di integrarli nel Prompt del LLM.
+Il modello, basandosi su queste informazioni, dovrebbe generare una risposta coerente e contestualizzata alla query iniziale.
+Nel caso specifico essendo il 14 Febbraio 2025 un venerdì,  la risposta corretta è:
 \begin{quote}
     \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}
 \end{quote}
 
 \section{Implementazione}
-\subsection{Creazione dei Chunk}
-I modelli di embedding hanno limiti massimi di input (512-4096 token)  per questo spezzare il codice in chunk di dimensioni adeguate è obbligatorio oltre ad essere in ogni caso fondamentale.
-Inoltre occorre prestare attenzione alla dimensione dei chunk generati, se troppo piccoli riducono il contesto disponibile per il modello mentre se troppo grandi perdono focalizzazione semantica.
-Per suddividere il file Java in chunk viene utilizzata la libreria \textbf{langchain\_text\_splitters.}
-Il seguente codice Python mostra come suddividere i file Java in chunk di dimensione fissa, salvando i risultati in un file JSON.
-\begin{lstlisting}[language=Python, caption={Codice Python per la suddivisione dei file Java in chunk}, label={lst:chunking}, inputencoding=utf8]
-    from langchain_text_splitters import RecursiveCharacterTextSplitter
-    import json
-    
-    # Funzione per caricare e suddividere un file Java
-    def process_file(file_path):
+\subsection{Chunking del Codice Java}
+Per segmentare il codice Java in chunk, è stata utilizzata la libreria \texttt{langchain\_text\_splitters}.
+Durante la progettazione del sistema di chunking, sono state analizzate le caratteristiche del codice Java e sono state adottate specifiche strategie per garantire una suddivisione efficace e accurata.:
+\begin{itemize}
+    \item La dimensione dei chunk è stata impostata a 512 token. 
+    Questa scelta è stata fatta per evitare che metodi diversi vengano fusi nello stesso chunk, garantendo al contempo un contesto sufficientemente utile.
+    \item È stato introdotto un overlap di 128 token tra i chunk. Questo assicura una continuità tra i chunk adiacenti, evitando la perdita di informazioni rilevanti.
+    \item Sono stati utilizzati separatori specifici per il linguaggio Java, come \texttt{\textbackslash n\}\textbackslash n\textbackslash npublic}, \texttt{\textbackslash nclass}, e \texttt{\textbackslash n/***}.
+    Questi separatori aiutano a preservare la struttura logica del codice.
+    \item Sono state implementate espressioni regolari per estrarre i nomi dei metodi e delle classi dai chunk.
+    Queste espressioni permettono di identificare i metodi e le classi presenti nel codice, arricchendo i chunk con informazioni contestuali.
+\end{itemize}
+\newpage
+\subsubsection{Funzione process\_file\_Java parte 1: Inizializzazione e Configurazione}
+\begin{lstlisting}[language=Python, caption={Configurazione dello splitter}]
+    def process_file_Java(file_path):
         with open(file_path, "r", encoding="utf-8") as f:
-         lines = f.readlines()
-    
-        # Ricostruisce il testo mantenendo le informazioni sulle linee
+            lines = f.readlines()
         text = ''.join(lines)
-    
         splitter = RecursiveCharacterTextSplitter(
-        chunk_size=512, # medio-basso per prevenire merge di metodi
-        chunk_overlap=128,
-        separators=[
-            # I seguenti separatori sono stati usati per mantenere i metodi uniti
-            # Prioritari: catturano la fine dei metodi
-            "\n}\n\npublic ",
-            "\n}\n\nprivate ",
-            "\n}\n\nprotected ",
-            "\n}\n\nstatic ",
-            "\n}\n\n// End of method", 
-            
-            # Secondari: separatori generici
-            "\nclass ",  # Inizio nuove classi
-            "\n@",  # Annotazioni
-            "\n/**",  # Javadoc
-            "\n * ", 
-            "\n"
-        ],
-        keep_separator=True
-        is_separator_regex=False
-    )
-    
-        chunks = splitter.split_text(text)
-        # Calcola le linee esatte per ogni chunk
-        chunk_metadata = []
-        cursor = 0
-        for chunk in chunks:
-            start_line = text.count('\n', 0, cursor) + 1
-            chunk_length = len(chunk)
-            end_line = text.count('\n', 0, cursor + chunk_length) + 1
-            chunk_metadata.append({
-                "start_line": start_line,
-                "end_line": end_line,
-                "text": chunk
-            })
-            cursor += chunk_length
-        
-        return chunk_metadata
-    
-    # Carica e suddividi i file Java
-    files = glob.glob("my_project/classi_java_custom/*.java") #["my_project/DateUtilCustom.java", "my_project/GiorniMagici.java", "my_project/BasketballStats.java", "my_project/Ventunoclassi.java"]
-    all_chunks = []
-    
-    for file_path in files:
-        chunks_info = process_file(file_path)
-        for chunk_info in chunks_info:
-            chunk_text = chunk_info["text"]
-            
-            # Aggiungi contesto strutturale
-            class_context = ""
-            if "class " in chunk_text:
-                class_name = chunk_text.split("class ")[1].split("{")[0].strip()
-                class_context = f"Classe: {class_name}\n"
-            
-            all_chunks.append({
-                "id": len(all_chunks) + 1,
-                "text": f"// File: {file_path}\n{class_context}{chunk_text}",
-                "source": file_path,
-                "type": "code",
-                "start_line": chunk_info["start_line"],
-                "end_line": chunk_info["end_line"],
-                "class": class_context.replace("Classe: ", "") if class_context else ""
-            })
-    
-    # Salva i chunk in un file JSON
-    with open("chunks.json", "w", encoding="utf-8") as f:
-        json.dump(all_chunks, f, indent=4, ensure_ascii=False)
+            chunk_size=512,
+            chunk_overlap=128,
+            separators=[    # Separatori basati sulla sintassi Java
+                "\n}\n\npublic ",
+                "\n}\n\nprivate ",
+                "\n}\n\nprotected ",
+                "\n}\n\nstatic ",
+                "\n}\n\n// End of method", 
+                "\nclass ",  # Inizio nuove classi
+                "\n@",      # Annotazioni
+                "\n/**",    # Javadoc
+                "\n * ", 
+                "\n"
+            ],
+            keep_separator=True, # Mantiene i separatori nei chunk
+            is_separator_regex=False # Separatori letterali (non regex)
+        )
 \end{lstlisting}
-Il chunking è costruito in maniera specifica per \textbf{codice java}, i separatori sono stati scelti per tentare di segmentare il codice secondo la struttura tipica dei metodi e delle classi, garantendo che il chunk contenga blocchi di codice "interi".
-L'opzione \texttt{keep\_separator=False} crea punti di split più naturali per il codice Java, allineandosi meglio con la struttura dei metodi e delle classi.
-Per ciascun chunk, se nel testo è presente la stringa \texttt{class}, il codice estrae il nome della classe 
-(prendendo il testo che segue \texttt{class} fino al primo \texttt{\{}) e lo utilizza per creare un contesto 
-strutturale (es \texttt{Classe: NomeClasse}).
-Questo contesto viene preappeso al testo del chunk e salvato anche come valore nel campo "class".
-
-\subsubsection{Il risultato nel file chunks.json è il seguente:}
-    \begin{lstlisting}[language=json,firstnumber=1, caption={Esempio di chunks generati}, label={lst:chunks-example}]
-        [
-            {
-                "id": 1,
-                "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\nClasse: AdvancedBasketballStats extends BasketballStats\npackage classi_java_custom;\nimport java.time.LocalDate;\nimport java.util.Arrays;\npublic class AdvancedBasketballStats extends BasketballStats {\n    \n    // Override con formula avanzata PER\n    @Override\n    public double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist, \n                                           int pallePerse, int tiriSbagliati) {\n        return (punti * 1.2 + rimbalzi * 1.1 + assist * 1.3) - \n              (pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }",
-                "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
-                "type": "code",
-                "start_line": 1,
-                "end_line": 14,
-                "class": "AdvancedBasketballStats extends BasketballStats\n"
-            },
-            {
-                "id": 2,
-                "text": "// File: my_project/classi_java_custom\\AdvancedBasketballStats.java\n(pallePerse * 0.9 + tiriSbagliati * 0.7);\n    }\n    \n    // Override con valutazione dettagliata\n    @Override\n    public String valutaTiro(double distanzaCanestro, int pressioneDifensiva) {\n        if (distanzaCanestro < 1.5 && pressioneDifensiva < 4) {\n            return \" Tiro ad alto rendimento (85% successo) \";\n        } else if (distanzaCanestro >= 7.0 && pressioneDifensiva > 6) {\n            return \" Tiro ad alto rischio (30% successo) \";\n        }",
-                "source": "my_project/classi_java_custom\\AdvancedBasketballStats.java",
-                "type": "code",
-                "start_line": 14,
-                "end_line": 24,
-                "class": ""
-            },
-            ............continua
-        ]
-    \end{lstlisting}
-        
-    Ogni chunk mantiene:
+Nella prima parte la funzione:
+\begin{itemize}
+    \item Legge il file Java e unisce il contenuto in un unico blocco di testo
+    \item Configura \texttt{RecursiveCharacterTextSplitter} con:
     \begin{itemize}
-        \item Il riferimento al file sorgente
-        \item Il nome della classe
-        \item Le righe di inizio e fine nel file originale
-        \item Il contenuto del codice con la sua struttura
+        \item Separatori specifici per costrutti Java (metodi, classi, annotazioni)
+        \item Token di dimensione 512 e overlap di 128
+        \item Mantenimento dei separatori nei chunk e uso di separatori letterali
     \end{itemize}
+\end{itemize}
 
-\subsection{Arricchire i chunk con metadati relativi al codice}
-    Oltre al testo del codice, è importante mantenere informazioni aggiuntive per facilitare la ricerca e l'interpretazione dei chunk.
-    La seguente funzione \texttt{extract\_method\_name} aggiunge una stringa contestuale per ogni chunk che include:
-    \begin{itemize}
-        \item Il nome del metodo o della classe
-        \item La classe di appartenenza
-        \item Le righe di inizio e fine del codice
-    \end{itemize}
-
-    \begin{lstlisting}[language=Python, caption={Funzione extract\_method\_name}]
-    import re
-    def extract_method_name(text):
-        # Pattern per la firma di un metodo in Java
-        method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
-        
-        # Pattern per i costruttori
-        constructor_pattern = r'(?:public|private|protected)\s+(\w+)\s*\([^)]*\)'
-        
-        # Cerca la firma di un metodo
-        matches = re.findall(method_pattern, text)
-        if matches:
-            return matches[0]  # Restituisce il primo metodo trovato
-        
-        # Cerca costruttori
-        constr_matches = re.findall(constructor_pattern, text)
-        if constr_matches:
-            return constr_matches[0] + " (costruttore)"
-        
-        # Cerca chiamate a metodi
-        method_calls = re.findall(r'\.(\w+)\s*\(', text)
-        if method_calls:
-            return f"Chiamata a: {method_calls[-1]}"
-        
-        return "unknown_method"  # Default se non trova nulla
-    \end{lstlisting}
-        
-\subsection{Generazione degli Embedding}
-    Gli embedding trasformano i chunk in rappresentazioni vettoriali che catturano il significato semantico.
-    Il seguente codice Python mostra come generare gli embedding e creare un database Faiss.
-    Come precedentemente descritto, il modello di embedding utilizzato è BGE-M3, questo modello usa due rappresentazioni per complementarietà, la rappresentazione densa cattura relazioni semantiche mentre quella sparsa cattura relazioni sintattiche.
-    Mentre sul database FAISS ad alta dimensionalità verrà settata la ricerca di somiglianza utilizzando la distanza euclidea tra i vettori.
+\subsubsection{Funzione process\_file\_Java parte 2: Generazione dei Chunk e Metadati}
+\begin{lstlisting}[language=Python, caption={Generazione chunk e metadati}]
+    # Suddivisione del testo e calcolo metadati
+    chunks = splitter.split_text(text)
+    chunk_metadata = []
+    cursor = 0
     
-    \begin{lstlisting}[language=Python, caption={Codice Python per la generazione degli embedding e la creazione di un database FAISS}, label={lst:embeddings}]
-        import json
+    for chunk in chunks:
+        # Calcolo righe di inizio/fine
+        start_line = text.count('\n', 0, cursor) + 1
+        chunk_length = len(chunk)
+        end_line = text.count('\n', 0, cursor + chunk_length) + 1
+        
+        # Estrazione contesto semantico
+        method_name = extract_method_name(chunk)
+        
+        # Registrazione metadati
+        chunk_metadata.append({
+            "start_line": start_line,
+            "end_line": end_line,
+            "text": chunk,
+            "methods": [method_name]
+        })
+        cursor += chunk_length
+    
+    return chunk_metadata
+\end{lstlisting}
+
+Nella seconda parte la funzione:
+\begin{itemize}
+    \item Calcola le righe di inizio/fine con logica a cursore
+    \item Arricchisce ogni chunk con i metadati sfruttando anche la funzione \texttt{extract\_method\_name} per estrarre i nomi dei metodi
+    \item Ritorna una lista di chunk con i relativi metadati
+\end{itemize}
+
+
+\subsubsection{Funzione extract\_method\_name}
+Per arricchire ulteriormente i chunk è stata creata la funzione \texttt{extract\_method\_name}.
+Questa funzione identifica i nomi dei metodi e delle classi all'interno dei chunk utilizzando espressioni regolari (regex).
+ n questo modo, ogni chunk può essere associato a un contesto semantico specifico, migliorando la ricerca in fase di embedding e arricchendo il Prompt del LLM con informazioni contestuali.
+
+\begin{lstlisting}[language=Python, caption={Estrazione contesto dai chunk}]
+    def extract_method_name(text):
+    # Pattern per la firma di un metodo in Java
+    method_pattern = r'(?:public|private|protected|static|final|synchronized|abstract|native)\s+[\w<>\[\]]+\s+(\w+)\s*\([^)]*\)'
+    # Pattern per i costruttori
+    constructor_pattern = r'(?:public|private|protected)\s+(\w+)\s*\([^)]*\)'
+    
+    # Cerca la firma di un metodo
+    matches = re.findall(method_pattern, text)
+    if matches:
+        return matches[0]  # Restituisce il primo metodo trovato
+    
+    # Cerca costruttori
+    constr_matches = re.findall(constructor_pattern, text)
+    if constr_matches:
+        return constr_matches[0] + " (costruttore)"
+    
+    # Cerca chiamate a metodi
+    method_calls = re.findall(r'\.(\w+)\s*\(', text)
+    if method_calls:
+        return f"Chiamata a: {method_calls[-1]}"
+    return "unknown_method"
+\end{lstlisting}
+
+\subsubsection{Aggiornamento Contesto Classe}
+Durante l'elaborazione dei file, è importante mantenere traccia del contesto delle classi.
+Questo viene fatto aggiornando dinamicamente il nome della classe corrente mentre si processano i chunk.
+In questo modo, ogni chunk può essere associato alla classe corretta.
+
+\begin{lstlisting}[language=Python, caption={Aggiornamento contesto classe}]
+current_class = ""
+for file_path in files:
+    chunks_info = process_file_Java(file_path)
+    for chunk_info in chunks_info:
+        if "class " in chunk_info["text"]:
+            class_name = chunk_text.split("class ")[1].split("{")[0].strip()
+            current_class = class_name
+        all_chunks.append({..., "class": current_class})
+\end{lstlisting}
+
+\subsubsection{Creazione file JSON}
+Il risultato finale del processo di chunking viene salvato in un file JSON chiamato \texttt{chunks.json}.
+Questo file contiene la lista dei chunk, ognuno dei quali comprende i metadati come il percorso del file originale, la relativa classe, i metodi identificati e le linee di codice di inizio e fine.
+\'E stato inserito di default il campo \texttt{type} per identificare il tipo di chunk, in questo caso \texttt{code}.
+Questo dato apre la possibilità di estendere il sistema per supportare altri tipi di chunk, come testo libero o documentazione.
+\begin{lstlisting}[language=json, caption={Esempio di chunk generato}]
+[
+    {
+        "id": 1,
+        "text": "package classi_java_custom;\nimport java.time.LocalDate;...",
+        "source": "my_project/.../AdvancedBasketballStats.java",
+        "type": "code",
+        "start_line": 1,
+        "end_line": 14,
+        "class": "AdvancedBasketballStats extends BasketballStats",
+        "methods": ["calcolaEfficienzaGiocatore"]
+    }
+]
+\end{lstlisting}
+\subsection{Generazione degli Embedding}
+Gli embedding trasformano i chunk in rappresentazioni vettoriali che catturano il significato semantico.
+Il seguente codice Python mostra come generare gli embedding e creare un database Faiss.
+Come precedentemente descritto, il modello di embedding utilizzato è BGE-M3, questo modello usa due rappresentazioni per complementarietà, la rappresentazione densa cattura relazioni semantiche mentre quella sparsa cattura relazioni sintattiche.
+Mentre sul database FAISS ad alta dimensionalità verrà settata la ricerca di somiglianza utilizzando la distanza euclidea tra i vettori.
+    \begin{lstlisting}[language=Python, caption={Generazione degli embedding e creazione di un database FAISS}, label={lst:embeddings}]
         from sentence_transformers import SentenceTransformer
         from langchain_community.vectorstores import FAISS
         
         # 1. Carica i chunk dal file JSON
         with open("chunks.json", "r", encoding="utf-8") as f:
-            chunks_data = json.load(f)
-        
+            chunks_data = json.load(f)        
         chunks = [item["text"] for item in chunks_data]
         
         # 2. Carica il modello BGE-M3 e genera gli embedding
         embedder = SentenceTransformer('BAAI/bge-m3')
         embeddings = embedder.encode(
-            [f"METHOD:{extract_method_name(c['text'])} CLASS:{c['class']} LINES:{c['start_line']}-{c['end_line']} CONTENT:{c['text']}" 
-             for c in chunks_data],
+            [
+                f"METHODS:{', '.join(c['methods']) if c['methods'] else 'unknown'}" 
+                f"CLASS:{c['class']}"
+                f"LINES:{c['start_line']}-{c['end_line']}"
+                f"CONTENT:{c['text']}"
+                for c in chunks_data
+            ],
             show_progress_bar=True
         )
         
@@ -677,9 +671,9 @@ Questo contesto viene preappeso al testo del chunk e salvato anche come valore n
         vector_store.save_local("./faiss_db")
         print("Database FAISS creato e salvato in ./faiss_db.")
     \end{lstlisting}
-
-Il metodo \emph{encode()} del modello BGE-M3 genera gli embedding per ogni chunk,
-chiamando la funzione \emph{extract\_method\_name} per arricchire il contesto e creare vettori con relazioni semantiche strutturate.
+Il metodo \emph{encode} del modello BGE-M3 genera gli embedding per ogni chunk,
+arricchendoli con i metadati creati durante il processo di chunking.
+Questi embedding vengono poi utilizzati per creare un database FAISS, che permette di eseguire ricerche di similarità in modo efficiente.
 
 \subsection{Esecuzione di query sul Database FAISS}
     Una volta creato il database FAISS, è possibile eseguire ricerche semantiche sui chunk memorizzati:
@@ -1137,7 +1131,8 @@ Proprio per questo mi piace concludere pensando che noi programmatori 'semplicem
 
 \chapter{Ringraziamenti}
 Ringrazio il mio relatore il Prof. Viroli Mirko e il Dott. Aguzzi Gianluca per l'interessantissimo argomento di tesi proposto e per la disponibilità e professionalità dimostrata.
-Ringrazio tutta lo comunità di ricercatori che forniscono materiale open source e documentazione per permettere a tutti di apprendere e migliorare questa incredibile tecnologia. In particolare Simone Rizzo che grazie ai suoi video estremamente chiari e tecnici mi ha permesso di comprendere moltissimi concetti.
+Ringrazio tutta lo comunità di ricercatori che forniscono materiale open source e documentazione per permettere a tutti di apprendere e migliorare questa incredibile tecnologia.
+Infine ringrazio gli studenti che ho conosciuto in questo percorso, è stato molto divertente studiare con voi.
 
 
 

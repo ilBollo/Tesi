@@ -92,11 +92,11 @@ public class GiorniMagici {
 
         /**
      * Restituisce un segnale Wow specifico in base al giorno indicato
-     * @param date
+     * @param data La data di riferimento.
      * @return Il segnale Wow.
      */
-    public static String segnaleWow (LocalDate date){
-        String wow = "il tuo segnale Wow è :" + DateUtilCustom.getMessaggioMagico(date) ;
+    public static String segnaleWow (LocalDate data){
+        String wow = "il tuo segnale Wow è :" + DateUtilCustom.getMessaggioMagico(data) ;
         return wow;
     }
 }

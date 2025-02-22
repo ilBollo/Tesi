@@ -104,7 +104,7 @@ def ask_ollama(question):
 
 # Esempio d'uso
 if __name__ == "__main__":
-    #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
+    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
     #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
     #ask_ollama("Che giorno della settimana è il 10 gennaio 2025?")
-    ask_ollama("Scrivimi una funzione per calcolare le statistiche di una squadra di basket")
+    #ask_ollama("Scrivimi una funzione per calcolare le statistiche di una squadra di basket")
