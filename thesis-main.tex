@@ -484,7 +484,7 @@ Nel caso specifico essendo il 14 Febbraio 2025 un venerdì,  la risposta corrett
 \section{Implementazione}
 \subsection{Chunking del Codice Java}
 Per segmentare il codice Java in chunk, è stata utilizzata la libreria \texttt{langchain\_text\_splitters}.
-Durante la progettazione del sistema di chunking, sono state analizzate le caratteristiche del codice Java e sono state adottate specifiche strategie per garantire una suddivisione efficace e accurata.:
+Durante la progettazione del sistema di chunking, sono state analizzate le caratteristiche del codice Java e sono state adottate specifiche strategie per garantire una suddivisione efficace e accurata:
 \begin{itemize}
     \item La dimensione dei chunk è stata impostata a 512 token. 
     Questa scelta è stata fatta per evitare che metodi diversi vengano fusi nello stesso chunk, garantendo al contempo un contesto sufficientemente utile.
