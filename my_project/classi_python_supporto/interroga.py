@@ -16,7 +16,8 @@ vector_store = FAISS.load_local(
 )
 
 # 3. Query di esempio
-query = "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?"
+query =  "Sto costruendo il seguente metodo: int calcolaGiorniLavorativi(Date dataA, Date dataB){ int numeroGiorni... return numeroGiorni} che trova la differenza in giorni lavorativi(escludendo sabato e domenica). Come posso costruirlo utilizzando la classe DataUtilCustom?"
+#"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?"
 #"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10))?"
 #"Scrivimi una funzione per calcolare le statistiche di una squadra di basket")
 
@@ -25,7 +26,7 @@ query = "Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 1, 10)) che utiliz
 docs = vector_store.similarity_search_with_score(
     query,
     k=5,
-    score_threshold=0.90,  # medio-bassa similarità
+    score_threshold=0.82,  # medio-bassa similarità
     search_type="similarity",  # Più efficace per il codice
     lambda_mult=0.5       # Bilancia diversità/rilevanza
 )

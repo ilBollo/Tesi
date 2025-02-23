@@ -22,13 +22,13 @@ vector_store = FAISS.load_local(
 retriever=vector_store.as_retriever(
         search_kwargs={
             "k": 5,                   # Più documenti per contesto
-            "score_threshold": 0.80, # medio-bassa similarità inizialmente era 0.90
+            "score_threshold": 0.82, # medio-bassa similarità inizialmente era 0.90
             "search_type" :"similarity",  # Più efficace per il codice usare mmr per diversità
             "lambda_mult":0.5       # Bilancia diversità/rilevanza
         }
     )
 
-varStileLLM = "Sei un programmatore che risponde conciso e sintetico."
+varStileLLM = "Sei un assistente che combina codice Java e contesto strutturale per risposte precise. Rispondi solo se hai certezza sicura della risposta."
 
 # Configurazione Template del prompt specifici per i modelli
 LLAMA_TEMPLATE = """<|begin_of_text|>
@@ -46,8 +46,8 @@ CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
 """
 
 COMMON_PARAMS = {
-    "temperature": 0.2,
-    "top_p": 0.85  # Bilancia creatività/controllo nei token generati
+    "temperature": 0.1, 
+    "top_p": 0.60  # Bilancia creatività/controllo nei token generati
 }
 
 # Caricamento modello
@@ -77,7 +77,7 @@ def load_model(model_name):
     )
 
 # Inizializza il modello
-llm, prompt = load_model("llama3.2")
+llm, prompt = load_model("codeqwen")
 
 # Catena RAG
 document_chain = create_stuff_documents_chain(llm, prompt)
@@ -104,7 +104,10 @@ def ask_ollama(question):
 
 # Esempio d'uso
 if __name__ == "__main__":
-    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
-    #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
+    ask_ollama("Sto costruendo il seguente metodo: int calcolaGiorniLavorativi(Date dataA, Date dataB){ int numeroGiorni... return numeroGiorni} che trova la differenza in giorni lavorativi(escludendo sabato e domenica). Come posso costruirlo utilizzando la classe DataUtilCustom?")
+        #"Sostituisci nella clase DateUtilCustom.java il costrutto \texttt{if-else} in \texttt{getMessaggioMagico()} con uno \texttt{switch} expression'")
+        #"Aggiungi alla classe AdvancedBasketballStats un metodo calcolaEfficienzaSquadra() che valuti l'efficienza della squadra in base alle statistiche della squadra e alle partite vinte")
+               #Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
+    #"Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
     #ask_ollama("Che giorno della settimana è il 10 gennaio 2025?")
     #ask_ollama("Scrivimi una funzione per calcolare le statistiche di una squadra di basket")

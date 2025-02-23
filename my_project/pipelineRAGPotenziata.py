@@ -25,13 +25,13 @@ vector_store = FAISS.load_local(
 retriever=vector_store.as_retriever(
         search_kwargs={
             "k": 5,                   # Più documenti per contesto
-            "score_threshold": 0.4, # troverà pochissimi chunk file
+            "score_threshold": 1, # troverà pochissimi chunk file
             "search_type" :"similarity",  # Più efficace per il codice usare mmr per diversità
             "lambda_mult":0.5       # Bilancia diversità/rilevanza
         }
     )
 
-varStileLLM = "Rispondi come un programmatore esperto ma in modo sintetico."
+varStileLLM = "Sei un assistente che combina codice Java e contesto strutturale per risposte precise. Rispondi solo se hai certezza sicura della risposta."
 
 # Configurazione Template del prompt specifici per i modelli
 LLAMA_TEMPLATE = """<|begin_of_text|>
@@ -49,8 +49,8 @@ CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
 """
 
 COMMON_PARAMS = {
-    "temperature": 0.3,
-    "top_p": 0.85  # Bilancia creatività/controllo nei token generati
+    "temperature": 0.1,
+    "top_p": 0.60  # Bilancia creatività/controllo nei token generati
 }
 
 # Caricamento modello
@@ -97,9 +97,8 @@ def load_questions(file_path: str) -> List[Dict]:
         for item in data:
             if not required_keys.issubset(item.keys()):
                 raise ValueError("Struttura JSON non valida")
-                
         return data
-        
+
     except FileNotFoundError:
         raise Exception(f"File {file_path} non trovato")
     except json.JSONDecodeError:
@@ -110,7 +109,6 @@ def process_questions(questions: List[Dict]) -> List[Dict]:
     for q in questions:
         try:
             result = rag_chain.invoke({"input": q["question"]})
-            
             entry = {
                 "id": q["id"],
                 "question": q["question"],
@@ -146,7 +144,7 @@ if __name__ == "__main__":
     # Processamento e salvataggio risultati
     all_results = process_questions(questions)
     
-    output_file = Path("rag_resultsllamascore04.json")
+    output_file = Path("rag_newresultsllamascore1.json")
     output_file.write_text(
         json.dumps(all_results, ensure_ascii=False, indent=2), 
         encoding='utf-8'

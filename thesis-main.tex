@@ -680,14 +680,10 @@ Mentre sul database FAISS ad alta dimensionalità verrà settata la ricerca di s
 Il metodo \emph{encode} del modello BGE-M3 genera gli embedding per ogni chunk,
 arricchendoli con i metadati creati durante il processo di chunking.
 Questi embedding vengono poi utilizzati per creare un database FAISS, che permette di eseguire ricerche di similarità in modo efficiente.
-
 \subsection{Esecuzione di query sul Database FAISS}
     Una volta creato il database FAISS, è possibile eseguire ricerche semantiche sui chunk memorizzati:
 
     \begin{lstlisting}[language=Python, caption={Esecuzione di una query sul database FAISS}, label={lst:query}]
-    from langchain_community.vectorstores import FAISS
-    from langchain_huggingface import HuggingFaceEmbeddings
-
     # 1. Carica il modello di embedding nel formato corretto
     embedder = HuggingFaceEmbeddings(
         model_name="BAAI/bge-m3",
@@ -760,7 +756,7 @@ LangChain fornisce un'interfaccia semplice per eseguire query semantiche sul dat
     Questo accade perché nessun altro chunk supera la soglia di similarità impostata.
     Tale comportamento evidenzia una criticità: la funzione \texttt{segnaleWow()} richiama un metodo presente nella libreria \texttt{DateUtilCustom} che non viene estratto dal Dataset.
 
-    \subsubsection{Query sintatticamente più complessa}
+    \subsubsection{Query che descrive il contesto in maniera più completa}
     Alla query iniziale vien aggiunto il riferimento al metodo utilizzato all'interno di segnale Wow.
         \begin{itemize}
             \item \textbf{Query:}
@@ -777,43 +773,40 @@ LangChain fornisce un'interfaccia semplice per eseguire query semantiche sul dat
     \subsubsection{Conclusione}
     Sono stati riscontrati due problemi molto rilevanti, il primo riguarda la mancanza di estrazione di metodi da librerie esterne se non esplicitate nella query.
     Mentre il secondo è causato da i chunk estratti, lo score impostato non è particolarmente basso e questo può causare l'estrazione di chunck relativi a funzioni con terminologie e meccanismi simili ma non coerenti con il contesto cercato.
-    Per questo secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.80,
-    questa piccola correzione risolve in parte il problema o almeno evita di propagarla ulteriormente, preferendo non ottenere in certi casi risultati dal \def{RAG} piuttosto che ricevere risposte non coerenti.
-    
+    Per questo secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.82,
+    questa piccola correzione risolve in parte il problema o almeno evita di propagarlo ulteriormente, preferendo non ottenere in certi casi risultati dal \ac{RAG} piuttosto che ricevere risposte non coerenti.
+
 \subsection{Creazione della Pipeline RAG}
-\begin{lstlisting}[language=Python, caption={Pipeline RAG}, label={lst:rag}]
-    from langchain_community.vectorstores import FAISS
-    from langchain_huggingface import HuggingFaceEmbeddings
-    from langchain_ollama import OllamaLLM
-    from langchain.chains import create_retrieval_chain
-    from langchain.chains.combine_documents import create_stuff_documents_chain
-    from langchain.prompts import PromptTemplate
-    
+La pipeline RAG combina i componenti precedentemente descritti per creare un sistema completo di generazione di risposte.
+\begin{lstlisting}[language=Python, caption={Caricamento database FAISS}, label={lst:Caricamento database FAISS}]
     # Configurazione embedding
     embedder = HuggingFaceEmbeddings(
         model_name="BAAI/bge-m3",
         model_kwargs={'device': 'cpu'},
         encode_kwargs={'normalize_embeddings': True}
     )
-    
     # Caricamento database FAISS
     vector_store = FAISS.load_local(
         folder_path="./faiss_db",
         embeddings=embedder,
         allow_dangerous_deserialization=True
     )
-    # Aggiunta del database FAISS al retriever
+\end{lstlisting}
+Inizialmente per eseguire l'embedder della query di input viene utilizzato il modello BAAI/bge-m3 e caricato il database FAISS precedentemente creato.
+
+\begin{lstlisting}[language=Python, caption={Configurazione Parametri}, label={lst:Configurazione Parametri}]
+    # Creazione del retriever
     retriever=vector_store.as_retriever(
-            search_kwargs={
-                "k": 5,                   # Piu' documenti per contesto
-                "score_threshold": 0.80, # medio-bassa similarita' inizialmente era 0.90
-                "search_type" :"similarity",  # Piu' efficace per il codice
-                "lambda_mult":0.5       # Bilancia diversita'/rilevanza
-            }
-        )
-    
-    varStileLLM = "Sei un programmatore che risponde conciso e sintetico."
-    
+        search_kwargs={
+            "k": 5,                   # Piu' documenti per contesto
+            "score_threshold": 0.82, # medio-bassa similarita' inizialmente era 0.90
+            "search_type" :"similarity",  # Piu' efficace per il codice
+            "lambda_mult":0.5       # Bilancia diversita'/rilevanza
+        }
+    )
+    # Comando di sistema
+    varStileLLM = "Sei un assistente che combina codice Java e contesto strutturale per risposte precise."
+
     # Configurazione Template del prompt specifici per i modelli
     LLAMA_TEMPLATE = """<|begin_of_text|>
     <|start_header_id|>system""" + varStileLLM + """<|end_header_id|>
@@ -821,7 +814,7 @@ LangChain fornisce un'interfaccia semplice per eseguire query semantiche sul dat
     <|start_header_id|>user<|end_header_id|>
     Domanda: {input}<|eot_id|>
     <|start_header_id|>assistant<|end_header_id|>"""
-    
+
     CODEQWEN_TEMPLATE = """<|im_start|>system """ + varStileLLM + """
     {context}<|im_end|>
     {{ if .Functions }}<|im_start|>functions
@@ -830,87 +823,94 @@ LangChain fornisce un'interfaccia semplice per eseguire query semantiche sul dat
     {input}<|im_end|>
     <|im_start|>assistant
     """
-    
+
     COMMON_PARAMS = {
         "temperature": 0.3, #lasciamo una bassa creativita' non vogliamo che inventi risposte
         "top_p": 0.85  # Bilancia creativita'/controllo nei token generati
     }
-    
-    # Caricamento modello
-    def load_model(model_name):
-        models = {
-            "llama3.2": {
-                "template": LLAMA_TEMPLATE,
-                "params": COMMON_PARAMS
-            },
-            "codeqwen": {
-                "template": CODEQWEN_TEMPLATE,
-                "params": COMMON_PARAMS
-            }
-        }
-        if model_name not in models:
-            raise ValueError(f"Modello non supportato: {model_name}")
-        return OllamaLLM(
-            model=model_name,
-            **models[model_name]["params"]
-        ), PromptTemplate(
-            template=models[model_name]["template"],
-            input_variables=["input", "context"]
-        )
-    
-    # Inizializza il modello
-    llm, prompt = load_model("codeqwen")
-    
-    # Catena RAG
-    document_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = create_retrieval_chain(
-        retriever,
-        document_chain
-    )
-    
-    # Funzione query
-    def ask_ollama(question):
-        try:
-            result = rag_chain.invoke({"input": question})
-            print("DOMANDA:", question)
-            print("RISPOSTA:")
-            print(result["answer"])
-            print("FONTI:")
-            for i, doc in enumerate(result["context"], 1):
-                print(f"{i}. {doc.page_content[:150]}...")
-                if 'source' in doc.metadata:
-                    print(f" Fonte: {doc.metadata['source']}")
-                print("-" * 80)
-        except Exception as e:
-            print(f"ERRORE: {str(e)}")
-    
-    # Esempio d'uso
-    if __name__ == "__main__":
-        ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
-        #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
 \end{lstlisting}
-\subsubsection{Spiegazione Pipeline del RAG}
-    Seguendo la struttura precedentemente creata, per eseguire l'embedder della query di input viene utilizzato il modello BAAI/bge-m3 e
-    caricato il database FAISS contenente la \textbf{knowledge base}.
-    La chiamata iniziale alla funzione \emph{ask\_ollama()} richiede come parametro \textbf{la query di input} per poi essere processata dalla pipeline RAG.
-    Sfruttando le funzionalità della libreria LangChain \cite{langchain-retrieval-chain}, \textbf{\emph{result}} sarà un array contente la risposta("answer") e il contesto("context") fornito alla query.
-\subsubsection{\emph{rag\_chain.invoke()}}
- Questa funzione esegue la catena RAG creata tramite il metodo \emph{create\_retrieval\_chain()} che prende come parametri il retriever e il document chain.
+Il retriever viene configurato con i parametri di ricerca precedentemente descritti.
+Vengono inoltre definiti i template del prompt per i due modelli LLM, Llama3.2 e Codeqwen, con il parametro system = \texttt{varStileLLM} e il tag context dove verranno inseriti i chunk recuperati dal database FAISS.
+I COMMON\_PARAMS sono stati impostati rispettivamente a:
+\begin{itemize}
+    \item \textbf{temperature}: 0.3, in modo da garantire risposte coerenti e precise senza inventarle.
+    \item \textbf{top\_p}: 0.85, per bilanciare creatività e controllo nei token generati.
+\end{itemize}
+\subsubsection{varStileLLM}
+Come parametro di sistema da passare al LLM è stata creata la variabile \texttt{varStileLLM} con il seguente valore: \textbf{``Sei un assistente che combina codice Java e contesto strutturale per risposte precise.''}
+questo parametro sarà passato ad ogni Prompt generato per il LLM e condizionerà tutte le risposte fornite.
+
+\begin{lstlisting}[language=Python, caption={Caricamento del modello}, label={lst:Caricamento del modello}]
+    # Caricamento modello
+def load_model(model_name):
+    models = {
+        "llama3.2": {
+            "template": LLAMA_TEMPLATE,
+            "params": COMMON_PARAMS
+        },
+        "codeqwen": {
+            "template": CODEQWEN_TEMPLATE,
+            "params": COMMON_PARAMS
+        }
+    }
+    if model_name not in models:
+        raise ValueError(f"Modello non supportato: {model_name}")
+    return OllamaLLM(
+        model=model_name,
+        **models[model_name]["params"]
+    ), PromptTemplate(
+        template=models[model_name]["template"],
+        input_variables=["input", "context"]
+    )
+
+# Inizializza il modello
+llm, prompt = load_model("codeqwen")
+\end{lstlisting}
+\textbf{load\_model} carica il modello LLM e il template del Prompt in base al modello scelto sfruttando OllamaLLM e PromptTemplate.
+\begin{lstlisting}[language=Python, caption={Catena RAG}, label={lst:Catena RAG}]
+# Catena RAG
+document_chain = create_stuff_documents_chain(llm, prompt)
+rag_chain = create_retrieval_chain(
+    retriever,
+    document_chain
+)
+
+# Funzione query
+def ask_ollama(question):
+    try:
+        result = rag_chain.invoke({"input": question})
+        print("DOMANDA:", question)
+        print("RISPOSTA:")
+        print(result["answer"])
+        print("FONTI:")
+        for i, doc in enumerate(result["context"], 1):
+            print(f"{i}. {doc.page_content[:150]}...")
+            if 'source' in doc.metadata:
+                print(f" Fonte: {doc.metadata['source']}")
+            print("-" * 80)
+    except Exception as e:
+        print(f"ERRORE: {str(e)}")
+
+# Esempio d'uso
+if __name__ == "__main__":
+    ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?")
+    #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
+
+\end{lstlisting}
+La chiamata iniziale alla funzione \emph{ask\_ollama} richiede come parametro la query di input per poi essere processata dalla pipeline RAG.
+Sfruttando le funzionalità della libreria LangChain \cite{langchain-retrieval-chain}, \textbf{\emph{result}} è un array contente la risposta e il contesto fornito alla query.
+\subsubsection{\emph{rag\_chain.invoke}}
+ Questa funzione esegue la catena RAG creata tramite il metodo \emph{create\_retrieval\_chain} che prende come parametri il retriever e il document chain.
  \begin{itemize}
     \item la funzione \textbf{create\_stuff\_documents\_chain()} carica una catena di documenti prendendo in input il modello LLM e il template del prompt.
-    \item \textbf{load\_model()} carica il modello LLM e il template del Prompt in base al modello scelto sfruttando OllamaLLM e PromptTemplate.
  \end{itemize}
- \subsubsection{Temperature}
-Per i due LLM è stata data una temperature molto bassa \textbf{0.3} in modo da garantire da parte dei LLM risposte coerenti e precise senza provi ad inventarle.
-\subsubsection{Top\_p}
-Il parametro \texttt{top\_p} è stato impostato a 0.85 per bilanciare creatività e controllo nei token generati.
-\subsubsection{System}
-Come parametro di sistema da passare al LLM è stata creata la variabile \texttt{varStileLLM} con il seguente valore: \textbf{"Sei un programmatore che risponde conciso e sintetico"}
-questa richiesta verrà sempre passata al LLM e condizionerà tutte le risposte fornite.
 
 \section{Test Sistema RAG}
 Valutiamo se il sistema RAG  è in grado di rispondere in maniera coerente alla query proposta.
-Ricordiamo che il risultato atteso è: \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}    
+Ricordiamo che il risultato atteso è: \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}
+\subsubsection{Modifica Temperature}
+I LLM provavano a dare risposta anche senza avere tutte le informazioni necessarie, ho deciso di abbassare la temperatura da 0.3 a 0.2 per vedere se i modelli rispondessero in maniera più precisa.
+Il risultato è stato raggiunto.
 \subsection{Query base senza riferimenti al metodo utilizzato all'interno di segnaleWow}
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?''}
@@ -921,67 +921,220 @@ per questo le risposte dei due modelli sono incomplete:
 \subsubsection{Output con LLM Llama3.2}
 L'output ottenuto utilizzando il modello Llama3.2 è stato:
 \begin{quote}
-    ``Il metodo \texttt{segnaleWow} restituisce una stringa che contiene un messaggio magico associato alla data specificata. In questo caso, la data è il 14 Febbraio 2025.
-La risposta esatta sarebbe:
-"il tuo segnale Wow è : [messaggio magico]"
-dove [messaggio magico] è il risultato dell'applicazione di `DateUtilCustom.getMessaggioMagico(date).''
+    ``Il metodo `segnaleWow` prende un parameetro di tipo `LocalDate` e lo utilizza per richiamare la funzione `getMessaggioMagico` di `DateUtilCustom`. Tuttavia, non è chiaro che il metodo `getMessaggioMagico` restituisca sempre una stringa.
+    Supponendo che `getMessaggioMagico` ritorni sempre una stringa, il risultato del metodo `segnaleWow` con l'input `LocalDate.of(2025, 2, 14)` sarebbe:
+    "il tuo segnale Wow è :messaggio magico"
+    Tuttavia, senza sapere cosa esattamente ritorni `getMessaggioMagico`, non possiamo essere certi del risultato.''
 \end{quote}
-
-\subsubsection{Modifica Temperature}
-CodeQwen provava a dare risposta anche senza avere tutte le informazioni necessarie, ho deciso di abbassare la temperatura da 0.3 a 0.2 per vedere se il modello CodeQwen avrebbe risposto in maniera più precisa.
-Cosa che è avvenuta:
 
 \subsubsection{Output con LLM CodeQwen}
-Utilizzando invece il modello CodeQwen, la risposta ottenuta è stata:
+CodeQwen continua a cercare di dare risposta senza conoscerla anche con la temperatura a 0.2, è stata quindi ulteriormente abbassata a 0.1 e top\_p è stato abbassato a 0.6.
+Il modello continuava a dare risposte incomplete è stato quindi aggiunto alla variabile \emph{varStileLLM} la stringa \texttt{``Rispondi solo se hai certezza sicura della risposta.''}.
+La risposta senza allucinazioni è stata:
 \begin{quote}
-    ``Se si chiama il metodo `segnaleWow` con un'istanza di `LocalDate` che rappresenta la data "14 febbraio 2025", il valore restituito sarà una stringa che indica il segnale Wow associato a tale data.
+    ``Il metodo `segnaleWow` restituisce una stringa che contiene un messaggio di "il tuo segnale Wow è :" seguito da un messaggio magico generato dal metodo `getMessaggioMagico` della classe `DateUtilCustom`.
+    Per ottenere il valore del messaggio magico associato a una data specifica, ad esempio `LocalDate.of(2025, 2, 14)`, dovresti richiamare il metodo `getMessaggioMagico` direttamente su quella data:
     ```java
-    String result = GiorniMagici.segnaleWow(LocalDate.of(2025, 2, 14));
-    System.out.println(result);
-    ```
-    Il metodo `getMessaggioMagico` viene richiamato su un'istanza di `DateUtilCustom`, passando la data "14 febbraio 2025" come parametro. Questo metodo presumibilmente restituisce un messaggio magico associato a tale data, ad esempio "La data del New Year è una data speciale".
-    Il risultato finale sarà:
-    ```
-    il tuo segnale Wow è : La data del New Year è una data speciale``
+    String wow = DateUtilCustom.getMessaggioMagico(LocalDate.of(2025, 2, 14));
+    System.out.println(wow);
+    ```''
 \end{quote}
 
-\subsection{Query Completa con riferimenti al metodo utilizzato all'interno di segnaleWow}
+\subsection{Risultati con query che descrive accuratamente il contesto}
+Rieseguiamo il test ma con una query più dettagliata aggiungento i riferimenti al metodo utilizzato all'interno della funzione segnaleWow:
 \begin{quote}
     \texttt{``Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14)) che utilizza la funzione getMessaggioMagico() della libreria DateUtilCustom?''}
 \end{quote}
 \subsubsection{Fonti aggiunte dal RAG al Prompt}
-In questo caso il RAG aggiunge 5 chunk, ovvero oltre a quello relativo alla funzione \texttt{segnaleWow} anche i chunk relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
+In questo caso il RAG aggiunge 4 chunk, il primo che riporta la funzione \texttt{segnaleWow} e gli altri tre chunk sonoo relativi alla funzione \texttt{getMessaggioMagico} della libreria DateUtilCustom.
 Ne consegue che \textbf{le risposte date dai due modelli sono coerenti con quanto atteso}.
 \subsubsection{Output con LLM Llama3.2}
-``Il metodo \texttt{segnaleWow} restituisce una stringa che contiene il messaggio magico per la data specificata. 
-Per determinare il messaggio esatto, dobbiamo analizzare la data fornita: `LocalDate.of(2025, 2, 14)`.
-La data è il 14 febbraio 2025. Il giorno della settimana corrisponde a `FRIDAY`.
-Quindi, il messaggio magico restituito dal metodo `getMessaggioMagico` sarà:
-\textbf{"Attenzione agli incantesimi del crepuscolo."}''
+``Il metodo `segnaleWow` restituisce una stringa che contiene il messaggio magico per la data specificata. Tuttavia, il messaggio magico è generato dalla funzione `getMessaggioMagico` della libreria `DateUtilCustom`, che richiede un oggetto `LocalDate`.
+Il problema è che il metodo `segnaleWow` non restituisce direttamente il messaggio magico, ma piuttosto una stringa che contiene il messaggio magico. Quindi, per ottenere il messaggio magico effettivamente, dobbiamo chiamare entrambi i metodi.
+Ecco la soluzione:
+```java
+public static String segnaleWow(LocalDate date) {
+    return "Il tuo segnale Wow è: " + getMessaggioMagico(date);
+}
+```
+Quindi, se chiamiamo `segnaleWow` con una data specifica, otteniamo il messaggio magico come risultato:
+```java
+LocalDate date = LocalDate.of(2025, 2, 14);
+String messaggioMagico = segnaleWow(date);
+System.out.println(messaggioMagico); // "Il tuo segnale Wow è: Il giorno perfetto per scoprire segreti nascosti."
+```
+In questo modo, otteniamo il messaggio magico effettivamente.''
+
 \subsubsection{Output con LLM CodeQwen}
-``Se si chiama il metodo `segnaleWow` con una data di `LocalDate.of(2025, 2, 14)`, utilizzando la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`, il risultato sarà:
+``Il metodo `segnaleWow` restituisce una stringa che contiene il messaggio magico associato alla data specificata. In questo caso, se si utilizza la funzione `getMessaggioMagico(LocalDate.of(2025, 2, 14))`, la data è un lunedì (14 febbraio 2025).
+Il metodo `getMessaggioMagico` restituisce il messaggio magico associato al giorno della settimana del parametro `datamagica`. Nel caso di una data lunedì, il messaggio restituito sarà "La magia inizia nel silenzio...".
+Quindi, la risposta del metodo `segnaleWow(LocalDate.of(2025, 2, 14))` sarà:
 ```
-Il tuo segnale Wow è : \textbf{Il giorno perfetto per scoprire segreti nascosti.}
-```
-Questo è dato che la data 2025-02-14 cade mercoledì, quindi il metodo `getMessaggioMagico()` restituisce il messaggio "Il giorno perfetto per scoprire segreti nascosti.''
+il tuo segnale Wow è : La magia inizia nel silenzio...''
 \subsection{Commento risultati ottenuti}
 I risultati ottenuti mostrano come il sistema RAG sia in grado di rispondere in maniera coerente alla query proposta.
 La ricerca dei chunk più simili funziona correttamente soprattutto se si scrive la richiesta in maniera più dettagliata possibile.
-CodeQwen ha sbagliato a calcolare il giorno della settimana a causa di un suo errore nel calcolare il giorno della settimana corrispondente alla data fornita come parametro ma la risposta utilizza correttamente il metodo getMessaggioMagico().
+I LLM hanno sbagliato a calcolare il giorno della settimana a causa di un loro errore nel calcolare il giorno della settimana corrispondente alla data fornita come parametro.
+Ma le risposte fornite utilizzano correttamente il metodo getMessaggioMagico.
+Sono stati migliorati i parametri di ricerca per evitare allucinazioni da parte dei modelli.
+Eseguendo questo test utilizzando versioni di questi modelli con più parametri, si è ottenuto il risultato corretto.
+\subsubsection{Esempio utilzzando qwen con 70 bilioni di parametri}
+Testato su https://deepinfra.com/Qwen/Qwen2.5-Coder-7B dove è stato possibile settare anche gli stessi parametri al modello, ovvero temperature 0.1 e top\_p 0.6.
+\begin{quote}
+    \texttt{`` Il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` ritorna una stringa che contiene il messaggio magico corrispondente alla data fornita. In questo caso, la data è il 14 febbraio 2025, che è un venerdì. Quindi, il metodo `getMessaggioMagico(LocalDate datamagica)` restituirà il messaggio "Attenzione agli incantesimi del crepuscolo." 
+    Quindi, il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` restituirà la stringa:
+    ```
+    il tuo segnale Wow è :Attenzione agli incantesimi del crepuscolo.
+    ``` 
+    Sicuro della risposta.''}
+\end{quote}
+La risposta è corretta, è possbile concludere che il sistema RAG creato funzioni complessivamente in modo corretto.
+\section{Generazione codice Java specifico con RAG}
+Valutiamo ora la capacità del sistema RAG di generare codice Java, verificando se il sistema RAG è in grado di aiutare i modelli LLM a personalizzare le risposte, per fare in modo che il
+LLM impari lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
+Per questi test è stato utilizzato il LLM \emph{CodeQwen 7B} essendo tra i due presi in considerazione quello che dovrebbe offrire risultati migliori.
+Sono state eseguente le seguenti tipologie di test specifici:
+\begin{itemize}
+    \item Estensione di classi esistenti
+    \item Refactoring di metodi 
+    \item Implementazione di nuove funzionalità usando metodi di classi esistenti
+\end{itemize}
 
-\section{Valutazione ``llm as a judge"}
-Per eseguire una valutazione più ampia del sistema usiamo l'approccio \textbf{\emph{"llm as a judge"}} per valutare automaticamente quanto prodotto dal sistema RAG.
-Generiamo \textbf{30 domande} sulle quali sarà richiesta risposta al sistema RAG e sucessivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di un altro LLM.
-\subsection{Crezione domande}
+\subsection{Esempio 1: Estensione di una Classe}
+\textbf{Query:} 
+\begin{quote}
+``Aggiungi alla classe \texttt{AdvancedBasketballStats} un metodo \texttt{calcolaEfficienzaSquadra()} 
+che valuti l'efficienza della squadra in base alle statistiche della squadra e alle partite vinte''
+\end{quote}
+
+\textbf{Codice generato con RAG:}
+\begin{lstlisting}[language=Java]
+package classi_java_custom;
+import java.time.LocalDate;
+public class AdvancedBasketballStats extends BasketballStats {
+
+    /** Override con calcolo avanzato
+     */
+    @Override
+    public double calcolaEfficienzaGiocatore(int punti, int rimbalzi, int assist,
+                                            int pallePerse, int tiriSbagliati) {
+        return (punti * 1.2 + rimbalzi * 1.1 + assist * 1.3) -
+              (pallePerse * 0.9 + tiriSbagliati * 0.7);
+    }
+
+    /** Aggiunto metodo per calcolo efficienza squadra
+     */
+    public double calcolaEfficienzaSquadra(int[] statisticheGiocatori) {
+        double totalPunti = 0;
+        double totalRimbalzi = 0;
+        double totalAssist = 0;
+        double totalPallePerse = 0;
+        double totalTiriSbagliati = 0;
+        for (int stat : statisticheGiocatori) {
+            totalPunti += stat / 5; // Assumendo che ogni statistica e' un punto, rimbalzo, assist, palle perse o tiri sbagliati
+            totalRimbalzi += stat / 4;
+            totalAssist += stat / 3;
+            totalPallePerse += stat / 2;
+            totalTiriSbagliati += stat / 1.5;
+        }
+        return calcolaEfficienzaGiocatore(totalPunti, totalRimbalzi, totalAssist, totalPallePerse, totalTiriSbagliati);
+    }
+}
+\end{lstlisting}
+
+\textbf{Analisi:}
+Il RAG fornisce al Prompt la classe specifica che permette al LLM di generare codice Java coerente con lo stile e che sfrutta i metodi già presenti nella classe.
+Infatti nel metodo \texttt{calcolaEfficienzaSquadra} generato viene utilizzato il metodo \texttt{calcolaEfficienzaGiocatore} già presente nella classe.
+Le variabili sono coerenti sia per significato che tipologia unico errore è stato creare variabili di tipo double invece che int.
+Complessivamente la risposta è coerente con quanto atteso e facilmente integrabile con il codice già presente.
+\subsection{Esempio 2: Refactoring di un Metodo}
+\textbf{Query:} 
+\begin{quote}
+``Sostituisci nella clase DateUtilCustom.java il costrutto \texttt{if-else} in \texttt{getMessaggioMagico()} con uno \texttt{switch} expression''
+\end{quote}
+
+\textbf{Codice generato con RAG:}
+\begin{lstlisting}[language=Java]
+    /**
+    * Ottieni un messaggio magico in base al giorno della settimana di una data.
+    * @param datamagica
+    * @return Il messaggio magico.
+    * @throws DateTimeParseException Se la data non e' valida.
+    */
+   public static String getMessaggioMagico(LocalDate datamagica) throws DateTimeParseException {
+       DayOfWeek giornoSettimana = datamagica.getDayOfWeek();
+
+       return switch (giornoSettimana) {
+           case MONDAY -> "Lunedi', il mondo e' in pausa per un lunedi'";
+           case TUESDAY -> "Martedi', la settimana comincia!";
+           ...continua correttamente
+       };
+   }
+\end{lstlisting}
+
+\textbf{Analisi:}
+Anche in questo caso il RAG fornisce al prompt il metodo specifico da modificare.
+Il refactoring è stato eseguito correttamente e il codice generato è facilmente integrabile con il codice già presente.
+\subsection{Esempio 3: Implementazione di nuove funzionalità usando metodi di classi esistenti}
+\textbf{Query:}
+\begin{quote}
+``Sto costruendo il seguente metodo: int calcolaGiorniLavorativi(Date dataA, Date dataB){
+    int numeroGiorni...
+    return numeroGiorni}
+    che trova la differenza in giorni lavorativi(escludendo sabato e domenica). Come posso costruirlo utilizzando la classe DataUtilCustom?''
+\end{quote}
+
+\textbf{Codice generato con RAG:}
+``Per calcolare i giorni lavorativi tra due date, puoi utilizzare il metodo `getDifferenceInWorkingDays` della classe `DateUtilCustom`. Questo metodo restituisce il numero di giorni lavorativi compresi tra le due date specificate, escludendo sabati e domeniche.   
+Ecco come implementare il metodo `calcolaGiorniLavorativi` utilizzando la classe `DateUtilCustom`:
+\begin{lstlisting}[language=Java]
+import java.util.Date;
+
+public class Main {
+    public static void main(String[] args) throws ParseException {
+        // Creazione di due date
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date dataA = formatter.parse("01/01/2023");
+        Date dataB = formatter.parse("31/12/2023");
+
+        // Calcolo dei giorni lavorativi tra le due date
+        int numeroGiorniLavorativi = calcolaGiorniLavorativi(dataA, dataB);
+        System.out.println("Numero di giorni lavorativi: " + numeroGiorniLavorativi);
+    }
+    public static int calcolaGiorniLavorativi(Date dataA, Date dataB) {
+        return (int) DateUtilCustom.getDifferenceInWorkingDays(dataA, dataB);
+    }
+}
+\end{lstlisting}
+Nell'esempio di codice qui sopra, viene utilizzato il metodo `getDifferenceInWorkingDays` della classe `DateUtilCustom` per calcolare la differenza in giorni lavorativi tra le due date specificate. Il risultato viene convertito in un intero e restituito dal metodo `calcolaGiorniLavorativi`.
+''
+
+\textbf{Analisi:}
+Nel Prompt sono state fornite le informazioni necessarie per implementare il metodo richiesto, passando i vari metodi della classe DateUtilCustom. 
+Ma il LLM non è riuscito a generare un codice corretto, infatti il metodo \texttt{calcolaGiorniLavorativi} non è stato implementato correttamente
+avendo utilizzato una funzione non esistente \texttt{getDifferenceInWorkingDays}.
+\subsection{Conclusioni}
+Il LLM dimostra notevoli capacità di contestualizzare le risposte se passate adeguate informazioni dal RAG al Prompt.
+Tuttavia le conoscenze passate non sono sempre sufficienti per dare al modello il giusto contesto per generare codice coerente,
+il RAG per fornire il giusto contesto ha bisogno di richieste mirate e di piccole dove riesce estrarre i chunk più rilevanti.
+Non è invece in grado di generare codice parti di codice Java articolate per le quali avrebbe bisogno di un contesto più ampio.
+Si potrebbe costruire un LLM specializzato nella gestione dei RAG direttamente in fase di fine-tuning, preparandolo a gestire le richieste del RAG.
+Inoltre il RAG dovrebbe fornire un contesto molto più ampio al Prompt al LLM, questo al giorno d'oggi sta già avvenendo in modelli come GitHub Copilot che permette di avere un contesto di classi molto ampio al LLM 
+per generare le sue risposte.
+
+\section{Valutazione ``llm as a judge''}
+Per eseguire una valutazione più ampia del sistema viene ora eseguito l'approccio \textbf{\emph{``llm as a judge''}} per valutare automaticamente quanto prodotto dal sistema RAG.
+Sono state generate \textbf{30 domande} sulle quali sarà richiesta risposta al sistema RAG e sucessivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di un altro LLM.
+\subsection{Creazione domande}
 Passando un file contenente tutte le librerie a \textbf{NotebookLM}, sono state generate 30 domande per valutare il sistema RAG.
-La domanda fatta al LLM è stata:
+La richiesta fatta al LLM è stata:
 \begin{quote}
     \texttt{``Dalle mie classi genera 30 domande/risposte per valutare il mio rag la prima è:
     \newline Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))
     che utilizza la funzione getMessaggioMagico() della libreria
     DateUtilCustom?''}
 \end{quote}
-Il risulta è strutturato nel seguente modo:
+Il risultato è strutturato nel seguente modo:
 \begin{lstlisting}[language=json, caption={Domande/Risposte generate da NotebookLM}]
     {
         "question1": "Cosa ritorna il metodo `segnaleWow(LocalDate.of(2025, 2, 14))` che utilizza la funzione `getMessaggioMagico()` della libreria `DateUtilCustom`?",
@@ -995,7 +1148,7 @@ Il risulta è strutturato nel seguente modo:
 \end{lstlisting}
 \subsection{Metrica del punteggio}
 Per valutare le domande generate da \textbf{LMNotebook}, è stato chiesto a \textbf{GPT4o} e a \textbf{Mistral} di 
-fornire un "punteggio totale" che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
+fornire un ``punteggio totale'' che indichi la capacità di rispondere alla domanda senza ambiguità con il contesto dato.
 Su una scala da 1 a 5, dove 1 significa che la domanda è risolvibile anche senza conoscere il contesto specifico, mentre 5 quando la domanda è chiaramente e inequivocabilmente risolvibile solo conoscendo il contesto.
 \subsubsection{Risultati}
 I modelli hanno valutato le domande generate da LMNotebook con punteggi diversi:
@@ -1010,11 +1163,11 @@ GPT4o ha fornito anche una tabella riepilogativa con i punteggi di ogni domanda 
     \item Domande con punteggio 3: Risolvibili parzialmente con conoscenze standard, ma con margini di errore.
     \item Domande con punteggio 2: Generalmente risolvibili perché rientrano in pattern comuni di programmazione.
 \end{itemize}
+
 \subsection{llm as a judge}
-Il sistema RAG ha elaborato le domande e fornito risposta salvando il risultato in un file JSON:
-\begin{lstlisting}[language=Python, caption={Codice aggiunto alla pipeline per elaborare massivamente le domande}, label={lst:chunking}, inputencoding=utf8]
+Per poter valutare massivamente le domande alla pipeline rag sono state aggiunte le seguenti funzioni:
+\begin{lstlisting}[language=Python, caption={funzione load\_questions}, label={lst:funzione load_questions}]
 def load_questions(file_path: str) -> List[Dict]:
-    """Carica le domande dal file JSON esterno"""
     try:
         actual_path = Path(__file__).parent / file_path
         with actual_path.open('r', encoding='utf-8') as f:
@@ -1025,20 +1178,21 @@ def load_questions(file_path: str) -> List[Dict]:
         for item in data:
             if not required_keys.issubset(item.keys()):
                 raise ValueError("Struttura JSON non valida")
-                
         return data
         
     except FileNotFoundError:
         raise Exception(f"File {file_path} non trovato")
     except json.JSONDecodeError:
         raise Exception("Errore nel parsing del JSON")
+\end{lstlisting}
 
+\textbf{load\_question} carica le domande dal file JSON e ne verifica la struttura.
+\begin{lstlisting}[language=Python, caption={Funzione:process\_questions}, label={lst:process_questions}]
 def process_questions(questions: List[Dict]) -> List[Dict]:
     results = []
     for q in questions:
         try:
             result = rag_chain.invoke({"input": q["question"]})
-            
             entry = {
                 "id": q["id"],
                 "question": q["question"],
@@ -1053,7 +1207,6 @@ def process_questions(questions: List[Dict]) -> List[Dict]:
                 ]
             }
             results.append(entry)
-            
             print(f"Processata {q['id']}")
             
         except Exception as e:
@@ -1064,69 +1217,49 @@ def process_questions(questions: List[Dict]) -> List[Dict]:
                 "error": str(e),
                 "question": q["question"]
             })
-    
     return results
-
 \end{lstlisting}
+\textbf{process\_questions} esegue la valutazione delle domande e restituisce i risultati.
 
-Questi file sono stati valutati da \textbf{DeepSeek}, il quale ha assegnato un punteggio specifico per ogni domanda confrontando le risposte \texttt{answerOK} e \texttt{answerRAG}. Sono state effettuate quattro elaborazioni differenti:
-
-\begin{itemize}[leftmargin=*, label={--}]
-    \item \textbf{CodeQwen con score threshold 1.0}
-    \begin{itemize}[leftmargin=*, label={$\bullet$}]
-        \item \textbf{Punteggio totale:} 109/124
-        \item \textbf{Punteggi per domanda:}
-        \texttt{[0,5,5,5,5, 5,4,4,4,4, 5,0,5,0,2, 2,3,2,2,2, 5,4,3,5,4, 5,4,5,5,5]}
-    \end{itemize}
-
-    \item \textbf{Llama3.2 score threshold 0.8}
-    \begin{itemize}[leftmargin=*, label={$\bullet$}]
-        \item \textbf{Punteggio totale:} 87/124
-        \item \textbf{Punteggi per domanda:}
-        \texttt{[0,5,0,5,5, 5,4,4,0,4, 5,4,5,0,2, 2,3,0,0,2, 0,4,3,5,0, 5,0,5,5,5]}
-    \end{itemize}
-
-    \item \textbf{Llama3.2 score threshold 1.0}
-    \begin{itemize}[leftmargin=*, label={$\bullet$}]
-        \item \textbf{Punteggio totale:} 97/124
-        \item \textbf{Punteggi per domanda:}
-        \texttt{[0,5,0,5,5, 5,4,4,0,4, 5,4,5,0,2, 2,3,0,2,2, 0,4,3,5,4, 5,4,5,5,5]}
-    \end{itemize}
-
-    \item \textbf{Llama3.2 score threshold 0.4}
-    \begin{itemize}[leftmargin=*, label={$\bullet$}]
-        \item \textbf{Punteggio totale:} 28/124
-        \item \textbf{Punteggi per domanda:}
-        \texttt{[0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,2, 2,3,0,2,2, 5,0,3,5,4, 0,0,0,0,0]}
-    \end{itemize}
+\subsection{Valutazione risposte}
+Il sistema RAG ha elaborato le domande e fornito risposta salvando il risultato in un file JSON:
+Questi file sono stati valutati da \textbf{DeepSeek}, il quale ha assegnato un punteggio specifico per ogni domanda confrontando le risposte \texttt{answerOK} e \texttt{answerRAG}.
+Sono state effettuate quattro elaborazioni con configurazioni differenti ottendo i seguenti punteggi:
+\begin{itemize}
+    \item CodeQwen con score\_threshold 1.0 : 109/124
+    \item Llama3.2 con score\_threshold 0.8 : 87/124
+    \item Llama3.2 con score\_threshold 1.0 : 97/124
+    \item Llama3.2 con score\_threshold 0.4 : 28/124
 \end{itemize}
-
-\paragraph{Nota:} È interessante notare che tutti i modelli hanno sbagliato la prima domanda,
-non per mancanza di Chunk forniti al Prompt ma a causa di un errore nel calcolo del giorno della settimana.
-Questo errore non si sarebbe verificato con le versioni con più parametri degli stessi modelli.
-\newpage
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{figures/confronto_valutazioni_modelli.png}
     \caption{Confronto risposte modelli RAG}
     \label{fig:confronto-modelli}
 \end{figure}
-
+\subsection{Analisi risultati}
+La configurazione migliore è stata quella del LLM \textbf{CodeQwen con score threshold 1.0},
+i test effettuati hanno dimostrato che è meglio aumentare la tolleranza di score dei chunk estratti nella fase di Retriever.
+Questo score relativamente alto, come già analizzato nei capitoli precedenti, può causare l'inserimento di alcuni chunk non coerenti ma allo stesso tempo evita di escludere chunk validi e fondamentali per permettere al LLM di rispondere correttamente.
+Quando il RAG trova i chunk corretti abbiamo dimostrato che score\_threshold ha valore molto basso solo nei casi in cui la query di input è scritta in maniera molto accurata cosa che 
+normalmente non avviene.
+Il risultato di questa minore rigidità nel filtrare i chunk può essere utile per ridurre l'overfitting creato nella prima fas di configurazione dei parametri dell RAG.
+Per validare la soluzione adottata e prevenire il plorifirarsi di chunk non coerenti viene sempre impostato il limite a 5 Chunk.
+In questo modo il Prompt non viene mai eccessivamente appesantito e il modello riesce ad elaborare nella maggior parte dei casi risposte coerenti.
+I test fatti su Llma3.2 con score threshold 1.0 e con threshold 0.8 esplicitano queste conclusioni infatti il risultato migliore è stato con score\_threshold più altro perchè in questo modo 
+non sono stati estromessi nella fase di Retriever chunk validi e fondamentali per la risposta.
+I risultati sono stati nel complesso soddisfacenti ed è possibile concludere che il sistema RAG funziona correttamente aumentando le conoscenze dei LLM in modo vincente.
+Ulteriore test è stato fatto impostando uno score\_threshold 0.4 con il quale vengono esclusi di fatto quasi tutti i chunck, in questo modo il LLM risponde solo utilizzando le sue con conoscenze riportando risultati estremamente scarsi non conoscendo i contesti e le librerie specificate nelle domande.
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{figures/completezza_per_domanda.png}
     \caption{Completezza per domanda}
     \label{fig:completezza-per-domanda}
 \end{figure}
-La configurazione migliore è stata quella del LLM \textbf{CodeQwen con score threshold 1.0},
-i test effettuati hanno dimostrato che è meglio aumentare la tolleranza di score dei Chunk estratti nella fase di Retriever.
-Questo score relativamente alto, come già analizzato nei capitoli precedenti, può causare l'inserimento di alcuni Chunk non coerenti ma allo stesso tempo evita di escluderne di validi e fondamentali per permettere al LLM di rispondere correttamente.
-Abbiamo visto che gli score avrebbero valori molto bassi solo se le query fossero scritte in maniera molto accurata ma questo solitamente non avviene.
-Questa minore rigidità può essere utile per ridurre una sorta di overfitting del modello RAG.
-In ogni caso per prevenire il plorifirarsi di Chunk non coerenti viene sempre impostato il limite a 5 Chunk in questo modo il Prompt non viene mai eccessivamente appesantito e il modello riesce ad elaborare buone risposte.
-Per rinforzare queste considerazione testando Llma3.2 con score threshold 1.0 e con threshold 0.8 il risultato migliore è stato con threshold maggiore perchè non ha estromesso nella fase di Retriever Chunk validi e fondamentali per la risposta.
-I risultati sono stati ottimi e il sistema RAG funziona correttamente aumentando le conoscenze dei LLM in manera vincente,
-ne è ulteriore prova l'impostazione di uno score threshold 0.4 con il quale vengono esclusi praticamente tutti i Chunck e per questo le risposte sono date solo dalle conoscenze del LLM con risultati estremamente scarsi non conoscendo i contesti e le librerie specificate nelle domande.
+
+\paragraph{Nota:} È interessante ricordare che tutti i modelli hanno sbagliato la prima domanda,
+non per mancanza di contesto nei chunk forniti al Prompt, ma come precedentemente descritto a causa di un errore nel calcolo del giorno della settimana.
+Questo errore non si sarebbe verificato con le versioni con più parametri degli stessi modelli.
 
 \chapter{Conclusioni}
 \begin{quote}
@@ -1141,19 +1274,21 @@ ne è ulteriore prova l'impostazione di uno score threshold 0.4 con il quale ven
     \includegraphics[width=\textwidth]{figures/intelligence_explosion.png}
     \caption{fig: tratta da situational-awareness.ai}
 \end{figure}
-
-
-Questi mesi di lavoro mi hanno portato a cercare di conosce e capire il più possibile come funzionano realmente questi modelli di Intelligenza Artificiale.
+Questi mesi di lavoro mi hanno portato a cercare di conosce e capire il più possibile come funzionano realmente i Large Language Model.
 Nella fase di ricerca ho sempre trovato nei vari articoli e analisi stupore e meraviglia nel commentare i risultati e le capacità dimostrate da questi modelli.
-Il saggio di Leopold Aschenbrenner \cite{Aschenbrenner2024} "SITUATIONAL AWARENESS: The Decade Ahead", da me conosciuto quasi al termine della scrittura di questa tesi, spiega e approfondisce lo stesso giudizio che oggi ho sul futuro dell'IA.
-Non voglio addentrarmi ora in ulteriori giudizi generali sul futuro dell'intelligenza Artificiale preferendo tornare nel contesto di questa tesi e affermere che \textbf{l'integrazione di RAG e LLM nello sviluppo del Software} è oggi già piena realtà.
-Il sistema RAG d'esempio implementato funziona correttamente nonostante i limiti dei modelli utilizzati e con un ulteriore implementazione delle tecniche Chunking potrebbe essere realmente utilizzato con buoni risultati.
-Implementazioni di sistemi RAG per le aziende oggi danno ottimi risultati,
-ma resta sempre il peso e la consapevolezza che in questo momento sono sempre un passo indietro rispetto ai miglioramenti globali che
+Il saggio di Leopold Aschenbrenner \cite{Aschenbrenner2024} ``SITUATIONAL AWARENESS: The Decade Ahead'', da me inontrato quasi al termine della scrittura di questa tesi, spiega e approfondisce lo stesso giudizio che oggi ho sul futuro dell'Artificial intelligence.
+Non voglio addentrarmi ora in ulteriori giudizi generali sul futuro dell'AI preferendo tornare nel contesto di questa tesi e affermere che \textbf{l'integrazione di RAG e LLM nello sviluppo del Software} è oggi già piena realtà.
+Il sistema RAG d'esempio implementato funziona correttamente nonostante i limiti dei modelli utilizzati e con un ulteriore implementazione delle tecniche Chunking potrebbe essere realmente utilizzato a livello aziendale con buoni risultati.
+Implementare sistemi RAG per le aziende oggi è un ottima soluzione,
+ma resta sempre il peso e la consapevolezza che in questo momento, le soluzioni costruite, sono sempre un passo indietro rispetto ai miglioramenti globali che
 giornalmente vengono rilasciati.
-Come programmatore al momento userò questi strumenti nel mio lavoro marginalmente perchè è mio desiderio continuare ad avere il controllo dei progetti realizzati e allo stesso tempo continuare ad avere soddisfazione e orgoglio nel riuscirci da solo.
-Certo sono consapevole che permettendo di velocizzare e migliorare la qualità del mio codice facendomi conoscere e ragionare su nuove tecniche e soluzioni aumentando la mia base di conoscenza.
-Proprio per questo mi piace concludere pensando che noi programmatori 'semplicemente' stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e l'AI sia, in questo campo, 'solo' un grandissimo trasmettitore di conoscenza.
+Come programmatore userò questi strumenti nel mio lavoro marginalmente perchè è mio desiderio continuare ad avere il controllo dei progetti realizzati che sento spesso di perdere utilizzando questi strumenti.
+Altro motivo e per continuare ad avere soddisfazione e orgoglio nel trovare soluzioni in autonomia, 
+certo sono consapevole che permettendo di velocizzare e migliorare la qualità del mio codice facendomi
+conoscere e ragionare su nuove tecniche e soluzioni aumentando la mia base di conoscenza.
+L'espressione \emph{``Se la ruota è già stata inventata, perchè reinventarla''} invita a non ripetere un lavoro già svolto con successo,
+ma è anche vero che il codice è stato inventato e migliorato da tanti programmatori che hanno cercato di renderlo più adatta ai loro scopi.
+Proprio per questo mi piace concludere pensando che noi programmatori (semplicemente) stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e l'AI sia, in questo campo, (?solo?) un grandissimo trasmettitore di conoscenza.
 
 \begin{quote}
     “De nihilo nihil”
@@ -1163,7 +1298,8 @@ Proprio per questo mi piace concludere pensando che noi programmatori 'semplicem
 \chapter{Ringraziamenti}
 Ringrazio il mio relatore il Prof. Viroli Mirko e il Dott. Aguzzi Gianluca per l'interessantissimo argomento di tesi proposto e per la disponibilità e professionalità dimostrata.
 Ringrazio tutta lo comunità di ricercatori che forniscono materiale open source e documentazione per permettere a tutti di apprendere e migliorare questa incredibile tecnologia.
-Infine ringrazio gli studenti che ho conosciuto in questo percorso, è stato molto divertente studiare con voi.
+Grazie a tutti gli studenti che ho conosciuto in questo percorso, è stato molto costruttivo e divertente studiare con voi.
+Infine vorrei trovare le parole giuste per ringraziare Giulia, in questi anni sei stata eccezzionale grazie per tutto, questo risultato è in gran parte merito tuo.
 
 
 
