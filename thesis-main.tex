@@ -56,9 +56,7 @@
 \mainlinespacing{1.241} % line spacing in mainmatter, comment to default (1)
 
 \begin{document}
-
 \frontmatter\frontispiece
-
 \begin{abstract}	
 I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
 Ma l'addestramento fatto sui modelli è su fonti generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta partendo da codice già creato dal programmatore o dalla propria azienda per casi simili.
@@ -114,7 +112,6 @@ In progetti complessi questo non riduce il ruolo del programmatore che detiene l
 Questi software hanno un problema importante, essendo addestrati su dataset generici e non personalizzati, sono validi nel fornire risposte standard e generiche, ma non sono in grado di fornire risposte personalizzate e specifiche per un'azienda o un programmatore.
 Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte, per fare in modo che il LLM impari lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
 Per fare questo entrano in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che sono l'argomento principale di questa tesi.
-
 \chapter{Addestrare un LLM per la Generazione del Codice}
 
 L'addestramento di LLM per la generazione del codice di programmazione richiede una serie di passaggi complessi e costi significativi.
@@ -252,7 +249,6 @@ Una volta completata la valutazione, i risultati ottenuti possono guidare il pro
     \item \textbf{Modifiche all'Architettura}: Introduzione di nuove componenti o revisione di quelle esistenti per aumentare la capacità del modello di apprendere e generalizzare.
     \item \textbf{Integrazione di Dati Aggiuntivi}: Ampliamento del dataset di addestramento con ulteriori esempi, mirati a colmare le lacune individuate durante la valutazione.
 \end{itemize}
-
 \chapter{Retrieval Augmented Generation}
 \section{Introduzione} 
 La sigla RAG, acronimo di \textbf{Retrieval Augmented Generation} (in italiano, \textit{Generazione Aumentata tramite Recupero}), indica un approccio innovativo volto a potenziare le capacità di un \ac{LLM}.
@@ -353,7 +349,6 @@ Riassumendo i vantaggi principali di un sistema RAG sono:
     \item supporta la creazione di documentazione aggiornata
     \item permette all'interno di un Team di migliorare la coerenza del codice scritto da diversi programmatori proponendo librerie e standard comuni
 \end{itemize}
-
 \chapter{Implementazione di un sistema RAG per lo sviluppo di codice per il linguaggio Java}
 \section{Obiettivo}
 Questo caso studio si propone l'obiettivo di verificare il livello di personalizzazione e qualità delle risposte di un \ac{LLM} integrato con un sistema \ac{RAG} specializzato per lo sviluppo di codice Java.
@@ -402,7 +397,6 @@ A completare il flusso operativo, il modulo \textbf{Retriever} esegue query sema
 \subsection{LLM Interface}
 Infine, l'\textbf{LLM Interface (CodeQwen e Llama 3.2)} rappresenta il punto di interazione diretto con l'utente. Attraverso un'interfaccia gestita da Ollama, questo modulo comunica con i modelli di linguaggio CodeQwen e Llama 3.2, utilizzando il contesto prelevato dal Retriever per generare risposte personalizzate e contestualizzate. In questo modo, il sistema RAG integra e potenzia le capacità del LLM senza modificare direttamente la sua base di conoscenza.
 Nel complesso, l'architettura modulare del sistema RAG permette di combinare la flessibilità della generazione basata su LLM con la precisione e la rapidità dei sistemi di recupero delle informazioni, offrendo così una soluzione altamente efficace per la personalizzazione e l'aggiornamento continuo delle risposte generate.
-
 \section{Software Utilizzati}
 \subsection{Ollama\hspace{0.3cm}\protect\includegraphics[width=0.03\linewidth]{figures/ollama.png}}
 Ollama \cite{ollama-docs} è un software che permette di utilizzare in locale LLM
@@ -435,7 +429,6 @@ Il modello permettendo di convertire testo in vettori numerici ad alta dimension
 \subsection{FAISS}
 FAISS (Facebook AI Similarity Search) \cite{faiss} è una libreria open source per la ricerca efficiente di similarità e il clustering di vettori densi.
 Progettata per gestire dataset su larga scala, FAISS supporta operazioni di ricerca anche su insiemi di vettori che superano la capacità della RAM, grazie a tecniche di indicizzazione avanzate e ottimizzazioni computazionali.
-
 \section{Dataset}
 Il dataset è stato creato appositamente per testare il sistema RAG ed è composto da diciannove classi Java.
 \'E possibile scaricare il dataset in \url{https://github.com/ilBollo/Tesi/tree/main/my_project/classi_java_custom}
@@ -448,7 +441,6 @@ Il dataset è composto dalle seguenti classi Java:
     \item[BasketballTest] Classe per testare le statistiche di basket implementate in AdvancedBasketballStats
     \item[Altre classi java] Non strettamente correlate con le prime due utili per aumentare la base dati sul quale effettuare le ricerche e per testare la capacità di generalizzazione del sistema.
 \end{description}
-
 \section{Risultato atteso caso d'uso RAG}
 DateUtilCustom.java e GiorniMagici.java sono strettamente correlate infatti GiorniMagici.java richiama metodi definiti in DateUtilCustom.java.
 Inizialmente andremo a testare il sistema RAG impostando come primo input la seguente query: 
@@ -482,14 +474,13 @@ public static String getMessaggioMagico(LocalDate datamagica) throws DateTimePar
 }
 \end{lstlisting}
 
-\subsection{Output Atteso}
+\subsection{Output}
 Il sistema RAG dovrebbe essere in grado di recuperare i chunk relativi ai metodi \texttt{segnaleWow} e \texttt{getMessaggioMagico} e di integrarli nel Prompt del LLM.
 Il modello, basandosi su queste informazioni, dovrebbe generare una risposta coerente e contestualizzata alla query iniziale.
 Nel caso specifico essendo il 14 Febbraio 2025 un venerdì,  la risposta corretta è:
 \begin{quote}
     \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}
 \end{quote}
-
 \section{Implementazione}
 \subsection{Chunking del Codice Java}
 Per segmentare il codice Java in chunk, è stata utilizzata la libreria \texttt{langchain\_text\_splitters}.
@@ -775,7 +766,6 @@ LangChain fornisce un'interfaccia semplice per eseguire query semantiche sul dat
     Mentre il secondo è causato da i chunk estratti, lo score impostato non è particolarmente basso e questo può causare l'estrazione di chunck relativi a funzioni con terminologie e meccanismi simili ma non coerenti con il contesto cercato.
     Per questo secondo punto questa analisi ha portato alla decisione di abbassare \texttt{score\_threshold} da 0.90 a 0.82,
     questa piccola correzione risolve in parte il problema o almeno evita di propagarlo ulteriormente, preferendo non ottenere in certi casi risultati dal \ac{RAG} piuttosto che ricevere risposte non coerenti.
-
 \subsection{Creazione della Pipeline RAG}
 La pipeline RAG combina i componenti precedentemente descritti per creare un sistema completo di generazione di risposte.
 \begin{lstlisting}[language=Python, caption={Caricamento database FAISS}, label={lst:Caricamento database FAISS}]
@@ -904,7 +894,6 @@ Sfruttando le funzionalità della libreria LangChain \cite{langchain-retrieval-c
  \begin{itemize}
     \item la funzione \textbf{create\_stuff\_documents\_chain()} carica una catena di documenti prendendo in input il modello LLM e il template del prompt.
  \end{itemize}
-
 \section{Test Sistema RAG}
 Valutiamo se il sistema RAG  è in grado di rispondere in maniera coerente alla query proposta.
 Ricordiamo che il risultato atteso è: \textbf{``il tuo segnale Wow è: Attenzione agli incantesimi del crepuscolo.''}
@@ -991,8 +980,8 @@ Testato su https://deepinfra.com/Qwen/Qwen2.5-Coder-7B dove è stato possibile s
 La risposta è corretta, è possbile concludere che il sistema RAG creato funzioni complessivamente in modo corretto.
 \section{Generazione codice Java specifico con RAG}
 Valutiamo ora la capacità del sistema RAG di generare codice Java, verificando se il sistema RAG è in grado di aiutare i modelli LLM a personalizzare le risposte, per fare in modo che il
-LLM impari lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
-Per questi test è stato utilizzato il LLM \emph{CodeQwen 7B} essendo tra i due presi in considerazione quello che dovrebbe offrire risultati migliori.
+LLM produca codice coerente con quanto già realizzato e conosciuto.
+Per questi test è stato utilizzato il LLM \emph{CodeQwen 7B} essendo tra i due presi in considerazione quello maggiormente adesstrato per lo sviluppo di codice e dal quale ci si aspetta risultati migliori.
 Sono state eseguente le seguenti tipologie di test specifici:
 \begin{itemize}
     \item Estensione di classi esistenti
@@ -1000,7 +989,7 @@ Sono state eseguente le seguenti tipologie di test specifici:
     \item Implementazione di nuove funzionalità usando metodi di classi esistenti
 \end{itemize}
 
-\subsection{Esempio 1: Estensione di una Classe}
+\subsection{Test 1: Estensione di una Classe}
 \textbf{Query:} 
 \begin{quote}
 ``Aggiungi alla classe \texttt{AdvancedBasketballStats} un metodo \texttt{calcolaEfficienzaSquadra()} 
@@ -1008,6 +997,7 @@ che valuti l'efficienza della squadra in base alle statistiche della squadra e a
 \end{quote}
 
 \textbf{Codice generato con RAG:}
+Il LLM ha riportato anche parte della classe \texttt{AdvancedBasketballStats}. 
 \begin{lstlisting}[language=Java]
 package classi_java_custom;
 import java.time.LocalDate;
@@ -1041,13 +1031,12 @@ public class AdvancedBasketballStats extends BasketballStats {
     }
 }
 \end{lstlisting}
-
 \textbf{Analisi:}
 Il RAG fornisce al Prompt la classe specifica che permette al LLM di generare codice Java coerente con lo stile e che sfrutta i metodi già presenti nella classe.
 Infatti nel metodo \texttt{calcolaEfficienzaSquadra} generato viene utilizzato il metodo \texttt{calcolaEfficienzaGiocatore} già presente nella classe.
 Le variabili sono coerenti sia per significato che tipologia unico errore è stato creare variabili di tipo double invece che int.
 Complessivamente la risposta è coerente con quanto atteso e facilmente integrabile con il codice già presente.
-\subsection{Esempio 2: Refactoring di un Metodo}
+\subsection{Test 2: Refactoring di un Metodo}
 \textbf{Query:} 
 \begin{quote}
 ``Sostituisci nella clase DateUtilCustom.java il costrutto \texttt{if-else} in \texttt{getMessaggioMagico()} con uno \texttt{switch} expression''
@@ -1071,11 +1060,10 @@ Complessivamente la risposta è coerente con quanto atteso e facilmente integrab
        };
    }
 \end{lstlisting}
-
 \textbf{Analisi:}
 Anche in questo caso il RAG fornisce al prompt il metodo specifico da modificare.
 Il refactoring è stato eseguito correttamente e il codice generato è facilmente integrabile con il codice già presente.
-\subsection{Esempio 3: Implementazione di nuove funzionalità usando metodi di classi esistenti}
+\subsection{Test 3: Implementazione di nuove funzionalità usando metodi di classi esistenti}
 \textbf{Query:}
 \begin{quote}
 ``Sto costruendo il seguente metodo: int calcolaGiorniLavorativi(Date dataA, Date dataB){
@@ -1083,8 +1071,7 @@ Il refactoring è stato eseguito correttamente e il codice generato è facilment
     return numeroGiorni}
     che trova la differenza in giorni lavorativi(escludendo sabato e domenica). Come posso costruirlo utilizzando la classe DataUtilCustom?''
 \end{quote}
-
-\textbf{Codice generato con RAG:}
+\textbf{Risposta e codice generato con RAG:}
 ``Per calcolare i giorni lavorativi tra due date, puoi utilizzare il metodo `getDifferenceInWorkingDays` della classe `DateUtilCustom`. Questo metodo restituisce il numero di giorni lavorativi compresi tra le due date specificate, escludendo sabati e domeniche.   
 Ecco come implementare il metodo `calcolaGiorniLavorativi` utilizzando la classe `DateUtilCustom`:
 \begin{lstlisting}[language=Java]
@@ -1108,7 +1095,6 @@ public class Main {
 \end{lstlisting}
 Nell'esempio di codice qui sopra, viene utilizzato il metodo `getDifferenceInWorkingDays` della classe `DateUtilCustom` per calcolare la differenza in giorni lavorativi tra le due date specificate. Il risultato viene convertito in un intero e restituito dal metodo `calcolaGiorniLavorativi`.
 ''
-
 \textbf{Analisi:}
 Nel Prompt sono state fornite le informazioni necessarie per implementare il metodo richiesto, passando i vari metodi della classe DateUtilCustom. 
 Ma il LLM non è riuscito a generare un codice corretto, infatti il metodo \texttt{calcolaGiorniLavorativi} non è stato implementato correttamente
@@ -1118,10 +1104,10 @@ Il LLM dimostra notevoli capacità di contestualizzare le risposte se passate ad
 Tuttavia le conoscenze passate non sono sempre sufficienti per dare al modello il giusto contesto per generare codice coerente,
 il RAG per fornire il giusto contesto ha bisogno di richieste mirate e di piccole dove riesce estrarre i chunk più rilevanti.
 Non è invece in grado di generare codice parti di codice Java articolate per le quali avrebbe bisogno di un contesto più ampio.
-Si potrebbe costruire un LLM specializzato nella gestione dei RAG direttamente in fase di fine-tuning, preparandolo a gestire le richieste del RAG.
+Nel RAG in fase di costruzione del Template da passare al Prompt come \emph{system} si potrebbe creare un testo bene strutturato con le best practice più importanti per il programmatore da passare che saranno ogni volta fornite al LLM.
+Soluzione migliore potrebbe essere costruire un LLM specializzato nella gestione dei RAG direttamente in fase di fine-tuning, preparandolo a gestire le richieste del RAG.
 Inoltre il RAG dovrebbe fornire un contesto molto più ampio al Prompt al LLM, questo al giorno d'oggi sta già avvenendo in modelli come GitHub Copilot che permette di avere un contesto di classi molto ampio al LLM 
 per generare le sue risposte.
-
 \section{Valutazione ``llm as a judge''}
 Per eseguire una valutazione più ampia del sistema viene ora eseguito l'approccio \textbf{\emph{``llm as a judge''}} per valutare automaticamente quanto prodotto dal sistema RAG.
 Sono state generate \textbf{30 domande} sulle quali sarà richiesta risposta al sistema RAG e sucessivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di un altro LLM.
@@ -1288,7 +1274,7 @@ certo sono consapevole che permettendo di velocizzare e migliorare la qualità d
 conoscere e ragionare su nuove tecniche e soluzioni aumentando la mia base di conoscenza.
 L'espressione \emph{``Se la ruota è già stata inventata, perchè reinventarla''} invita a non ripetere un lavoro già svolto con successo,
 ma è anche vero che il codice è stato inventato e migliorato da tanti programmatori che hanno cercato di renderlo più adatta ai loro scopi.
-Proprio per questo mi piace concludere pensando che noi programmatori (semplicemente) stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e l'AI sia, in questo campo, (?solo?) un grandissimo trasmettitore di conoscenza.
+Proprio per questo mi piace concludere pensando che noi programmatori (semplicemente) stiamo imparando da altri programmatori che non incontreremo e conosceremo mai di persona e l'AI sia, in questo campo, (solo) un grandissimo trasmettitore di conoscenza.
 
 \begin{quote}
     “De nihilo nihil”
