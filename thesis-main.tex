@@ -58,15 +58,15 @@
 \begin{document}
 \frontmatter\frontispiece
 \begin{abstract}	
-I \ac{LLM} addestrati per sviluppare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
-Ma l'addestramento fatto sui modelli è su fonti generali, questo non da quindi la possibilità al modello di generare soluzioni su misura per una specifica richiesta partendo da codice già creato dal programmatore o dalla propria azienda per casi simili.
+I \ac{LLM} addestrati per generare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
+Tuttavia, poiché il loro addestramento si basa su fonti generaliste, tali modelli non sono in grado di elaborare soluzioni personalizzate per specifiche esigenze, utilizzando codice già creato dal programmatore o dalla propria azienda per contesti analoghi.
 Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
-Servirebbe quindi una nuova fase di fine-tunig per adattare il modello alle proprie esigenze, ma questa soluzione è un processo molto costoso che richiede particolari competenze tecnica
+Servirebbe quindi una nuova fase di fine-tuning per adattare il modello alle proprie esigenze, ma questa soluzione è un processo molto costoso che richiede particolari competenze tecniche
 difficilmente presenti in molte aziende. Inoltre il fine-tuning non permette di aggiornare il modello in maniera rapida e dinamica, richiedendo un nuovo addestramento per ogni modifica.
 Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza arricchendo il prompt della query di input che sarà elaborata dal \ac{LLM}.
 Il \ac{RAG}, ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, li inserirà per aumentare il Prompt del LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
 Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} specifico per codice Java e un \ac{LLM} con lo scopo di ottenere risposte personalizzate
-che solo con la conoscenza del LLM, anche se estremamente performante e completo, sarebbe stato impossibile ottenere.
+che solo con la conoscenza del LLM, anche se estremamente performante e completo, sarebbero state impossibili da ottenere.
 \end{abstract}
 
 \begin{dedication}
@@ -273,7 +273,7 @@ Per creare questo database vengono utilizzati dati esterni al training set origi
     \item Archivi documentali
     \item File di testo e codice
 \end{itemize}
-La creazione di un database ben strutturato e \underline{la fase più importante} di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la sucessiva fase di interrogazione.
+La creazione di un database ben strutturato e \underline{la fase più importante} di tutto il processo, dividere il codice in chunk correttamente etichettando ogni elemento con i corretti metadati è fondamentale per la successiva fase di interrogazione.
 Il processo di creazione del Vector Database segue la seguente pipeline:
 \begin{itemize}
     \item \textbf{Chunking}: Per garantire che i modelli di embedding possano lavorare efficacemente, è necessario suddividere il dataset in chunk di dimensioni controllate.
@@ -1110,7 +1110,7 @@ Inoltre il RAG dovrebbe fornire un contesto molto più ampio al Prompt al LLM, q
 per generare le sue risposte.
 \section{Valutazione ``llm as a judge''}
 Per eseguire una valutazione più ampia del sistema viene ora eseguito l'approccio \textbf{\emph{``llm as a judge''}} per valutare automaticamente quanto prodotto dal sistema RAG.
-Sono state generate \textbf{30 domande} sulle quali sarà richiesta risposta al sistema RAG e sucessivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di un altro LLM.
+Sono state generate \textbf{30 domande} sulle quali sarà richiesta risposta al sistema RAG e successivamente eseguita una valutazione automatizzata delle risposte prodotte da parte di un altro LLM.
 \subsection{Creazione domande}
 Passando un file contenente tutte le librerie a \textbf{NotebookLM}, sono state generate 30 domande per valutare il sistema RAG.
 La richiesta fatta al LLM è stata:
