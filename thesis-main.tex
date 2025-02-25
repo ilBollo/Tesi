@@ -126,7 +126,7 @@ La procedura si divide nelle seguenti fasi:
 \end{itemize}
 Analizziamo ora nel dettaglio ogni fase.
 \section{Scelta Modello}
-Gli LLM utilizzano tipicamente architetture basate su transformers, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
+I LLM utilizzano tipicamente architetture basate su transformers, che sono particolarmente efficaci nell'elaborazione di sequenze di dati, come il testo e il codice.
 I transformers utilizzano meccanismi di auto-attenzione per valutare l'importanza di diversi elementi in una sequenza,
 permettendo al modello di comprendere le relazioni tra parole o token.
 Questa capacità è fondamentale nella generazione del codice, poiché le dipendenze tra variabili e funzioni possono estendersi su ampie sezioni del codice, richiedendo al modello di considerare un ampio contesto per trovare le risposte corrette.
@@ -253,7 +253,7 @@ Una volta completata la valutazione, i risultati ottenuti possono guidare il pro
 \section{Introduzione} 
 La sigla RAG, acronimo di \textbf{Retrieval Augmented Generation} (in italiano, \textit{Generazione Aumentata tramite Recupero}), indica un approccio innovativo volto a potenziare le capacità di un \ac{LLM}.
 Questo sistema amplia la base di conoscenza del modello arricchendola con informazioni esterne, al di fuori dal dataset di addestramento originale.
-Il prompt del \ac{LLM} contente la query in input dell'utente, prima di essere elaborato, viene arricchito con contenuti aggiuntivi chiamati 'chunk', ottenuti attraverso tecniche di recupero che identificano le corrispondenze rilevanti rispetto ad un proprio database vettoriale.
+Il prompt del \ac{LLM} contente la query in input dell'utente, prima di essere elaborato, viene arricchito con contenuti aggiuntivi chiamati chunk, ottenuti attraverso tecniche di recupero che identificano le corrispondenze rilevanti rispetto ad un proprio database vettoriale.
 Tale integrazione consente al modello di generare risposte più accurate, contestualizzate e aggiornate, migliorando significativamente la qualità complessiva dell’output.
 \section{Funzionamento}
 Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il Prompt della richiesta.
