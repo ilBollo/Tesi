@@ -59,7 +59,7 @@
 \frontmatter\frontispiece
 \begin{abstract}	
 I \ac{LLM} addestrati per generare il codice sono oggi altamente efficaci e in grado di generare soluzioni di qualità.
-Tuttavia, poiché il loro addestramento si basa su fonti generaliste, tali modelli non sono in grado di elaborare soluzioni personalizzate per specifiche esigenze, utilizzando codice già creato dal programmatore o dalla propria azienda per contesti analoghi.
+Tuttavia, poiché il loro addestramento si basa su dataset generici, tali modelli non sono in grado di elaborare soluzioni personalizzate per specifiche esigenze, utilizzando codice già creato dal programmatore o dalla propria azienda per contesti analoghi.
 Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
 Servirebbe quindi una nuova fase di fine-tuning per adattare il modello alle proprie esigenze, ma questa soluzione è un processo molto costoso che richiede particolari competenze tecniche
 difficilmente presenti in molte aziende. Inoltre il fine-tuning non permette di aggiornare il modello in maniera rapida e dinamica, richiedendo un nuovo addestramento per ogni modifica.
@@ -102,14 +102,14 @@ che propone il testo da utilizzare come descrizione di un commit, basandosi sull
 
 Software come Copilot utilizzano LLM per riprodurre codice e testo, scansionando in pochi istanti il contesto nel codice che si sta costruendo.
 In progetti complessi questo non riduce il ruolo del programmatore che detiene la realizzazione di compiti complessi ad alto valore aggiunto delegando la generazione di parti del codice semplici e ripetitive a questi software.
-\`E quindi importante capire il funzionamento di questi strumenti, sapere come chiedere e formulare correttamente le domande, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice per indizzare il \ac{LLM} nell'elaborazione e ragionamento corretto.
+\`E quindi importante capire il funzionamento di questi strumenti, sapere come chiedere e formulare correttamente le domande, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice per indirizzare il \ac{LLM} nell'elaborazione e ragionamento corretto.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/copilotsolutionSettimanaEnigmistica.png}
     \caption{Copilot scansionando il codice spesso trova valide soluzioni}
     \label{fig:Copilot-Solution}
 \end{figure}
-Questi software hanno un problema importante, essendo addestrati su dataset generici e non personalizzati, sono validi nel fornire risposte standard e generiche, ma non sono in grado di fornire risposte personalizzate e specifiche per un'azienda o un programmatore.
+Questi software hanno un problema importante, essendo addestrati su dataset generici e non personalizzati, essi sono validi nel fornire risposte standard e generiche, ma non sono in grado di fornire risposte personalizzate e specifiche per un'azienda o un programmatore.
 Proprio per questo l'ultimo miglio da percorrere per sfruttare questi strumenti è la personalizzazione delle risposte, per fare in modo che il LLM impari lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
 Per fare questo entrano in gioco il \textbf{Fine-Tuning} e i \textbf{RAG} che sono l'argomento principale di questa tesi.
 \chapter{Addestrare un LLM per la Generazione del Codice}
