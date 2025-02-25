@@ -63,7 +63,7 @@ Tuttavia, poiché il loro addestramento si basa su dataset generici, tali modell
 Da questo nasce l'esigenza di addestrare il modello per personalizzare le soluzioni proposte, contestualizzandole alla propria realtà aziendale e al proprio stile nel programmare.
 Servirebbe quindi una nuova fase di fine-tuning per adattare il modello alle proprie esigenze, ma questa soluzione è un processo molto costoso che richiede particolari competenze tecniche
 difficilmente presenti in molte aziende. Inoltre il fine-tuning non permette di aggiornare il modello in maniera rapida e dinamica, richiedendo un nuovo addestramento per ogni modifica.
-Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza arricchendo il prompt della query di input che sarà elaborata dal \ac{LLM}.
+Per rispondere a questa esigenza entra in gioco la \ac{RAG}, che permette di aumentare la conoscenza del modello, recuperando informazioni da una propria base di conoscenza arricchendo il prompt della query in input che sarà elaborata dal \ac{LLM}.
 Il \ac{RAG}, ricercando semanticamente i chunk maggiormente somiglianti a quanto richiesto se trovati, li inserirà per aumentare il Prompt del LLM, estendendo la base di informazioni sulla quale genererà l'output con la risposta.
 Questa tesi approfondisce questi concetti e sperimenta l'integrazione di un \ac{RAG} specifico per codice Java e un \ac{LLM} con lo scopo di ottenere risposte personalizzate
 che solo con la conoscenza del LLM, anche se estremamente performante e completo, sarebbero state impossibili da ottenere.
@@ -253,7 +253,7 @@ Una volta completata la valutazione, i risultati ottenuti possono guidare il pro
 \section{Introduzione} 
 La sigla RAG, acronimo di \textbf{Retrieval Augmented Generation} (in italiano, \textit{Generazione Aumentata tramite Recupero}), indica un approccio innovativo volto a potenziare le capacità di un \ac{LLM}.
 Questo sistema amplia la base di conoscenza del modello arricchendola con informazioni esterne, al di fuori dal dataset di addestramento originale.
-Il prompt del \ac{LLM} contente la query di input dell'utente, prima di essere elaborato, viene arricchito con contenuti aggiuntivi chiamati 'chunk', ottenuti attraverso tecniche di recupero che identificano le corrispondenze rilevanti rispetto ad un proprio database vettoriale.
+Il prompt del \ac{LLM} contente la query in input dell'utente, prima di essere elaborato, viene arricchito con contenuti aggiuntivi chiamati 'chunk', ottenuti attraverso tecniche di recupero che identificano le corrispondenze rilevanti rispetto ad un proprio database vettoriale.
 Tale integrazione consente al modello di generare risposte più accurate, contestualizzate e aggiornate, migliorando significativamente la qualità complessiva dell’output.
 \section{Funzionamento}
 Il sistema RAG si integra al LLM attivando un meccanismo di recupero delle informazioni per aumentare il Prompt della richiesta.
@@ -782,7 +782,7 @@ La pipeline RAG combina i componenti precedentemente descritti per creare un sis
         allow_dangerous_deserialization=True
     )
 \end{lstlisting}
-Inizialmente per eseguire l'embedder della query di input viene utilizzato il modello BAAI/bge-m3 e caricato il database FAISS precedentemente creato.
+Inizialmente per eseguire l'embedder della query in input viene utilizzato il modello BAAI/bge-m3 e caricato il database FAISS precedentemente creato.
 
 \begin{lstlisting}[language=Python, caption={Configurazione Parametri}, label={lst:Configurazione Parametri}]
     # Creazione del retriever
@@ -887,7 +887,7 @@ if __name__ == "__main__":
     #ask_ollama("Cosa ritorna il metodo segnaleWow(LocalDate.of(2025, 2, 14))?")
 
 \end{lstlisting}
-La chiamata iniziale alla funzione \emph{ask\_ollama} richiede come parametro la query di input per poi essere processata dalla pipeline RAG.
+La chiamata iniziale alla funzione \emph{ask\_ollama} richiede come parametro la query in input per poi essere processata dalla pipeline RAG.
 Sfruttando le funzionalità della libreria LangChain \cite{langchain-retrieval-chain}, \textbf{\emph{result}} è un array contente la risposta e il contesto fornito alla query.
 \subsubsection{\emph{rag\_chain.invoke}}
  Questa funzione esegue la catena RAG creata tramite il metodo \emph{create\_retrieval\_chain} che prende come parametri il retriever e il document chain.
@@ -1227,7 +1227,7 @@ Sono state effettuate quattro elaborazioni con configurazioni differenti ottendo
 La configurazione migliore è stata quella del LLM \textbf{CodeQwen con score threshold 1.0},
 i test effettuati hanno dimostrato che è meglio aumentare la tolleranza di score dei chunk estratti nella fase di Retriever.
 Questo score relativamente alto, come già analizzato nei capitoli precedenti, può causare l'inserimento di alcuni chunk non coerenti ma allo stesso tempo evita di escludere chunk validi e fondamentali per permettere al LLM di rispondere correttamente.
-Quando il RAG trova i chunk corretti abbiamo dimostrato che score\_threshold ha valore molto basso solo nei casi in cui la query di input è scritta in maniera molto accurata cosa che 
+Quando il RAG trova i chunk corretti abbiamo dimostrato che score\_threshold ha valore molto basso solo nei casi in cui la query in input è scritta in maniera molto accurata cosa che 
 normalmente non avviene.
 Il risultato di questa minore rigidità nel filtrare i chunk può essere utile per ridurre l'overfitting creato nella prima fas di configurazione dei parametri dell RAG.
 Per validare la soluzione adottata e prevenire il plorifirarsi di chunk non coerenti viene sempre impostato il limite a 5 Chunk.
