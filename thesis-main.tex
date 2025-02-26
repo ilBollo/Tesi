@@ -87,31 +87,43 @@ A Giulia e ai miei figli, il dono più incredibile di questa vita.
 \chapter{Introduzione}
 \label{chap:introduction}
 %----------------------------------------------------------------------------------------
-Il mondo della programmazione è un settore in continua evoluzione e negli ultimi anni ha visto un esplosione nel campo dell'\ac{AI}.
-Con l'avvento di questa nuova tecnologia, per molti programmatori è cambiato il modo di lavorare: utilizzano  assistenti basati sull’AI durante la produzione del codice software.
-Questi strumenti sono in grado di completare il codice, effettuare debugging, suggerire correzioni e creare documentazione pertinente.
-Aiutano inoltre i programmatori nei compiti più ripetivi e meccanici, aumentando la produttività e riducendo i tempi di sviluppo.
-Ad esempio in \textbf{Github Copilot},  un assistente per la scrittura del codice basato su \ac{LLM}, include il comando: \emph{``Generate Commit Message with Copilot''}
-che propone testi per i commit basandosi sulle modifiche apportate al codice, come mostrato in \cref{figura:Commit-Autogenerato}.
+Il settore dello sviluppo software sta vivendo una trasformazione radicale grazie all’avvento dei Large Language Models (LLM),
+strumenti di intelligenza artificiale in grado di completare il codice, effettuare debugging, suggerire correzioni e creare documentazione pertinente.
+Queste applicazioni, svolgono il ruolo di assistenti in tutte le fasi della creazione del software, aumentando la produttività e riducendo i tempi di sviluppo.
+In progetti complessi, questo non riduce il ruolo del programmatore, che rimane responsabile dei compiti ad alto valore aggiunto, delegando invece la generazione di parti semplici e ripetitive a questi strumenti.
+\`E quindi fondamentale comprenderne il funzionamento, saper formulare correttamente le domande, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice, per indirizzare correttamente il ragionamento del \ac{LLM}.
+Prendendo tra queste applicazioni come esempio \textbf{Github Copilot}\cite{github-copilot}, quest'ultimo fornisce diverse funzionalità di supporto nella generazione del codice tra cui il comando: \emph{``Generate Commit Message with Copilot''}
+che genere testi per i commit basandosi sulle modifiche apportate al codice, come mostrato in \cref{figura:Commit-Autogenerato}.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\linewidth]{figures/commit.png}
     \caption{Esempio di commit autogenerato da Copilot}
     \label{figura:Commit-Autogenerato}
 \end{figure}
-Software come Copilot utilizzano LLM per generare codice e testo, scansionando in pochi istanti il contesto nel codice in sviluppo.
-In progetti complessi, questo non riduce il ruolo del programmatore, che rimane responsabile dei compiti ad alto valore aggiunto, delegando invece la generazione di parti semplici e ripetitive a questi strumenti.
-\`E quindi fondamentale comprenderne il funzionamento, saper formulare correttamente le domande, esplicitando nel dettaglio con parole chiave mirate come deve essere realizzato il codice, per indirizzare correttamente il ragionamento del \ac{LLM}.
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.5\linewidth]{figures/copilotsolutionSettimanaEnigmistica.png}
-    \caption{Copilot risolve gli enigmi del programmatore}
-    \label{fig:Copilot-Solution}
-\end{figure}
-\newline
-Un limite significativo di questi strumenti risiede nel loro addestramento su dataset generici: forniscono risposte standardizzate, ma non sono in grado di adattarsi a esigenze specifiche di un’azienda o di un programmatore.
+Software come Copilot utilizzano LLM per generare codice e testo, scansionando in pochi istanti il contesto nel codice in sviluppo e fornendo risposte quasi sempre coerenti.
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=0.5\linewidth]{figures/copilotsolutionSettimanaEnigmistica.png}
+%    \caption{Copilot risolve gli enigmi del programmatore}
+%    \label{fig:Copilot-Solution}
+%\end{figure}
+\subsubsection{Limiti dei Large Language Models}
+Tuttavia, nonostante la loro grande utilità, questi modelli presentano un limite critico: la loro knowledge è vincolata ai dataset di addestramento, che non comprendono il codice specifico di un'azienda o di un programmatore.
 Proprio per questo, la personalizzazione delle risposte rappresenta l'ultimo miglio da percorrere, affinchè il LLM apprenda lo stile del programmatore e produca codice coerente con quanto già realizzato e conosciuto.
-In questo contesto si inseriscono il \textbf{Fine-Tuning} e i sistemi \textbf{RAG}, argomento centrale di questa tesi.
+In questo scenario, la Retrieval-Augmented Generation (RAG) emerge come una soluzione promettente.
+Integrando un database vettoriale con informazioni contestuali, il RAG arricchisce il prompt dell’LLM con dati rilevanti estratti da una knowledge base personalizzata,
+permettendo al modello di generare risposte precise senza modifiche architetturali al \ac{LLM}.
+Questo approccio combina i vantaggi dell’apprendimento automatico su larga scala con la flessibilità dell’aggiornamento dinamico, rendendolo ideale per singoli programmatori o piccole aziende.
+
+\subsubsection{Obiettivi della Tesi}
+Questa tesi si propone di esplorare l’integrazione di un sistema RAG specializzato nel linguaggio Java con un LLM, con l’obiettivo di dimostrare come tale combinazione possa superare i limiti degli LLM nella generazione di codice contestualizzato.
+Il lavoro si focalizza su quattro aspetti chiave:
+\begin{itemize}
+    \item Analisi delle metodologie per addestrare un LLM per la generazione del codice.
+    \item Introduzione del concetto di Retrieval-Augmented Generation e delle sue potenzialità.
+    \item Implementazione di un sistema RAG specializzato per il linguaggio Java e integrazione con un LLM.
+    \item Valutazione delle prestazioni del sistema RAG, discutendo dei risultati ottenuti.
+\end{itemize}
 
 \chapter{Addestrare un LLM per la Generazione del Codice}
 L'addestramento di LLM per la generazione del codice di programmazione richiede una serie di passaggi complessi e costi significativi.
